@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MyHomePage extends StatefulWidget {
   // const keyword here makes the constructor work like a flyweight constexpr constructor
@@ -51,6 +52,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            TextButton(
+              onPressed: () => context.go("/swipe"),
+              child: const Text('Swipes'),
+            ),
+            TextButton(
+              onPressed: () => context.go("/feed"),
+              child: const Text('Feed'),
+            ),
+            TextButton(
+              onPressed: () => context.go("/profile"),
+              child: const Text('Profile'),
             ),
           ],
         ),
