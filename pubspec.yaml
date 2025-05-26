@@ -40,6 +40,15 @@ dependencies:
   iconify_flutter: ^0.0.7
   flutter_bloc: ^9.1.1
   flutter_card_swiper: ^7.0.2
+  google_fonts: ^6.2.1
+  webview_flutter: ^4.13.0
+  just_audio: ^0.10.3
+  url_launcher: ^6.3.1
+  http: ^1.4.0
+  oauth2: ^2.0.3
+  audioplayers: ^6.4.0
+  flutter_map: ^8.1.1
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:
