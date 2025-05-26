@@ -23,7 +23,8 @@ class MatchScreen extends StatelessWidget {
       child: CardSwiper(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         numberOfCardsDisplayed: 2,
-        maxAngle: 30,
+        maxAngle: 300,
+        threshold: 90,
         allowedSwipeDirection: AllowedSwipeDirection.symmetric(horizontal: true, vertical: false),
         cardBuilder: (context, index, percentX, percentY) =>
             cards[index % cards.length],

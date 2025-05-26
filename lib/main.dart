@@ -43,20 +43,24 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Color.fromRGBO(187, 158, 100, 100)
+            seedColor: Color.fromRGBO(186, 158, 99, 1)
             ),
           textTheme: TextTheme(
             bodyLarge: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
             bodyMedium: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 18,
               color: Colors.white
             ),
             bodySmall: GoogleFonts.poppins(
-              fontSize: 13,
+              fontSize: 14,
+              color: Colors.white
+            ),
+            titleMedium: GoogleFonts.poppins(
+              fontSize: 18,
               color: Colors.white
             ),
             titleLarge: GoogleFonts.poppins(

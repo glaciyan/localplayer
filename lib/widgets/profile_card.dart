@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/icon_park_solid.dart';
 import 'package:localplayer/widgets/profile_avatar.dart';
 import 'package:localplayer/widgets/spotify_embed_player.dart';
 
@@ -44,7 +46,7 @@ class ProfileCard extends StatelessWidget {
 
             // profile card
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children:[
@@ -52,30 +54,49 @@ class ProfileCard extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ProfileAvatar(avatarLink: avatarLink,color: Colors.green),
-                              Spacer(flex: 1,),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
-                                  Text('Artist', style: Theme.of(context).textTheme.bodyLarge),
-                                  Text('Artist Description', style: Theme.of(context).textTheme.bodyMedium)
-                                  ]
-                              ),
-                              Spacer(flex: 5,)
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ProfileAvatar(avatarLink: avatarLink,color: Colors.green),
+                                SizedBox(width: 16,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                                  children:[
+                                    Text('Artist', style: Theme.of(context).textTheme.titleLarge),
+                                    Text('Artist Genre', style: Theme.of(context).textTheme.bodyMedium),
+                                    Text('27.365 Monthly Listeners', style: Theme.of(context).textTheme.bodySmall)
+                                    ]
+                                ),
+                                Spacer(flex: 5,)
+                              ],
+                            ),
                           ),
                           SizedBox(height: 16,),
-                          Text(style: Theme.of(context).textTheme.bodySmall,'[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              style: Theme.of(context).textTheme.bodySmall,
+                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+                          ),
+
                           SizedBox(height: 20,),
                           SpotifyPreviewWidget(trackId: '3Lc2iEewvM7KoJi9zcN5bx'),
                           SizedBox(height: 20,),
                           SpotifyPreviewWidget(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
                           SizedBox(height: 20,),
-                          Text(style: Theme.of(context).textTheme.bodySmall,'[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              style: Theme.of(context).textTheme.bodySmall,
+                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+                          ),
+
+
                           SizedBox(height: 20,),
                           SpotifyPreviewWidget(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
                           SizedBox(height: 20,),
@@ -97,23 +118,64 @@ class ProfileCard extends StatelessWidget {
               left: 0,
               right: 0,
               bottom: 0,
-              height: 200, // Adjust height to control how much of the content is blurred
+              height: 350, 
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
+                      end: Alignment.center,
                       colors: [
-                        Colors.black.withAlpha(100), // dark fade to add contrast
+                        Colors.black.withAlpha(150), // dark fade to add contrast
                         Colors.transparent,
                       ],
                     ),
                   ),
                 ),
             ),
+
+            Padding(
+              padding: EdgeInsetsGeometry.all(40),
+              child:
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                              
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).highlightColor,
+                            shape: BoxShape.circle
+                          ),
+                          child: IconButton(
+                            onPressed: () {  },
+                            icon: Iconify(IconParkSolid.dislike_two, size: 50,color: Colors.white,)
+                          ),
+                        ),
+
+                        SizedBox(width: 125,),
+
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            shape: BoxShape.circle
+                          ),
+                          child: IconButton(
+                            onPressed: () {  },
+                            icon: Iconify(IconParkSolid.like, size: 50,color: Theme.of(context).primaryColor)
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+            )
           ],
         )
       )
     );
   }
-} 
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,6 +47,7 @@ class _SpotifyPreviewWidgetState extends State<SpotifyPreviewWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Color.fromRGBO(18,18,18,1),
       elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -54,6 +57,7 @@ class _SpotifyPreviewWidgetState extends State<SpotifyPreviewWidget> {
               children: [
                 IconButton(
                   icon: Icon(
+                    color: Color.fromRGBO(30, 215, 69,1),
                     _isPlaying ? Icons.pause : Icons.play_arrow,
                     size: 32,
                   ),
@@ -76,7 +80,7 @@ class _SpotifyPreviewWidgetState extends State<SpotifyPreviewWidget> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.open_in_new),
+                  icon: Iconify(Mdi.spotify, color: Color.fromRGBO(30, 215, 69,1), size: 28,),
                   onPressed: () async {
                     final url = "https://open.spotify.com/track/${widget.trackId}";
                     if (await canLaunchUrl(Uri.parse(url))) {
