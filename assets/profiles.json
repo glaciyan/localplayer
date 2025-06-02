@@ -1,0 +1,72 @@
+[
+    {
+        "name": "Alice",
+        "age": 23,
+        "imageUrl": "https://picsum.photos/id/1011/300/400",
+        "description": "Singer & Songwriter",
+        "location": "Los Angeles, CA"
+    },
+    {
+        "name": "Isla",
+        "age": 22,
+        "imageUrl": "https://picsum.photos/id/1014/300/400",
+        "description": "Singer & Pianist",
+        "location": "Boston, MA"
+    },
+    {
+        "name": "Ben",
+        "age": 29,
+        "imageUrl": "https://picsum.photos/id/1027/300/400",
+        "description": "Guitarist & Producer",
+        "location": "Nashville, TN"
+    },
+    {
+        "name": "Chloe",
+        "age": 26,
+        "imageUrl": "https://picsum.photos/id/1005/300/400",
+        "description": "Drummer & Songwriter",
+        "location": "Austin, TX"
+    },
+    {
+        "name": "David",
+        "age": 31,
+        "imageUrl": "https://picsum.photos/id/1012/300/400",
+        "description": "Bass Player",
+        "location": "Seattle, WA"
+    },
+    {
+        "name": "Ella",
+        "age": 24,
+        "imageUrl": "https://picsum.photos/id/1015/300/400",
+        "description": "Violinist & Composer",
+        "location": "New York, NY"
+    },
+    {
+        "name": "Felix",
+        "age": 28,
+        "imageUrl": "https://picsum.photos/id/1021/300/400",
+        "description": "Music Producer",
+        "location": "Chicago, IL"
+    },
+    {
+        "name": "Grace",
+        "age": 27,
+        "imageUrl": "https://picsum.photos/id/1006/300/400",
+        "description": "Keyboardist & Vocalist",
+        "location": "Miami, FL"
+    },
+    {
+        "name": "Henry",
+        "age": 30,
+        "imageUrl": "https://picsum.photos/id/1013/300/400",
+        "description": "Sound Engineer",
+        "location": "San Francisco, CA"
+    },
+    {
+        "name": "Jack",
+        "age": 25,
+        "imageUrl": "https://picsum.photos/id/1020/300/400",
+        "description": "Drummer & Producer",
+        "location": "Portland, OR"
+    }
+]

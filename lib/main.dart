@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localplayer/screens/main_navigation_view.dart';
-import 'blocs/navigation/navigation_bloc.dart';
+import 'package:localplayer/core/go_router/router.dart';
+import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
+import 'package:localplayer/features/feed/presentation/blocs/feed_block.dart';
+import 'package:localplayer/features/map/presentation/blocs/map_block.dart';
+import 'package:localplayer/features/match/match_module.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
+
 
 void main() {
-  runApp(
-    BlocProvider(
-      create: (_) => NavigationBloc(),
-      child: const MyApp(),
-    )
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,34 +19,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NavigationBloc>(
-          create: (_) => NavigationBloc(),
-        ),
-        /*
-        BlocProvider<ChatBloc>(
-          create: (_) => ChatBloc(),
-        ),
-        BlocProvider<MatchBloc>(
-          create: (_) => MatchBloc(),
-        ),
-        BlocProvider<FeedBloc>(
-          create: (_) => FeedBloc(),
-        ),
-        BlocProvider<MapBloc>(
-          create: (_) => MapBloc(),
-        ),
-        */
+        BlocProvider(create: (_) => MatchModule.provideBloc()..add(LoadProfiles())),
+        BlocProvider(create: (_) => ChatBloc()),
+        BlocProvider(create: (_) => FeedBloc()),
+        BlocProvider(create: (_) => MapBloc()),
+        // optionally add NavigationBloc if still needed
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'localplayers',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Color.fromRGBO(187, 158, 100, 100)
-          )
+            seedColor: const Color.fromRGBO(187, 158, 100, 100),
+          ),
         ),
-        home: MainNavigationView()
-      )
+        routerConfig: router,
+      ),
     );
   }
 }
