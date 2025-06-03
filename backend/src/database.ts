@@ -19,6 +19,4 @@ export const initDatabase = async () => {
     return prisma;
 };
 
-export type DatabaseClient = PrismaClient;
-
 export const prisma = await initDatabase();

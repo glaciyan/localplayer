@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { isSessionValid, Session } from "./Session.ts";
 import { mklog } from "../logger.ts";
+import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("auth");
 
@@ -28,11 +29,8 @@ export const AuthService = new Elysia() //
         requireSession: {
             resolve({ status, cookie: { id }, store: { sessions } }) {
                 if (!id?.value) {
-                    log.warn("No session was given");
-                    return status(401, {
-                        success: false,
-                        message: "Unauthorized",
-                    });
+                    log.http("No session was given");
+                    return status(401, UNAUTHORIZED);
                 }
 
                 const sessionId = id.value;
@@ -40,22 +38,15 @@ export const AuthService = new Elysia() //
                 const session = sessions[sessionId];
 
                 if (!session) {
-                    log.warn(
-                        `Session was not found in the session store`
-                    );
-                    return status(401, {
-                        success: false,
-                        message: "Unauthorized",
-                    });
+                    log.http(`Session ${sessionId} was not found in the session store`);
+                    return status(401, UNAUTHORIZED);
                 }
 
+
                 if (!isSessionValid(session)) {
-                    log.warn(`Session ${session} has expired`);
+                    log.http(`Session ${session} has expired`);
                     delete sessions[sessionId];
-                    return status(401, {
-                        success: false,
-                        message: "Unauthorized, session expired",
-                    });
+                    return status(401, UNAUTHORIZED);
                 }
 
                 return { userId: session.userId, sessionId: sessionId };

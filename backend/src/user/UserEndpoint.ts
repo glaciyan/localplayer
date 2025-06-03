@@ -27,6 +27,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             requireSession: true,
         }
     )
+    // TODO this point can be attacked, add rate limiting
     .post(
         "/signup",
         async ({ body }) => {
