@@ -11,7 +11,15 @@ export class UserService {
         return this.handler.registerUser(username, password);
     }
 
-    getUser(username: string) {
-        return this.handler.getUser(username);
+    async getUser(username: string) {
+        const user = await this.handler.getUser(username);
+        if (user === null) {
+            return null;
+        }
+
+        return {
+            id: user.id,
+            username: user.username
+        }
     }
 }

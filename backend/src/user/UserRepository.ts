@@ -1,7 +1,7 @@
 import { IUserHandler } from "./IUserHandler.ts";
 import { prisma } from "../database.ts";
 import { User } from "../generated/prisma/client.ts";
-import { hasher } from "../passwords/hashing.ts";
+import { hasher } from "../authentication/hashing.ts";
 
 export class UserRepository implements IUserHandler {
     async getUser(username: string): Promise<User | null> {
