@@ -1,6 +1,6 @@
 // features/match/presentation/blocs/match/match_state.dart
 import 'package:equatable/equatable.dart';
-import 'package:localplayer/features/match/domain/entities/UserProfile.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 
 abstract class MatchState extends Equatable {
@@ -16,11 +16,23 @@ class MatchLoading extends MatchState {}
 
 class MatchLoaded extends MatchState {
   final List<UserProfile> profiles;
+  final int currentIndex;
 
-  const MatchLoaded(this.profiles);
+  const MatchLoaded(this.profiles, {this.currentIndex = 0});
+
+  UserProfile get currentProfile => profiles[currentIndex];
+
+  bool get hasMore => currentIndex < profiles.length - 1;
+
+  MatchLoaded copyWith({int? currentIndex}) {
+    return MatchLoaded(
+      profiles,
+      currentIndex: currentIndex ?? this.currentIndex,
+    );
+  }
 
   @override
-  List<Object?> get props => [profiles];
+  List<Object?> get props => [profiles, currentIndex];
 }
 
 

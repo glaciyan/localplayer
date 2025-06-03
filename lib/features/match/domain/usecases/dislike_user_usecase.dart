@@ -1,4 +1,4 @@
-import 'package:localplayer/features/match/domain/entities/UserProfile.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import '../repositories/match_repository.dart';
 
 class DislikeUserUseCase {
