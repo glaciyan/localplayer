@@ -1,3 +1,15 @@
-import { log } from "./logger";
+import { mklog } from "./logger.ts";
 
-log.info("hello world!");
+const log = mklog("main");
+
+const main = async () => {
+    log.info("LocalPlayer Backend");
+    log.debug("debug");
+    log.warn("warn");
+    log.error("err");
+    log.http("http");
+};
+
+main().finally(() => {
+    log.info("Shutting down");
+});

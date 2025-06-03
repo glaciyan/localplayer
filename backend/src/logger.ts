@@ -1,7 +1,7 @@
 // src/logger.ts
 import winston from "winston";
 import chalk from "chalk";
-import { version } from "../package.json";
+import packagejson from "../package.json" with { type: "json" };
 
 // Custom log levels with colors
 const logLevels = {
@@ -10,7 +10,6 @@ const logLevels = {
     info: 2,
     http: 3,
     debug: 4,
-    trace: 5,
 };
 
 const logColors = {
@@ -18,37 +17,28 @@ const logColors = {
     warn: "yellow",
     info: "green",
     http: "magenta",
-    debug: "blue",
-    trace: "gray",
+    debug: "gray",
 };
 
-// Custom format for console output with colors
 const consoleFormat = winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSS" }),
     winston.format.errors({ stack: true }),
-    winston.format.printf(({ timestamp, level, message, stack }) => {
-        // Color mapping
+    winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
         const colorMap: Record<string, (text: string) => string> = {
             error: chalk.red,
             warn: chalk.yellow,
             info: chalk.green,
             http: chalk.magenta,
-            debug: chalk.blue,
-            trace: chalk.gray,
+            debug: chalk.gray,
         };
 
         const colorFn = colorMap[level] || chalk.white;
         const levelPadded = level.toUpperCase().padEnd(5);
 
-        // Process ID and hostname for additional context
-        const pid = process.pid;
-        const hostname = require("os").hostname();
-
         let logLine = `${chalk.gray(timestamp)} ${colorFn(
             `[${levelPadded}]`
-        )} ${chalk.cyan(`[${hostname}:${pid}]`)} ${message}`;
+        )} ${chalk.cyan(`[${meta["namespace"]}]`)} ${message}`;
 
-        // Add stack trace for errors
         if (stack) {
             logLine += `\n${chalk.red("Stack:")} ${stack}`;
         }
@@ -57,20 +47,18 @@ const consoleFormat = winston.format.combine(
     })
 );
 
-// File format without colors (for log files)
 const fileFormat = winston.format.combine(
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSS" }),
     winston.format.errors({ stack: true }),
     winston.format.json()
 );
 
-// Create the logger
 const logger = winston.createLogger({
     levels: logLevels,
     level: process.env["LOG_LEVEL"] || "info",
     defaultMeta: {
         service: "localplayers-backend",
-        version: version,
+        version: packagejson.version,
         environment: process.env["NODE_ENV"] || "development",
     },
     transports: [
@@ -111,17 +99,17 @@ if (!fs.existsSync(logsDir)) {
 }
 
 // Export logger with typed methods
-export const log = {
+export const mklog = (namespace: string) => ({
     error: (message: string, meta?: Record<string, unknown>) =>
-        logger.error(message, meta),
+        logger.error(message, { namespace, ...meta }),
     warn: (message: string, meta?: Record<string, unknown>) =>
-        logger.warn(message, meta),
+        logger.warn(message, { namespace, ...meta }),
     info: (message: string, meta?: Record<string, unknown>) =>
-        logger.info(message, meta),
+        logger.info(message, { namespace, ...meta }),
     http: (message: string, meta?: Record<string, unknown>) =>
-        logger.http(message, meta),
+        logger.http(message, { namespace, ...meta }),
     debug: (message: string, meta?: Record<string, unknown>) =>
-        logger.debug(message, meta),
-};
+        logger.debug(message, { namespace, ...meta }),
+});
 
 export default logger;
