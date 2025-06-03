@@ -1,3 +1,4 @@
+import { hasher } from "../authentication/hashing.ts";
 import { IUserHandler } from "./IUserHandler.ts";
 
 export class UserService {
@@ -11,7 +12,7 @@ export class UserService {
         return this.handler.registerUser(username, password);
     }
 
-    async getUser(username: string) {
+    async getPublicUser(username: string) {
         const user = await this.handler.getUser(username);
         if (user === null) {
             return null;
@@ -21,5 +22,14 @@ export class UserService {
             id: user.id,
             username: user.username
         }
+    }
+
+    async authenticateUser(username: string, password: string) {
+        const user = await this.handler.getUser(username);
+        if (user === null) {
+            return null;
+        }
+
+        return await hasher.verify(user.passwordHash, password) ? user : null;
     }
 }
