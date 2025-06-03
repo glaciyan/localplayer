@@ -16,22 +16,44 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     required this.dislikeUseCase,
     required this.repository,
   }) : super(MatchInitial()) {
-    on<LoadProfiles>((event, emit) async {
-      emit(MatchLoading());
-      try {
-        final profiles = await repository.fetchProfiles();
-        emit(MatchLoaded(profiles));
-      } catch (e) {
-        emit(MatchError('Failed to load profiles.'));
+  on<LoadProfiles>((event, emit) async {
+    emit(MatchLoading());
+    try {
+      final profiles = await repository.fetchProfiles();
+      emit(MatchLoaded(profiles));
+    } catch (e, stack) {
+      print('❌ Failed to load profiles: $e');
+      print(stack); // optional: shows where it failed
+      emit(MatchError('Failed to load profiles.'));
+    }
+  });
+
+    on<LikePressed>((event, emit) async {
+      final state = this.state;
+      if (state is MatchLoaded) {
+        final profile = state.currentProfile;
+        await likeUseCase(profile);
+
+        if (state.hasMore) {
+          emit(state.copyWith(currentIndex: state.currentIndex + 1));
+        } else {
+          emit(MatchInitial());
+        }
       }
     });
 
-    on<LikePressed>((event, emit) async {
-      await likeUseCase(event.profile);
-    });
-
     on<DislikePressed>((event, emit) async {
-      await dislikeUseCase(event.profile);
+      final state = this.state;
+      if (state is MatchLoaded) {
+        final profile = state.currentProfile;
+        await dislikeUseCase(profile);
+
+        if (state.hasMore) {
+          emit(state.copyWith(currentIndex: state.currentIndex + 1));
+        } else {
+          emit(MatchInitial());
+        }
+      }
     });
   }
 }

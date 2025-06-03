@@ -1,6 +1,6 @@
 // features/match/presentation/blocs/match/match_event.dart\
 import 'package:equatable/equatable.dart';
-import 'package:localplayer/features/match/domain/entities/UserProfile.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 abstract class MatchEvent extends Equatable {
   const MatchEvent();
