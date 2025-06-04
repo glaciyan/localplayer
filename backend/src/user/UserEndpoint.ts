@@ -1,6 +1,5 @@
 import { Elysia, status } from "elysia";
 import userController from "./user.ts";
-import base64url from "base64url";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { sessionController } from "../authentication/session/session.ts";
@@ -11,14 +10,14 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
     .get(
         "/:id",
-        async ({ params: { id }, userId }) => {
-            log.http(`Get user request from user ${userId}`);
-            const user = await userController.getPublicUser(id);
-            if (user === null) {
+        async ({ params: { id }, user }) => {
+            log.http(`Get user request from user ${user.username}`);
+            const requestedUser = await userController.getPublicUser(id);
+            if (requestedUser === null) {
                 return status(404, "User Not Found");
             }
 
-            return user;
+            return requestedUser;
         },
         {
             cookie: "session",
@@ -64,14 +63,11 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 return status(401);
             }
 
-            const buffer = new Uint8Array(16);
-            const random = crypto.getRandomValues(buffer);
-            const sessionToken = base64url.default(Buffer.from(random));
-
-            const { expiresOn } = await sessionController.createSession(
+            const { sessionToken, expiresOn } = await sessionController.createSession(
                 goodLogin.username
             );
 
+            // set cookie
             id.set({
                 value: sessionToken,
                 // secure: true,
@@ -93,8 +89,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     )
     .post(
         "/logout",
-        async ({ cookie: { id }, userId, sessionId }) => {
-            log.http(`User ${userId} is logging off`);
+        async ({ cookie: { id }, user, sessionId }) => {
+            log.http(`User ${user.username} is logging off`);
 
             const success = await sessionController.deleteSessionSecure(
                 sessionId

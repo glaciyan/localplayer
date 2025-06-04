@@ -6,6 +6,9 @@ import { AuthService } from "./authentication/AuthService.ts";
 import { swaggerConfig } from "./swagger.ts";
 import { UNAUTHORIZED } from "./errors.ts";
 import { cors } from "@elysiajs/cors";
+import { Prisma } from "./generated/prisma/client.ts";
+import { cron } from "@elysiajs/cron";
+import { sessionController } from "./authentication/session/session.ts";
 
 const log = mklog("main");
 
@@ -15,6 +18,16 @@ const main = async () => {
     log.info("Launching LocalPlayer Backend");
 
     new Elysia() //
+        .use(
+            cron({
+                name: "session_clean_up",
+                pattern: "*/1 * * * *",
+                async run() {
+                    log.info("Cleaning up sessions");
+                    await sessionController.cleanSessionStore();
+                }
+            })
+        )
         .onError(({ error, code, path }) => {
             if (code === "INTERNAL_SERVER_ERROR") {
                 log.error(
@@ -56,6 +69,18 @@ const main = async () => {
                 return status(500);
             }
 
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                log.error(error.message);
+
+                if (error.code === "P2002") {
+                    return status(500, "Unique constraint failed");
+                }
+
+                return status(500);
+            }
+
+            // log.error(`Uncaught error detected ${JSON.stringify(error)}`);
+            // return status(500, "Unknown error check logs");
             return;
         })
         .use(swagger(swaggerConfig))

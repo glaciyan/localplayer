@@ -5,4 +5,5 @@ export interface ISessionHandler {
     getSession(secureId: string): Promise<(Session & { user: User }) | null>;
     deleteSession(id: number): Promise<Session | null>;
     deleteSessionSecure(secureId: string): Promise<Session | null>;
+    deleteExpiredSessions(): Promise<void>;
 }

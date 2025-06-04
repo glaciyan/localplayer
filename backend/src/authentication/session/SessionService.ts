@@ -33,7 +33,7 @@ export class SessionService {
 
         const now = new Date();
         if (now > session.validUntil) {
-            log.http("Removing expired session"); // TODO kevin: session clear cron job
+            log.http("Removing expired session");
             this.handler.deleteSession(session.id);
             return null;
         }
@@ -59,5 +59,9 @@ export class SessionService {
         }
 
         return true;
+    }
+
+    async cleanSessionStore() {
+        await this.handler.deleteExpiredSessions();
     }
 }

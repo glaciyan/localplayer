@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
-import { isSessionValid, Session } from "./Session.ts";
 import { mklog } from "../logger.ts";
 import { UNAUTHORIZED } from "../errors.ts";
+import { sessionController } from "./session/session.ts";
 
 const log = mklog("auth");
 
@@ -24,7 +24,7 @@ export const AuthService = new Elysia() //
     })
     .macro({
         requireSession: {
-            resolve({ status, cookie: { id }, store: { sessions } }) {
+            async resolve({ status, cookie: { id } }) {
                 if (!id?.value) {
                     log.http("No session was given");
                     return status(401, UNAUTHORIZED);
@@ -32,21 +32,14 @@ export const AuthService = new Elysia() //
 
                 const sessionId = id.value;
 
-                const session = sessions[sessionId];
+                const session = await sessionController.getSession(id.value);
 
                 if (!session) {
                     log.http(`Session ${sessionId} was not found in the session store`);
                     return status(401, UNAUTHORIZED);
                 }
 
-
-                if (!isSessionValid(session)) {
-                    log.http(`Session ${session} has expired`);
-                    delete sessions[sessionId];
-                    return status(401, UNAUTHORIZED);
-                }
-
-                return { userId: session.userId, sessionId: sessionId };
+                return { user: session.user, sessionId: sessionId };
             },
         },
     });

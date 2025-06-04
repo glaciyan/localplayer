@@ -41,11 +41,26 @@ export class SessionRepository implements ISessionHandler {
 
     async deleteSessionSecure(secureId: string): Promise<Session | null> {
         try {
-            const session = await prisma.session.delete({ where: { secureId } });
+            const session = await prisma.session.delete({
+                where: { secureId },
+            });
             return session;
         } catch (e) {
-            log.error(`Attempted session delete that was not found secure id: ${secureId}`);
+            log.error(
+                `Attempted session delete that was not found secure id: ${secureId}`
+            );
             return null;
         }
+    }
+
+    async deleteExpiredSessions(): Promise<void> {
+        const currentTime = new Date();
+        await prisma.session.deleteMany({
+            where: {
+                validUntil: {
+                    lte: currentTime,
+                },
+            },
+        });
     }
 }
