@@ -6,9 +6,6 @@ import { UNAUTHORIZED } from "../errors.ts";
 const log = mklog("auth");
 
 export const AuthService = new Elysia() //
-    .state({
-        sessions: {} as Record<string, Session>,
-    })
     .model({
         optionalSession: t.Cookie({
             id: t.Optional(t.String()),

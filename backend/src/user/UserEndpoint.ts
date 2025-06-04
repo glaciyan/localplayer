@@ -7,7 +7,6 @@ import { AuthService } from "../authentication/AuthService.ts";
 
 const log = mklog("user-api");
 
-const MAX_SESSION_LENGTH = 3600;
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
@@ -46,6 +45,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 const session = store.sessions[id.value];
                 // user could have a session id cookie but we have restarted our server
                 if (session) {
+                    // TODO refresh session
                     log.http(
                         `Session ${id.value} (user: ${session?.userId}) tried logging in but was already logged on`
                     );
@@ -66,7 +66,6 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             }
 
             const buffer = new Uint8Array(16);
-
             const random = crypto.getRandomValues(buffer);
             const sessionToken = base64url.default(Buffer.from(random));
 
