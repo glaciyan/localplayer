@@ -22,22 +22,42 @@ export class SessionService {
         const expiresOn = addSeconds(new Date(), MAX_SESSION_LENGTH);
 
         await this.handler.createSession(sessionToken, username, expiresOn);
-        return [sessionToken, expiresOn];
+        return { sessionToken, expiresOn };
     }
 
     async getSession(sessionId: string) {
         const session = await this.handler.getSession(sessionId);
-        if (session === null) {
-            return [false, null];
+        if (session === null || session.user === null) {
+            return null;
         }
 
         const now = new Date();
         if (now > session.validUntil) {
-            log.http("Removing expired session");
+            log.http("Removing expired session"); // TODO kevin: session clear cron job
             this.handler.deleteSession(session.id);
-            return [false, session];
+            return null;
         }
 
-        return [true, session];
+        return session;
+    }
+
+    async deleteSession(id: number) {
+        const session = await this.handler.deleteSession(id);
+
+        if (session === null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    async deleteSessionSecure(sessionId: string) {
+        const session = await this.handler.deleteSessionSecure(sessionId);
+
+        if (session === null) {
+            return false;
+        }
+
+        return true;
     }
 }

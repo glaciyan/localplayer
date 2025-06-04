@@ -8,7 +8,7 @@ const log = mklog("session-repo");
 export class SessionRepository implements ISessionHandler {
     async getSession(
         secureId: string
-    ): Promise<(Session & { user?: User }) | null> {
+    ): Promise<(Session & { user: User }) | null> {
         const session = await prisma.session.findFirst({
             where: { secureId },
             include: { user: true },
@@ -35,6 +35,16 @@ export class SessionRepository implements ISessionHandler {
             return session;
         } catch (e) {
             log.error(`Attempted session delete that was not found id: ${id}`);
+            return null;
+        }
+    }
+
+    async deleteSessionSecure(secureId: string): Promise<Session | null> {
+        try {
+            const session = await prisma.session.delete({ where: { secureId } });
+            return session;
+        } catch (e) {
+            log.error(`Attempted session delete that was not found secure id: ${secureId}`);
             return null;
         }
     }

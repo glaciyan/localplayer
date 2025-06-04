@@ -1,12 +1,11 @@
 import { Elysia, status } from "elysia";
 import userController from "./user.ts";
-import { createSession } from "../authentication/Session.ts";
 import base64url from "base64url";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
+import { sessionController } from "../authentication/session/session.ts";
 
 const log = mklog("user-api");
-
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
@@ -39,15 +38,15 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     )
     .post(
         "/login",
-        async ({ body, store, cookie: { id } }) => {
+        async ({ body, cookie: { id } }) => {
             // make sure user is not logged on
             if (id.value) {
-                const session = store.sessions[id.value];
+                const session = await sessionController.getSession(id.value);
                 // user could have a session id cookie but we have restarted our server
                 if (session) {
                     // TODO refresh session
                     log.http(
-                        `Session ${id.value} (user: ${session?.userId}) tried logging in but was already logged on`
+                        `Session ${id.value} (user: ${session.user.username}) tried logging in but was already logged on`
                     );
                     return status(
                         403,
@@ -69,9 +68,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             const random = crypto.getRandomValues(buffer);
             const sessionToken = base64url.default(Buffer.from(random));
 
-            store.sessions[sessionToken] = createSession(
-                goodLogin.username,
-                MAX_SESSION_LENGTH
+            const { expiresOn } = await sessionController.createSession(
+                goodLogin.username
             );
 
             id.set({
@@ -79,7 +77,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 // secure: true,
                 httpOnly: true,
                 sameSite: true,
-                maxAge: MAX_SESSION_LENGTH,
+                expires: expiresOn,
             });
 
             log.http(
@@ -95,11 +93,19 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     )
     .post(
         "/logout",
-        ({ store: { sessions }, cookie: { id }, userId, sessionId }) => {
+        async ({ cookie: { id }, userId, sessionId }) => {
             log.http(`User ${userId} is logging off`);
-            delete sessions[sessionId];
+
+            const success = await sessionController.deleteSessionSecure(
+                sessionId
+            );
+
+            if (!success) {
+                return status(500);
+            }
+
             id.remove();
-            return userId;
+            return status(200);
         },
         {
             cookie: "session",
