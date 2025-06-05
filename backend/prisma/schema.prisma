@@ -8,11 +8,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------------------------------------------
+// Base Models for Basic functionality
+// ---------------------------------------------
+
 model User {
   id           Int       @id @default(autoincrement())
   username     String    @unique
   passwordHash String
-  Session      Session[]
+  Sessions     Session[]
+  Profiles     Profile[]
 }
 
 model Session {
@@ -21,4 +26,35 @@ model Session {
   user       User     @relation(fields: [username], references: [username])
   username   String
   validUntil DateTime
+}
+
+// ---------------------------------------------
+// LocalPlayer Models
+// ---------------------------------------------
+
+model MapPresence {
+  id      Int       @id @default(autoincrement())
+  Profile Profile[]
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+
+  displayName String
+  biography   String
+  presenceId  Int
+  presence    MapPresence @relation(fields: [presenceId], references: [id])
+  LPSession   LPSession[]
+}
+
+model LPSession {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  creator   Profile  @relation(fields: [creatorId], references: [id])
+  creatorId Int
 }

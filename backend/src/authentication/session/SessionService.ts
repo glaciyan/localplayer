@@ -5,7 +5,7 @@ import { mklog } from "../../logger.ts";
 
 const log = mklog("session");
 
-const MAX_SESSION_LENGTH = 3600;
+const MAX_SESSION_LENGTH = 36000;
 
 export class SessionService {
     handler: ISessionHandler;

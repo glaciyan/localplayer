@@ -13,9 +13,13 @@ export const initDatabase = async () => {
             },
         ],
     });
-    prisma.$on("query", (e) => {
-        log.debug(`${e.duration}ms ${e.params} ${e.query}`);
-    });
+
+    if (process.env["DB_LOG"] === "true") {
+        prisma.$on("query", (e) => {
+            log.debug(`${e.duration}ms ${e.params} ${e.query}`);
+        });
+    }
+
     return prisma;
 };
 
