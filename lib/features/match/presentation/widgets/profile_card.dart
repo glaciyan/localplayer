@@ -9,7 +9,7 @@ import 'package:localplayer/features/map/presentation/widgets/profile_avatar.dar
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
-import 'package:localplayer/features/match/presentation/widgets/spotify_preview_widget.dart';
+import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
 
 class ProfileCard extends StatelessWidget {
   final UserProfile profile;
@@ -85,27 +85,15 @@ class ProfileCard extends StatelessWidget {
                           ),
 
                           SizedBox(height: 20,),
-                          SpotifyPreviewWidget(trackId: '3Lc2iEewvM7KoJi9zcN5bx'),
+                          SpotifyPreviewContainer(trackId: '3n3Ppam7vgaVa1iaRUc9Lp'),
+                          
                           SizedBox(height: 20,),
-                          SpotifyPreviewWidget(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
+                          SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
                           SizedBox(height: 20,),
 
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              style: Theme.of(context).textTheme.bodySmall,
-                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
-                          ),
+                          SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
+                          SizedBox(height: 20,),
 
-
-                          SizedBox(height: 20,),
-                          SpotifyPreviewWidget(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
-                          SizedBox(height: 20,),
-                          SpotifyPreviewWidget(trackId: '0PvFJmanyNQMseIFrU708S'),
-                          SizedBox(height: 20,),
-                          Text(style: Theme.of(context).textTheme.bodySmall,'[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
-                          SizedBox(height: 20,),
-                          SpotifyPreviewWidget(trackId: '0PvFJmanyNQMseIFrU708S'),
                         ],
                       )
                     )
