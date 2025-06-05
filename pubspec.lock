@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "1.19.1"
   colorful_iconify_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: colorful_iconify_flutter
       sha256: "3f9ee56343bfc7a48c41b4abb97b6fbb4e97ce017c6174a85898a3b709b881d7"
@@ -288,6 +288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.7"
+  ini:
+    dependency: "direct main"
+    description:
+      name: ini
+      sha256: "12a76c53591ffdf86d1265be3f986888a6dfeb34a85957774bc65912d989a173"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   intl:
     dependency: transitive
     description:

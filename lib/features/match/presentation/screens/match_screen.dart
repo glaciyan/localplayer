@@ -48,6 +48,7 @@ class MatchScreen extends StatelessWidget {
             return const Center(child: Text('Swipe to find matches!'));
 
           } else if (state is MatchError) {
+          
             return Center(child: Text('Error: ${state.message}'));
           } else {
             return const Center(child: Text('No profiles found.'));

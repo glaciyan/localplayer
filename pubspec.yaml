@@ -50,7 +50,8 @@ dependencies:
   audioplayers: ^6.4.0
   flutter_map: ^8.1.1
   latlong2: ^0.9.1
-
+  colorful_iconify_flutter: ^0.0.5
+  ini: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -115,3 +116,4 @@ flutter:
   # see https://flutter.dev/to/font-from-package
   assets:
     - assets/profiles.json
+    - assets/config.ini
