@@ -117,3 +117,4 @@ flutter:
   assets:
     - assets/profiles.json
     - assets/config.ini
+    - assets/LocalPlayer.png

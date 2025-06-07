@@ -15,7 +15,7 @@ class MapWidget extends StatelessWidget {
     },
     {
       'name': 'Bob',
-      'position': LatLng(51.519364, -0.118928), // Slightly northeast
+      'position': LatLng(51.519364, -0.118928),
       'avatar': 'https://i1.sndcdn.com/avatars-000701366305-hu9f0i-t120x120.jpg',
       'color': Colors.green,
     },

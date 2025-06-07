@@ -26,7 +26,6 @@ class ProfileAvatar extends StatelessWidget {
           aspectRatio: 1,
           child: Transform(
             alignment: Alignment.center,
-            // transform: Matrix4.rotationX(3.14159),
             transform: Matrix4.rotationX(0.1),            
             child: Image.network(
               avatarLink,
