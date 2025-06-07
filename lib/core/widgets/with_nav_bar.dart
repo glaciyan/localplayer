@@ -14,7 +14,7 @@ class WithNavBar extends StatelessWidget {
 
   void _onNavTap(BuildContext context, int index) {
     switch (index) {
-      case 0: context.go('/'); break;
+      case 0: context.go('/map'); break;
       case 1: context.go('/swipe'); break;
       case 2: context.go('/feed'); break;
       case 3: context.go('/profile'); break;

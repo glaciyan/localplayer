@@ -2,6 +2,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
+
 abstract class MatchEvent extends Equatable {
   const MatchEvent();
 
