@@ -5,7 +5,8 @@
     "private": true,
     "version": "0.0.1",
     "scripts": {
-        "compile": "bun build --compile --target=bun --outfile=server --minify-syntax --minify-whitespace ./src/main.ts"
+        "compile": "bun build --compile --target=bun --outfile=server --minify-syntax --minify-whitespace ./src/main.ts",
+        "typecheck": "tsc --noEmit"
     },
     "devDependencies": {
         "@types/bun": "latest",

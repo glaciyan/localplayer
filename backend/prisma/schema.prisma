@@ -13,14 +13,14 @@ datasource db {
 // ---------------------------------------------
 
 model User {
-  id           Int       @id @default(autoincrement())
-  username     String    @unique
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
   passwordHash String
-  Sessions     Session[]
+  Sessions     AuthSession[]
   Profiles     Profile[]
 }
 
-model Session {
+model AuthSession {
   id         Int      @id @default(autoincrement())
   secureId   String   @unique
   user       User     @relation(fields: [username], references: [username])
@@ -33,28 +33,80 @@ model Session {
 // ---------------------------------------------
 
 model MapPresence {
-  id      Int       @id @default(autoincrement())
-  Profile Profile[]
+  id        Int         @id @default(autoincrement())
+  Profile   Profile[]
+  LPSession LPSession[]
+
+  latitude  Decimal
+  longitude Decimal
 }
 
 model Profile {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   Int
+
+  owner   User @relation(fields: [ownerId], references: [id])
+  ownerId Int
 
   displayName String
   biography   String
-  presenceId  Int
-  presence    MapPresence @relation(fields: [presenceId], references: [id])
-  LPSession   LPSession[]
+
+  presenceId Int
+  presence   MapPresence @relation(fields: [presenceId], references: [id])
+
+  sessionsMade         LPSession[]
+  sessionParticipating LPSessionParticipation[]
+  swipesMade           Swipe[]                  @relation("swipesMade")
+  swipesReceived       Swipe[]                  @relation("swipesReceived")
+}
+
+model LPSessionParticipation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  participantId Int
+  participant   Profile @relation(fields: [participantId], references: [id])
+
+  sessionId Int
+  session   LPSession @relation(fields: [sessionId], references: [id])
+
+  @@unique([participantId, sessionId])
 }
 
 model LPSession {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
-  creator   Profile  @relation(fields: [creatorId], references: [id])
+
+  creator   Profile @relation(fields: [creatorId], references: [id])
   creatorId Int
+
+  presenceId Int
+  presence   MapPresence @relation(fields: [presenceId], references: [id])
+
+  status       String
+  participants LPSessionParticipation[]
+}
+
+model LPSessionRequest {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  // TODO
+}
+
+model Swipe {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  swiperId Int
+  swiper   Profile @relation("swipesMade", fields: [swiperId], references: [id])
+
+  swipeeId Int
+  swipee   Profile @relation("swipesReceived", fields: [swipeeId], references: [id])
+
+  @@unique([swiperId, swipeeId])
 }

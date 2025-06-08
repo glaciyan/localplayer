@@ -1,5 +1,5 @@
 import { prisma } from "../../database.ts";
-import { Session, User } from "../../generated/prisma/client.ts";
+import { AuthSession as Session, User } from "../../generated/prisma/client.ts";
 import { mklog } from "../../logger.ts";
 import { ISessionHandler } from "./ISessionHandler.ts";
 
@@ -9,7 +9,7 @@ export class SessionRepository implements ISessionHandler {
     async getSession(
         secureId: string
     ): Promise<(Session & { user: User }) | null> {
-        const session = await prisma.session.findFirst({
+        const session = await prisma.authSession.findFirst({
             where: { secureId },
             include: { user: true },
         });
@@ -22,7 +22,7 @@ export class SessionRepository implements ISessionHandler {
         username: string,
         validUntil: Date
     ): Promise<Session> {
-        const Session = await prisma.session.create({
+        const Session = await prisma.authSession.create({
             data: { secureId, username, validUntil },
         });
 
@@ -31,7 +31,7 @@ export class SessionRepository implements ISessionHandler {
 
     async deleteSession(id: number) {
         try {
-            const session = await prisma.session.delete({ where: { id } });
+            const session = await prisma.authSession.delete({ where: { id } });
             return session;
         } catch (e) {
             log.error(`Attempted session delete that was not found id: ${id}`);
@@ -41,7 +41,7 @@ export class SessionRepository implements ISessionHandler {
 
     async deleteSessionSecure(secureId: string): Promise<Session | null> {
         try {
-            const session = await prisma.session.delete({
+            const session = await prisma.authSession.delete({
                 where: { secureId },
             });
             return session;
@@ -55,7 +55,7 @@ export class SessionRepository implements ISessionHandler {
 
     async deleteExpiredSessions(): Promise<void> {
         const currentTime = new Date();
-        await prisma.session.deleteMany({
+        await prisma.authSession.deleteMany({
             where: {
                 validUntil: {
                     lte: currentTime,

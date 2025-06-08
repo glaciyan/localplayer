@@ -1,4 +1,4 @@
-import { Session, User } from "../../generated/prisma/client.ts";
+import { AuthSession as Session, User } from "../../generated/prisma/client.ts";
 
 export interface ISessionHandler {
     createSession(secureId: string, username: string, validUntil: Date): Promise<Session>;
