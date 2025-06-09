@@ -1,8 +1,7 @@
-import { IPresenceHandler } from "./IPresenceHandler.ts";
 import { prisma } from "../database.ts";
 import { MapPresence, Profile } from "../generated/prisma/client.ts";
 
-export class PresenceRepository implements IPresenceHandler {
+export class PresenceRepository {
     async getPresence(id: number): Promise<MapPresence | null> {
         return await prisma.mapPresence.findUnique({ where: { id: id } });
     }

@@ -1,10 +1,10 @@
-import { IPresenceHandler } from "./IPresenceHandler.ts";
 import profileController from "../profile/profile.ts";
+import { PresenceRepository } from "./PresenceRepository.ts";
 
 export class PresenceService {
-    handler: IPresenceHandler;
+    handler: PresenceRepository;
 
-    constructor(handler: IPresenceHandler) {
+    constructor(handler: PresenceRepository) {
         this.handler = handler;
     }
 
