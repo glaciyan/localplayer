@@ -22,14 +22,6 @@ export class PresenceService {
         return await this.handler.getPresence(id);
     }
 
-    async createPresence(latitude: string, longitude: string) {
-        const lat = this.handler.decimal(latitude);
-        const lng = this.handler.decimal(longitude);
-        this.validateCoords(lat, lng);
-
-        return await this.handler.createPresence(lat, lng);
-    }
-
     async updatePresence(id: number, latitude: string, longitude: string) {
         const lat = this.handler.decimal(latitude);
         const lng = this.handler.decimal(longitude);
@@ -87,11 +79,11 @@ export class PresenceService {
     async getProfilesInArea(
         latitude: string,
         longitude: string,
-        radius: string
+        radiusKm: string
     ) {
         const lat = this.handler.decimal(latitude);
         const lng = this.handler.decimal(longitude);
-        const rad = this.handler.decimal(radius);
+        const rad = this.handler.decimal(radiusKm);
 
         this.validateCoords(lat, lng);
 
@@ -103,6 +95,10 @@ export class PresenceService {
             displayName: profile.displayName,
             biography: profile.biography,
             createdAt: profile.createdAt,
+            precense: {
+                latitude: profile.fakePresence?.latitude,
+                longitude: profile.fakePresence?.longitude,
+            },
         }));
     }
 }

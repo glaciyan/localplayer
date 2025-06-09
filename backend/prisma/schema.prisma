@@ -33,9 +33,10 @@ model AuthSession {
 // ---------------------------------------------
 
 model MapPresence {
-  id        Int         @id @default(autoincrement())
-  Profile   Profile[]
-  LPSession LPSession[]
+  id          Int         @id @default(autoincrement())
+  Profile     Profile[]   @relation("realPresence")
+  ProfileFake Profile[]   @relation("fakePresence")
+  LPSession   LPSession[]
 
   latitude  Decimal
   longitude Decimal
@@ -46,8 +47,8 @@ model Profile {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
-  owner   User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  owner             User @relation(fields: [ownerId], references: [id])
+  ownerId           Int
   profileOwnerIndex Int
 
   handle      String
@@ -55,7 +56,10 @@ model Profile {
   biography   String?
 
   presenceId Int?
-  presence   MapPresence? @relation(fields: [presenceId], references: [id])
+  presence   MapPresence? @relation("realPresence", fields: [presenceId], references: [id])
+
+  fakePresenceId Int?
+  fakePresence   MapPresence? @relation("fakePresence", fields: [fakePresenceId], references: [id])
 
   sessionsMade         LPSession[]
   sessionParticipating LPSessionParticipation[]

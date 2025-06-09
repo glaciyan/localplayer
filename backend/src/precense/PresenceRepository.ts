@@ -1,6 +1,9 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
 import { MapPresence, Profile } from "../generated/prisma/client.ts";
+import { mklog } from "../logger.ts";
+
+const log = mklog("presence-repo");
 
 export type CDecimal = Decimal;
 
@@ -13,16 +16,34 @@ export class PresenceRepository {
         return new Decimal(value);
     }
 
-    async createPresence(
+    private addNoiseToCoordinates(
         latitude: CDecimal,
-        longitude: CDecimal
-    ): Promise<MapPresence> {
-        return await prisma.mapPresence.create({
-            data: {
-                latitude: latitude,
-                longitude: longitude,
-            },
-        });
+        longitude: CDecimal,
+        noiseRadiusMeters: CDecimal
+    ): { latitude: CDecimal; longitude: CDecimal } {
+        const earthRadiusKm = new Decimal(6371);
+        const noiseRadiusKm = noiseRadiusMeters.div(1000);
+
+        const randomAngle = new Decimal(Math.random()).mul(2).mul(Math.PI);
+        const randomDistance = new Decimal(Math.random()).mul(noiseRadiusKm);
+
+        const latNoise = randomDistance
+            .mul(Decimal.cos(randomAngle))
+            .div(earthRadiusKm)
+            .mul(180)
+            .div(Math.PI);
+
+        const lonNoise = randomDistance
+            .mul(Decimal.sin(randomAngle))
+            .div(earthRadiusKm)
+            .mul(180)
+            .div(Math.PI)
+            .div(Decimal.cos(latitude.mul(Math.PI).div(180)));
+
+        return {
+            latitude: latitude.add(latNoise),
+            longitude: longitude.add(lonNoise),
+        };
     }
 
     async createPresenceForProfile(
@@ -40,6 +61,13 @@ export class PresenceRepository {
                         latitude: latitude,
                         longitude: longitude,
                     },
+                },
+                fakePresence: {
+                    create: this.addNoiseToCoordinates(
+                        latitude,
+                        longitude,
+                        new Decimal(3000)
+                    ),
                 },
             },
             include: {
@@ -82,8 +110,8 @@ export class PresenceRepository {
     async getProfilesInArea(
         latitude: CDecimal,
         longitude: CDecimal,
-        radius: CDecimal
-    ): Promise<Profile[]> {
+        radiusKm: CDecimal
+    ) {
         const profilesWithPresence = await prisma.profile.findMany({
             where: {
                 presenceId: {
@@ -91,30 +119,26 @@ export class PresenceRepository {
                 },
             },
             include: {
-                presence: true,
+                fakePresence: true,
             },
         });
 
         const profilesInArea = profilesWithPresence.filter((profile) => {
-            if (!profile.presence) return false;
+            if (!profile.fakePresence) return false;
 
             const distance = this.calculateDistance(
                 latitude,
                 longitude,
-                profile.presence.latitude,
-                profile.presence.longitude
+                profile.fakePresence.latitude,
+                profile.fakePresence.longitude
             );
 
+            log.info(distance.toString());
 
-            return distance.lessThan(radius);
+            return distance.lessThan(radiusKm);
         });
 
-        return profilesInArea.map(({ presence, ...profile }) => {
-            return {
-                ...profile,
-                persence: presence,
-            };
-        });
+        return profilesInArea;
     }
 
     private calculateDistance(

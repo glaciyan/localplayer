@@ -15,7 +15,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
         areaQuery: t.Object({
             latitude: t.String(),
             longitude: t.String(),
-            radius: t.Optional(t.String()),
+            radiusKm: t.Optional(t.String()),
         }),
     })
     .get(
@@ -96,16 +96,16 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
     .get(
         "/nearby",
         async ({ query, user }) => {
-            const { latitude, longitude, radius = "10" } = query;
+            const { latitude, longitude, radiusKm = "10" } = query;
 
             log.http(
-                `Get nearby profiles request from user ${user.username} at (${latitude}, ${longitude}) within ${radius}km`
+                `Get nearby profiles request from user ${user.username} at (${latitude}, ${longitude}) within ${radiusKm}km`
             );
 
             const profiles = await presenceController.getProfilesInArea(
                 latitude,
                 longitude,
-                radius
+                radiusKm
             );
 
             return profiles;
