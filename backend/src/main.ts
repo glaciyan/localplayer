@@ -9,7 +9,7 @@ import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
 import { ProfileEndpoint } from "./profile/ProfileEndpoint.ts";
-import { PresenceEndpoint } from "./precense/PrecenseEndpoint.ts";
+import { PresenceEndpoint } from "./precense/PresenceEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");

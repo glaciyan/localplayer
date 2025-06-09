@@ -1,14 +1,21 @@
+import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
 import { MapPresence, Profile } from "../generated/prisma/client.ts";
+
+export type CDecimal = Decimal;
 
 export class PresenceRepository {
     async getPresence(id: number): Promise<MapPresence | null> {
         return await prisma.mapPresence.findUnique({ where: { id: id } });
     }
 
+    decimal(value: string): CDecimal {
+        return new Decimal(value);
+    }
+
     async createPresence(
-        latitude: number,
-        longitude: number
+        latitude: CDecimal,
+        longitude: CDecimal
     ): Promise<MapPresence> {
         return await prisma.mapPresence.create({
             data: {
@@ -20,8 +27,8 @@ export class PresenceRepository {
 
     async createPresenceForProfile(
         profileId: number,
-        latitude: number,
-        longitude: number
+        latitude: CDecimal,
+        longitude: CDecimal
     ) {
         const result = await prisma.profile.update({
             where: {
@@ -45,8 +52,8 @@ export class PresenceRepository {
 
     async updatePresence(
         id: number,
-        latitude: number,
-        longitude: number
+        latitude: CDecimal,
+        longitude: CDecimal
     ): Promise<MapPresence | null> {
         try {
             return await prisma.mapPresence.update({
@@ -73,9 +80,9 @@ export class PresenceRepository {
     }
 
     async getProfilesInArea(
-        latitude: number,
-        longitude: number,
-        radius: number
+        latitude: CDecimal,
+        longitude: CDecimal,
+        radius: CDecimal
     ): Promise<Profile[]> {
         const profilesWithPresence = await prisma.profile.findMany({
             where: {
@@ -94,37 +101,54 @@ export class PresenceRepository {
             const distance = this.calculateDistance(
                 latitude,
                 longitude,
-                parseFloat(profile.presence.latitude.toString()),
-                parseFloat(profile.presence.longitude.toString())
+                profile.presence.latitude,
+                profile.presence.longitude
             );
 
-            return distance <= radius;
+
+            return distance.lessThan(radius);
         });
 
-        // Remove the presence data before returning (keep only profile data)
-        return profilesInArea.map(({ presence, ...profile }) => profile);
+        return profilesInArea.map(({ presence, ...profile }) => {
+            return {
+                ...profile,
+                persence: presence,
+            };
+        });
     }
 
     private calculateDistance(
-        lat1: number,
-        lon1: number,
-        lat2: number,
-        lon2: number
-    ): number {
-        const R = 6371; // earth's radius in km
-        const dLat = ((lat2 - lat1) * Math.PI) / 180;
-        const dLon = ((lon2 - lon1) * Math.PI) / 180;
+        lat1: Decimal,
+        lon1: Decimal,
+        lat2: Decimal,
+        lon2: Decimal
+    ): Decimal {
+        const R = new Decimal(6371); // earth's radius in km
+        const PI = new Decimal(Math.PI);
+        const deg180 = new Decimal(180);
 
-        const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos((lat1 * Math.PI) / 180) *
-                Math.cos((lat2 * Math.PI) / 180) *
-                Math.sin(dLon / 2) *
-                Math.sin(dLon / 2);
+        const dLat = new Decimal(lat2).minus(lat1).mul(PI).div(deg180);
+        const dLon = new Decimal(lon2).minus(lon1).mul(PI).div(deg180);
 
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const distance = R * c;
+        const lat1Rad = new Decimal(lat1).mul(PI).div(deg180);
+        const lat2Rad = new Decimal(lat2).mul(PI).div(deg180);
 
+        const sinDLatHalf = Decimal.sin(dLat.div(2));
+        const sinDLonHalf = Decimal.sin(dLon.div(2));
+
+        const a = sinDLatHalf
+            .pow(2)
+            .plus(
+                Decimal.cos(lat1Rad)
+                    .mul(Decimal.cos(lat2Rad))
+                    .mul(sinDLonHalf.pow(2))
+            );
+
+        const sqrtA = Decimal.sqrt(a);
+        const sqrt1MinusA = Decimal.sqrt(new Decimal(1).minus(a));
+        const c = new Decimal(2).mul(Decimal.atan2(sqrtA, sqrt1MinusA));
+
+        const distance = R.mul(c);
         return distance;
     }
 }
