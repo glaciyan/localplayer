@@ -1,8 +1,7 @@
-import { IProfileHandler } from "./IProfileHandler.ts";
 import { prisma } from "../database.ts";
 import { MapPresence, Profile } from "../generated/prisma/client.ts";
 
-export class ProfileRepository implements IProfileHandler {
+export class ProfileRepository {
     async getProfileByOwner(
         index: number,
         ownerId: number

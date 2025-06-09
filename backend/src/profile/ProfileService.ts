@@ -1,9 +1,9 @@
-import { IProfileHandler } from "./IProfileHandler.ts";
+import { ProfileRepository } from "./ProfileRepository.ts";
 
 export class ProfileService {
-    handler: IProfileHandler;
+    handler: ProfileRepository;
 
-    constructor(handler: IProfileHandler) {
+    constructor(handler: ProfileRepository) {
         this.handler = handler;
     }
 
