@@ -9,6 +9,7 @@ import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
 import { ProfileEndpoint } from "./profile/ProfileEndpoint.ts";
+import { PresenceEndpoint } from "./precense/PrecenseEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");
@@ -79,6 +80,7 @@ const main = async () => {
         .use(AuthService)
         .use(UserEndpoint)
         .use(ProfileEndpoint)
+        .use(PresenceEndpoint)
         .use(cors()) // TODO make stricter for production
         .listen(PORT);
 

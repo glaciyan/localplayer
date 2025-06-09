@@ -48,7 +48,6 @@ model Profile {
 
   owner   User @relation(fields: [ownerId], references: [id])
   ownerId Int
-
   profileOwnerIndex Int
 
   handle      String

@@ -19,6 +19,10 @@ export class ProfileService {
         return await this.handler.updateProfile(id, displayName, biography);
     }
 
+    async getFullPublicProfile(id: number) {
+        return await this.handler.getPublicProfile(id);
+    }
+
     async getPublicProfile(id: number) {
         const profile = await this.handler.getPublicProfile(id);
         if (profile === null) {
@@ -26,11 +30,14 @@ export class ProfileService {
         }
 
         return {
-            id: profile.id,
             handle: profile.handle,
             displayName: profile.displayName,
             biography: profile.biography,
-            createdAt: profile.createdAt
+            createdAt: profile.createdAt,
+            precense: {
+                longitude: profile.presence?.longitude,
+                latitude: profile.presence?.latitude,
+            }
         };
     }
 }
