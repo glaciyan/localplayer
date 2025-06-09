@@ -34,7 +34,7 @@ export class ProfileService {
             displayName: profile.displayName,
             biography: profile.biography,
             createdAt: profile.createdAt,
-            precense: {
+            presence: {
                 longitude: profile.presence?.longitude,
                 latitude: profile.presence?.latitude,
             }

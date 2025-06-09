@@ -99,7 +99,7 @@ export class PresenceService {
             displayName: profile.displayName,
             biography: profile.biography,
             createdAt: profile.createdAt,
-            precense: {
+            presence: {
                 latitude: profile.fakePresence?.latitude,
                 longitude: profile.fakePresence?.longitude,
             },
