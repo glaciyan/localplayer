@@ -22,12 +22,12 @@ export class PresenceService {
         return await this.handler.getPresence(id);
     }
 
-    async updatePresence(id: number, latitude: string, longitude: string) {
+    async updatePresence(id: number, fakeId: number | null, latitude: string, longitude: string, radiusMeters: string) {
         const lat = this.handler.decimal(latitude);
         const lng = this.handler.decimal(longitude);
         this.validateCoords(lat, lng);
 
-        return await this.handler.updatePresence(id, lat, lng);
+        return await this.handler.updatePresence(id, fakeId, lat, lng, this.handler.decimal(radiusMeters));
     }
 
     async deletePresence(id: number) {
@@ -37,7 +37,8 @@ export class PresenceService {
     async setProfilePresence(
         profileId: number,
         latitude: string,
-        longitude: string
+        longitude: string,
+        fakingRadiusMeters: string
     ) {
         // Get current profile to check if it has a presence
         const profile = await profileController.getFullPublicProfile(profileId);
@@ -53,14 +54,17 @@ export class PresenceService {
         if (profile.presenceId) {
             presence = await this.updatePresence(
                 profile.presenceId,
+                profile.fakePresenceId,
                 latitude,
-                longitude
+                longitude,
+                fakingRadiusMeters
             );
         } else {
             presence = await this.handler.createPresenceForProfile(
                 profileId,
                 lat,
-                lng
+                lng,
+                this.handler.decimal(fakingRadiusMeters)
             );
         }
 

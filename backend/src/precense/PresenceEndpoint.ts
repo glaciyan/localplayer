@@ -11,6 +11,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
         presenceLocation: t.Object({
             latitude: t.String(),
             longitude: t.String(),
+            fakingRadiusMeters: t.String(),
         }),
         areaQuery: t.Object({
             latitude: t.String(),
@@ -56,7 +57,8 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             const presence = await presenceController.setProfilePresence(
                 profile.id,
                 body.latitude,
-                body.longitude
+                body.longitude,
+                body.fakingRadiusMeters
             );
 
             if (!presence) {

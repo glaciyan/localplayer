@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
-import { MapPresence, Profile } from "../generated/prisma/client.ts";
+import { MapPresence } from "../generated/prisma/client.ts";
 import { mklog } from "../logger.ts";
 
 const log = mklog("presence-repo");
@@ -49,7 +49,8 @@ export class PresenceRepository {
     async createPresenceForProfile(
         profileId: number,
         latitude: CDecimal,
-        longitude: CDecimal
+        longitude: CDecimal,
+        noiseRadiusMeters: CDecimal
     ) {
         const result = await prisma.profile.update({
             where: {
@@ -66,31 +67,49 @@ export class PresenceRepository {
                     create: this.addNoiseToCoordinates(
                         latitude,
                         longitude,
-                        new Decimal(3000)
+                        noiseRadiusMeters
                     ),
                 },
             },
             include: {
                 presence: true,
+                fakePresence: true,
             },
         });
 
-        return result.presence;
+        return result;
     }
 
     async updatePresence(
         id: number,
+        fakeId: number | null,
         latitude: CDecimal,
-        longitude: CDecimal
-    ): Promise<MapPresence | null> {
+        longitude: CDecimal,
+        noiseRadiusMeters: CDecimal
+    ) {
         try {
-            return await prisma.mapPresence.update({
+            const real = await prisma.mapPresence.update({
                 where: { id: id },
                 data: {
                     latitude: latitude,
                     longitude: longitude,
                 },
             });
+
+            if (fakeId !== null) {
+                const fake = await prisma.mapPresence.update({
+                    where: { id: fakeId },
+                    data: this.addNoiseToCoordinates(
+                        latitude,
+                        longitude,
+                        noiseRadiusMeters
+                    ),
+                });
+
+                return { real, fake };
+            }
+
+            return { real };
         } catch (error) {
             return null;
         }
