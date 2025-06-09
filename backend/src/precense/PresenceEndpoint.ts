@@ -15,7 +15,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
         areaQuery: t.Object({
             latitude: t.String(),
             longitude: t.String(),
-            radius: t.Optional(t.String())
+            radius: t.Optional(t.String()),
         }),
     })
     .get(
@@ -36,7 +36,10 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 return status(404, "Presence not found");
             }
 
-            return presence;
+            return {
+                latitude: presence.latitude,
+                longitude: presence.longitude,
+            };
         },
         {
             cookie: "session",
