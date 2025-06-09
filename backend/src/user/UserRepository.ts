@@ -10,9 +10,16 @@ export class UserRepository implements IUserHandler {
 
     async registerUser(username: string, password: string) {
         const passwordHash = await hasher.hash(password);
-        const User = await prisma.user.create({
-            data: { username, passwordHash },
+        const Profile = await prisma.profile.create({
+            data: {
+                handle: username,
+                profileOwnerIndex: 0,
+                owner: {
+                    create : { username, passwordHash }
+                }
+            },
         });
-        return User;
+
+        return Profile != null;
     }
 }

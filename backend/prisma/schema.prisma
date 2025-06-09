@@ -23,8 +23,8 @@ model User {
 model AuthSession {
   id         Int      @id @default(autoincrement())
   secureId   String   @unique
-  user       User     @relation(fields: [username], references: [username])
-  username   String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
   validUntil DateTime
 }
 
@@ -49,22 +49,41 @@ model Profile {
   owner   User @relation(fields: [ownerId], references: [id])
   ownerId Int
 
-  displayName String
-  biography   String
+  profileOwnerIndex Int
 
-  presenceId Int
-  presence   MapPresence @relation(fields: [presenceId], references: [id])
+  handle      String
+  displayName String?
+  biography   String?
+
+  presenceId Int?
+  presence   MapPresence? @relation(fields: [presenceId], references: [id])
 
   sessionsMade         LPSession[]
   sessionParticipating LPSessionParticipation[]
   swipesMade           Swipe[]                  @relation("swipesMade")
   swipesReceived       Swipe[]                  @relation("swipesReceived")
+  spotifyDisplay       MusicDisplay?
+
+  notificationsSent     Notification[] @relation("notificationsSent")
+  notificationsReceived Notification[] @relation("notificationsReceived")
+
+  @@unique([ownerId, profileOwnerIndex])
 }
 
-model LPSessionParticipation {
+model MusicDisplay {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int     @unique
+}
+
+model LPSessionParticipation {
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  status SessionRequestStatus
 
   participantId Int
   participant   Profile @relation(fields: [participantId], references: [id])
@@ -72,7 +91,13 @@ model LPSessionParticipation {
   sessionId Int
   session   LPSession @relation(fields: [sessionId], references: [id])
 
-  @@unique([participantId, sessionId])
+  @@id([participantId, sessionId])
+}
+
+enum SessionRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
 }
 
 model LPSession {
@@ -90,17 +115,10 @@ model LPSession {
   participants LPSessionParticipation[]
 }
 
-model LPSessionRequest {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
-
-  // TODO
-}
-
 model Swipe {
-  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+
+  type SwipeType
 
   swiperId Int
   swiper   Profile @relation("swipesMade", fields: [swiperId], references: [id])
@@ -108,5 +126,22 @@ model Swipe {
   swipeeId Int
   swipee   Profile @relation("swipesReceived", fields: [swipeeId], references: [id])
 
-  @@unique([swiperId, swipeeId])
+  @@id([swiperId, swipeeId])
+}
+
+enum SwipeType {
+  POSITIVE
+  NEGATIVE
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  sender   Profile? @relation("notificationsSent", fields: [senderId], references: [id])
+  senderId Int?
+
+  recipient   Profile @relation("notificationsReceived", fields: [recipientId], references: [id])
+  recipientId Int
 }

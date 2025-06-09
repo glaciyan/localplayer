@@ -14,14 +14,14 @@ export class SessionService {
         this.handler = handler;
     }
 
-    async createSession(username: string) {
+    async createSession(userId: number) {
         const buffer = new Uint8Array(16);
         const random = crypto.getRandomValues(buffer);
         const sessionToken = base64url.default(Buffer.from(random));
 
         const expiresOn = addSeconds(new Date(), MAX_SESSION_LENGTH);
 
-        await this.handler.createSession(sessionToken, username, expiresOn);
+        await this.handler.createSession(sessionToken, userId, expiresOn);
         return { sessionToken, expiresOn };
     }
 

@@ -19,11 +19,11 @@ export class SessionRepository implements ISessionHandler {
 
     async createSession(
         secureId: string,
-        username: string,
+        userId: number,
         validUntil: Date
     ): Promise<Session> {
         const Session = await prisma.authSession.create({
-            data: { secureId, username, validUntil },
+            data: { secureId, userId, validUntil },
         });
 
         return Session;

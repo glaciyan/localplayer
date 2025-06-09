@@ -8,28 +8,27 @@ const log = mklog("user-api");
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
-    .get(
-        "/:id",
-        async ({ params: { id }, user }) => {
-            log.http(`Get user request from user ${user.username}`);
-            const requestedUser = await userController.getPublicUser(id);
-            if (requestedUser === null) {
-                return status(404, "User Not Found");
-            }
+    // .get(
+    //     "/:id",
+    //     async ({ params: { id }, user }) => {
+    //         log.http(`Get user request from user ${user.username}`);
+    //         const requestedUser = await userController.getPublicUser(id);
+    //         if (requestedUser === null) {
+    //             return status(404, "User Not Found");
+    //         }
 
-            return requestedUser;
-        },
-        {
-            cookie: "session",
-            requireSession: true,
-        }
-    )
-    // TODO this point can be attacked, add rate limiting
+    //         return requestedUser;
+    //     },
+    //     {
+    //         cookie: "session",
+    //         requireSession: true,
+    //     }
+    // )
     .post(
         "/signup",
         async ({ body }) => {
-            await userController.register(body.name, body.password);
-            return status(200);
+            const success = await userController.register(body.name, body.password);
+            return status(success ? 200 : 500);
         },
         {
             body: "userAuth",
@@ -64,7 +63,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             }
 
             const { sessionToken, expiresOn } = await sessionController.createSession(
-                goodLogin.username
+                goodLogin.id
             );
 
             // set cookie

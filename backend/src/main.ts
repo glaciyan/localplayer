@@ -8,6 +8,7 @@ import { UNAUTHORIZED } from "./errors.ts";
 import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
+import { ProfileEndpoint } from "./profile/ProfileEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");
@@ -77,6 +78,7 @@ const main = async () => {
         .use(swagger(swaggerConfig))
         .use(AuthService)
         .use(UserEndpoint)
+        .use(ProfileEndpoint)
         .use(cors()) // TODO make stricter for production
         .listen(PORT);
 
