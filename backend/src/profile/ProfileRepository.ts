@@ -12,7 +12,7 @@ export class ProfileRepository {
             },
             include: {
                 fakePresence: { omit: { id: true } },
-                presence: { omit: { id: true } },
+                realPresence: { omit: { id: true } },
             },
         });
     }
@@ -24,7 +24,7 @@ export class ProfileRepository {
             },
             include: {
                 fakePresence: { omit: { id: true } },
-                presence: { omit: { id: true } },
+                realPresence: { omit: { id: true } },
             },
         });
 

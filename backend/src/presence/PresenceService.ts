@@ -26,19 +26,8 @@ export class PresenceService {
         return { lat, lng };
     }
 
-    async getPresence(id: number, fakePresenceId: number | null) {
-        const out = await this.handler.getPresence(id, fakePresenceId);
-
-        return {
-            real: {
-                latitude: out?.real.latitude,
-                longitude: out?.real.longitude,
-            },
-            fake: {
-                latitude: out?.fake?.latitude,
-                longitude: out?.fake?.longitude,
-            },
-        };
+    async getPresence(realPresenceId: number, fakePresenceId: number | null) {
+        return await this.handler.getPresence(realPresenceId, fakePresenceId);
     }
 
     async updatePresence(
@@ -77,54 +66,32 @@ export class PresenceService {
 
         const { lat, lng } = this.convertCoords(latitude, longitude);
 
-        if (profile.presenceId) {
-            const out = await this.updatePresence(
-                profile.presenceId,
+        if (profile.realPresenceId) {
+            return await this.updatePresence(
+                profile.realPresenceId,
                 profile.fakePresenceId,
                 latitude,
                 longitude,
                 fakingRadiusMeters
             );
-
-            return {
-                real: {
-                    latitude: out?.real.latitude,
-                    longitude: out?.real.longitude,
-                },
-                fake: {
-                    latitude: out?.fake?.latitude,
-                    longitude: out?.fake?.longitude,
-                },
-            };
         } else {
-            const out = await this.handler.createPresenceForProfile(
+            return await this.handler.createPresenceForProfile(
                 profileId,
                 lat,
                 lng,
                 this.handler.decimal(fakingRadiusMeters)
             );
-
-            return {
-                real: {
-                    latitude: out?.presence?.latitude,
-                    longitude: out?.presence?.longitude,
-                },
-                fake: {
-                    latitude: out?.fakePresence?.latitude,
-                    longitude: out?.fakePresence?.longitude,
-                },
-            };
         }
     }
 
     async removeProfilePresence(profileId: number) {
         const profile = await profileController.getPublicProfile(profileId);
-        if (!profile || !profile.presenceId) {
+        if (!profile || !profile.realPresenceId) {
             return false;
         }
 
         return await this.deletePresence(
-            profile.presenceId,
+            profile.realPresenceId,
             profile.fakePresenceId
         );
     }
@@ -140,16 +107,6 @@ export class PresenceService {
 
         const profiles = await this.handler.getProfilesInArea(lat, lng, rad);
 
-        return profiles.map((profile) => ({
-            id: profile.id,
-            handle: profile.handle,
-            displayName: profile.displayName,
-            biography: profile.biography,
-            createdAt: profile.createdAt,
-            presence: {
-                latitude: profile.fakePresence?.latitude,
-                longitude: profile.fakePresence?.longitude,
-            },
-        }));
+        return profiles;
     }
 }

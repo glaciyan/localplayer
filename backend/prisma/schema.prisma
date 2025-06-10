@@ -55,8 +55,8 @@ model Profile {
   displayName String?
   biography   String?
 
-  presenceId Int?
-  presence   MapPresence? @relation("realPresence", fields: [presenceId], references: [id])
+  realPresenceId Int? @map("presenceId")
+  realPresence   MapPresence? @relation("realPresence", fields: [realPresenceId], references: [id])
 
   fakePresenceId Int?
   fakePresence   MapPresence? @relation("fakePresence", fields: [fakePresenceId], references: [id])

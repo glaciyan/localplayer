@@ -7,19 +7,19 @@ const log = mklog("presence-repo");
 export type CDecimal = Decimal;
 
 export class PresenceRepository {
-    async getPresence(id: number, fakePresenceId: number | null) {
-        const real = await prisma.mapPresence.findUnique({ where: { id: id } });
-        if (real === null) {
+    async getPresence(realPresenceId: number, fakePresenceId: number | null) {
+        const realPresence = await prisma.mapPresence.findUnique({ where: { id: realPresenceId } });
+        if (realPresence === null) {
             throw "Constraint Error: Real Coordinate was not found";
         }
 
         if (fakePresenceId) {
-            const fake = await prisma.mapPresence.findUnique({
+            const fakePresence = await prisma.mapPresence.findUnique({
                 where: { id: fakePresenceId },
             });
-            return { real, fake };
+            return { realPresence, fakePresence };
         }
-        return { real, fake: null };
+        return { realPresence, fakePresence: null };
     }
 
     decimal(value: string): CDecimal {
@@ -67,7 +67,7 @@ export class PresenceRepository {
                 id: profileId,
             },
             data: {
-                presence: {
+                realPresence: {
                     create: {
                         latitude: latitude,
                         longitude: longitude,
@@ -82,7 +82,7 @@ export class PresenceRepository {
                 },
             },
             include: {
-                presence: true,
+                realPresence: true,
                 fakePresence: true,
             },
         });
@@ -98,7 +98,7 @@ export class PresenceRepository {
         noiseRadiusMeters: CDecimal
     ) {
         try {
-            const real = await prisma.mapPresence.update({
+            const realPresence = await prisma.mapPresence.update({
                 where: { id: id },
                 data: {
                     latitude: latitude,
@@ -107,7 +107,7 @@ export class PresenceRepository {
             });
 
             if (fakeId !== null) {
-                const fake = await prisma.mapPresence.update({
+                const fakePresence = await prisma.mapPresence.update({
                     where: { id: fakeId },
                     data: this.addNoiseToCoordinates(
                         latitude,
@@ -116,10 +116,10 @@ export class PresenceRepository {
                     ),
                 });
 
-                return { real, fake };
+                return { realPresence, fakePresence };
             }
 
-            return { real, fake: null };
+            return { realPresence, fakePresence: null };
         } catch (error) {
             return null;
         }
@@ -152,7 +152,7 @@ export class PresenceRepository {
     ) {
         const profilesWithPresence = await prisma.profile.findMany({
             where: {
-                presenceId: {
+                realPresenceId: {
                     not: null,
                 },
             },

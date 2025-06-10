@@ -2,8 +2,41 @@ import { Elysia, status, t } from "elysia";
 import presenceController from "./presence.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
+import { Decimal } from "@prisma/client/runtime/client";
+import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 
 const log = mklog("presence-api");
+
+type Presence = {
+    realPresence: {
+        id: number;
+        latitude: Decimal;
+        longitude: Decimal;
+    } | null;
+    fakePresence: {
+        id: number;
+        latitude: Decimal;
+        longitude: Decimal;
+    } | null;
+};
+
+export const PresenceDTOMapWithPrivate = (p: Presence) => ({
+    real: {
+        latitude: p?.realPresence?.latitude,
+        longitude: p?.realPresence?.longitude,
+    },
+    fake: {
+        latitude: p?.fakePresence?.latitude,
+        longitude: p?.fakePresence?.longitude,
+    },
+});
+
+export const PresenceDTOMap = (p: Presence) => ({
+    precense: {
+        latitude: p?.fakePresence?.latitude,
+        longitude: p?.fakePresence?.longitude,
+    },
+});
 
 export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
     .use(AuthService)
@@ -26,16 +59,16 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 `Get current presence request from user ${user.username} for profile ${profile.id}`
             );
 
-            if (!profile.presenceId) {
+            if (!profile.realPresenceId) {
                 return status(404, "No presence set for this profile");
             }
 
             const presence = await presenceController.getPresence(
-                profile.presenceId,
+                profile.realPresenceId,
                 profile.fakePresenceId
             );
 
-            return presence;
+            return PresenceDTOMapWithPrivate(presence);
         },
         {
             cookie: "session",
@@ -60,7 +93,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 return status(500, "Failed to set presence");
             }
 
-            return presence;
+            return PresenceDTOMapWithPrivate(presence);
         },
         {
             cookie: "session",
@@ -105,7 +138,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 radiusKm
             );
 
-            return { profiles: profiles };
+            return profiles.map((p) => ProfileDTOMap(p));
         },
         {
             cookie: "session",

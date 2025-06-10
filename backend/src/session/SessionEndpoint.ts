@@ -3,8 +3,6 @@ import { AuthService } from "../authentication/AuthService.ts";
 import lpsessionController from "./session.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 
-
-
 const SessionDTOMap = (session: any) => ({
     id: session.id,
     createdAt: session.createdAt,
@@ -15,17 +13,11 @@ const SessionDTOMap = (session: any) => ({
         latitude: session.presence.latitude,
         longitude: session.presence.longitude,
     },
-    creator: {
-        createdAt: session.creator.createdAt,
-        handle: session.creator.handle,
-        displayName: session.creator.displayName,
-        biography: session.creator.biography,
-        presence: {
-            latitude: session.creator.fakePresence?.latitude,
-            longitude: session.creator.fakePresence?.longitude,
-        },
-    },
-    participations: session.participants.map((p: any) => ({ status: p.status, participant: ProfileDTOMap(p.participant) })),
+    creator: ProfileDTOMap(session.creator),
+    participations: session.participants.map((p: any) => ({
+        status: p.status,
+        participant: ProfileDTOMap(p.participant),
+    })),
 });
 
 export const SessionEndpoint = new Elysia({ prefix: "session" }) //
