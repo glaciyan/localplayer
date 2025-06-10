@@ -4,7 +4,7 @@ import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { Decimal } from "@prisma/client/runtime/client";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
-import { SessionDTOMap, SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
+import { SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
 
 const log = mklog("presence-api");
 
