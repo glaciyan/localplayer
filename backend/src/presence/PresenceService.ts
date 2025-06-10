@@ -18,16 +18,39 @@ export class PresenceService {
         }
     }
 
-    async getPresence(id: number) {
-        return await this.handler.getPresence(id);
+    async getPresence(id: number, fakePresenceId: number | null) {
+        const out = await this.handler.getPresence(id, fakePresenceId);
+
+        return {
+            real: {
+                latitude: out?.real.latitude,
+                longitude: out?.real.longitude,
+            },
+            fake: {
+                latitude: out?.fake?.latitude,
+                longitude: out?.fake?.longitude,
+            },
+        };
     }
 
-    async updatePresence(id: number, fakeId: number | null, latitude: string, longitude: string, radiusMeters: string) {
+    async updatePresence(
+        id: number,
+        fakeId: number | null,
+        latitude: string,
+        longitude: string,
+        radiusMeters: string
+    ) {
         const lat = this.handler.decimal(latitude);
         const lng = this.handler.decimal(longitude);
         this.validateCoords(lat, lng);
 
-        return await this.handler.updatePresence(id, fakeId, lat, lng, this.handler.decimal(radiusMeters));
+        return await this.handler.updatePresence(
+            id,
+            fakeId,
+            lat,
+            lng,
+            this.handler.decimal(radiusMeters)
+        );
     }
 
     async deletePresence(id: number, fakePresenceId: number | null) {
@@ -67,8 +90,8 @@ export class PresenceService {
                 fake: {
                     latitude: out?.fake?.latitude,
                     longitude: out?.fake?.longitude,
-                }
-            }
+                },
+            };
         } else {
             const out = await this.handler.createPresenceForProfile(
                 profileId,
@@ -85,8 +108,8 @@ export class PresenceService {
                 fake: {
                     latitude: out?.fakePresence?.latitude,
                     longitude: out?.fakePresence?.longitude,
-                }
-            }
+                },
+            };
         }
     }
 
@@ -96,7 +119,10 @@ export class PresenceService {
             return false;
         }
 
-        return await this.deletePresence(profile.presenceId, profile.fakePresenceId);
+        return await this.deletePresence(
+            profile.presenceId,
+            profile.fakePresenceId
+        );
     }
 
     async getProfilesInArea(

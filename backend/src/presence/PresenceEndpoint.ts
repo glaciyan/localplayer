@@ -31,16 +31,11 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             }
 
             const presence = await presenceController.getPresence(
-                profile.presenceId
+                profile.presenceId,
+                profile.fakePresenceId
             );
-            if (!presence) {
-                return status(404, "Presence not found");
-            }
 
-            return {
-                latitude: presence.latitude,
-                longitude: presence.longitude,
-            };
+            return presence;
         },
         {
             cookie: "session",
@@ -110,7 +105,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 radiusKm
             );
 
-            return profiles;
+            return { profiles: profiles };
         },
         {
             cookie: "session",

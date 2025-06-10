@@ -42,7 +42,6 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 const session = await sessionController.getSession(id.value);
                 // user could have a session id cookie but we have restarted our server
                 if (session) {
-                    // TODO refresh session
                     log.http(
                         `Session ${id.value} (user: ${session.user.username}) tried logging in but was already logged on`
                     );

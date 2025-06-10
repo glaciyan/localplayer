@@ -10,6 +10,7 @@ import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
 import { ProfileEndpoint } from "./profile/ProfileEndpoint.ts";
 import { PresenceEndpoint } from "./presence/PresenceEndpoint.ts";
+import { SessionEndpoint } from "./session/SessionEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");
@@ -81,7 +82,8 @@ const main = async () => {
         .use(UserEndpoint)
         .use(ProfileEndpoint)
         .use(PresenceEndpoint)
-        .use(cors()) // TODO make stricter for production
+        .use(SessionEndpoint)
+        .use(cors())
         .listen(PORT);
 
     log.info(`Elysia server running on port ${PORT}`);

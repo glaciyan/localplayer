@@ -1,6 +1,5 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
-import { MapPresence } from "../generated/prisma/client.ts";
 import { mklog } from "../logger.ts";
 
 const log = mklog("presence-repo");
@@ -8,8 +7,19 @@ const log = mklog("presence-repo");
 export type CDecimal = Decimal;
 
 export class PresenceRepository {
-    async getPresence(id: number): Promise<MapPresence | null> {
-        return await prisma.mapPresence.findUnique({ where: { id: id } });
+    async getPresence(id: number, fakePresenceId: number | null) {
+        const real = await prisma.mapPresence.findUnique({ where: { id: id } });
+        if (real === null) {
+            throw "Constraint Error: Real Coordinate was not found";
+        }
+
+        if (fakePresenceId) {
+            const fake = await prisma.mapPresence.findUnique({
+                where: { id: fakePresenceId },
+            });
+            return { real, fake };
+        }
+        return { real, fake: null };
     }
 
     decimal(value: string): CDecimal {
