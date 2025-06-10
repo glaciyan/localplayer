@@ -4,7 +4,7 @@ import { mklog } from "./logger.ts";
 import { UserEndpoint } from "./user/UserEndpoint.ts";
 import { AuthService } from "./authentication/AuthService.ts";
 import { swaggerConfig } from "./swagger.ts";
-import { UNAUTHORIZED } from "./errors.ts";
+import { CustomValidationError, UNAUTHORIZED } from "./errors.ts";
 import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
@@ -22,6 +22,9 @@ const main = async () => {
 
     new Elysia() //
         .use(SessionCleanCrontab)
+        .error({
+            CustomValidationError,
+        })
         .onError(({ error, code, path }) => {
             if (code === "INTERNAL_SERVER_ERROR") {
                 error_handling.error(
@@ -32,6 +35,13 @@ const main = async () => {
                     }
                 );
                 return status(500);
+            }
+
+            if (code === "CustomValidationError") {
+                return status(422, {
+                    type: "VALIDATION",
+                    message: error.message,
+                });
             }
 
             if (code === "VALIDATION") {

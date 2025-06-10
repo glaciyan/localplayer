@@ -1,3 +1,4 @@
+import { CustomValidationError } from "../errors.ts";
 import profileController from "../profile/profile.ts";
 import { CDecimal, PresenceRepository } from "./PresenceRepository.ts";
 
@@ -10,11 +11,11 @@ export class PresenceService {
 
     private validateCoords(lat: CDecimal, lng: CDecimal) {
         if (lat.lessThan(-90) || lat.greaterThan(90)) {
-            throw "Invalid latitude";
+            throw new CustomValidationError("latitude is out of range");
         }
 
-        if (lng.lessThan(-180) || lat.greaterThan(180)) {
-            throw "Invalid longitude";
+        if (lng.lessThan(-180) || lng.greaterThan(180)) {
+            throw new CustomValidationError("longitude is out of range");
         }
     }
 
@@ -132,9 +133,9 @@ export class PresenceService {
     ) {
         const lat = this.handler.decimal(latitude);
         const lng = this.handler.decimal(longitude);
-        const rad = this.handler.decimal(radiusKm);
-
         this.validateCoords(lat, lng);
+
+        const rad = this.handler.decimal(radiusKm);
 
         const profiles = await this.handler.getProfilesInArea(lat, lng, rad);
 
