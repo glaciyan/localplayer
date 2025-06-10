@@ -60,7 +60,7 @@ export const AuthService = new Elysia() //
                     return status(401, UNAUTHORIZED);
                 }
 
-                const profileIndex = headers["x-profile-index"];
+                const profileIndex = headers["x-profile-index"] || "0";
 
                 if (!profileIndex) {
                     log.http(
@@ -87,14 +87,14 @@ export const AuthService = new Elysia() //
                 );
                 if (profile === null) {
                     log.http(`Profile ${index_parsed} not found`);
-                    return status(403, "Profile Not Found");
+                    return status(403, UNAUTHORIZED);
                 }
 
                 if (profile.ownerId !== session.user.id) {
                     log.http(
                         `User ${session.user.username} attempted to access profile ${index_parsed} owned by user ${profile.ownerId}`
                     );
-                    return status(403, "Access denied");
+                    return status(403, UNAUTHORIZED);
                 }
 
                 return {
