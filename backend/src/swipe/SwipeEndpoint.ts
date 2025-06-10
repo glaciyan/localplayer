@@ -45,6 +45,9 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
                 swipeeId: t.Number(),
                 rating: t.Enum(RatingOptions),
             }),
+            detail: {
+                description: "Rate another user using swipe, set rating to either `good` or `bad`."
+            }
         }
     )
     .get(
@@ -58,5 +61,8 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get a list of profiles for the swiping cards."
+            }
         }
     );

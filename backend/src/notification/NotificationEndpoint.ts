@@ -11,7 +11,9 @@ export const NotificationDTOMap = (notif: any) => ({
     message: notif.message,
     read: notif.read,
     sender: ProfileDTOMap(notif.sender),
-    session: notif.session ? SessionDTOMapWithoutParticipants(notif.session) : null
+    session: notif.session
+        ? SessionDTOMapWithoutParticipants(notif.session)
+        : null,
 });
 
 export const NotificationEndpoint = new Elysia({ prefix: "notification" }) //
@@ -27,5 +29,8 @@ export const NotificationEndpoint = new Elysia({ prefix: "notification" }) //
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get all your notifications.",
+            },
         }
     );

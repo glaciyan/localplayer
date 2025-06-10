@@ -30,6 +30,10 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
         {
             cookie: "session",
             requireSession: true,
+            detail: {
+                description:
+                    "Get all your registered profiles, in case multi-profiles are used.",
+            },
         }
     )
     .get(
@@ -43,6 +47,9 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get your current profile.",
+            },
         }
     )
     .get(
@@ -67,6 +74,9 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
         {
             cookie: "session",
             requireSession: true,
+            detail: {
+                description: "Get info about a public profile.",
+            },
         }
     )
     .patch(
@@ -95,5 +105,8 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 displayName: t.Optional(t.String()),
                 biography: t.Optional(t.String()),
             }),
+            detail: {
+                description: "Edit your current profile.",
+            },
         }
     );

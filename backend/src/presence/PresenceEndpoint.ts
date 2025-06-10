@@ -74,6 +74,9 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get your current location.",
+            },
         }
     )
     .post(
@@ -100,6 +103,10 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             cookie: "session",
             requireProfile: true,
             body: "presenceLocation",
+            detail: {
+                description:
+                    "Change your current location. This will return both real and fake location, a user can send this endpoint multiple times to choose their fake location.",
+            },
         }
     )
     .delete(
@@ -122,6 +129,9 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Delete your current location.",
+            },
         }
     )
     .get(
@@ -147,12 +157,18 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
 
             return {
                 profiles: profiles.map((p) => ProfileDTOMap(p)),
-                sessions: sessions.map((s) => SessionDTOMapWithoutParticipants(s)),
+                sessions: sessions.map((s) =>
+                    SessionDTOMapWithoutParticipants(s)
+                ),
             };
         },
         {
             cookie: "session",
             requireSession: true,
             query: "areaQuery",
+            detail: {
+                description:
+                    "List all nearby Profiles and Sessions in a radius.",
+            },
         }
     );

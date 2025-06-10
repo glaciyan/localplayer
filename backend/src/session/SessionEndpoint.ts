@@ -64,6 +64,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             cookie: "session",
             requireProfile: true,
             body: "sessionParams",
+            detail: {
+                description: "Create a Session.",
+            },
         }
     )
     .get(
@@ -82,15 +85,15 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             params: t.Object({
                 id: t.Number(),
             }),
+            detail: {
+                description: "Get a session by it's ID.",
+            },
         }
     )
     .post(
         "/:id/join",
         async ({ params: { id }, profile }) => {
-            const request = await lpsessionController.joinSession(
-                id,
-                profile
-            );
+            const request = await lpsessionController.joinSession(id, profile);
             return request;
         },
         {
@@ -99,6 +102,10 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             params: t.Object({
                 id: t.Number(),
             }),
+            detail: {
+                description:
+                    "Join a Session. If it's an open session you are automatically in, otherwise you send a request to join.",
+            },
         }
     )
     .get(
@@ -119,6 +126,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get all incoming requests to join your sessions.",
+            },
         }
     )
     .get(
@@ -138,6 +148,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
         {
             cookie: "session",
             requireProfile: true,
+            detail: {
+                description: "Get all join requests that you have sent.",
+            },
         }
     )
     .post(
@@ -171,6 +184,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 sessionId: t.Number(),
                 accept: t.Boolean(),
             }),
+            detail: {
+                description: "Send a response to a join request.",
+            },
         }
     )
     .post(
@@ -195,5 +211,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             params: t.Object({
                 id: t.Number(),
             }),
+            detail: {
+                description:
+                    "Conclude/Close a session and prevent anyone else from joining.",
+            },
         }
     );
