@@ -4,15 +4,19 @@ meta {
   seq: 3
 }
 
-get {
+post {
   url: {{host}}/user/signup
   body: json
   auth: none
 }
 
+headers {
+  secret: {{open_secret}}
+}
+
 body:json {
   {
-    "name": "user123",
+    "name": "user123123",
     "password": "asdfasdf"
   }
 }

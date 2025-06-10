@@ -8,7 +8,9 @@ export type CDecimal = Decimal;
 
 export class PresenceRepository {
     async getPresence(realPresenceId: number, fakePresenceId: number | null) {
-        const realPresence = await prisma.mapPresence.findUnique({ where: { id: realPresenceId } });
+        const realPresence = await prisma.mapPresence.findUnique({
+            where: { id: realPresenceId },
+        });
         if (realPresence === null) {
             throw "Constraint Error: Real Coordinate was not found";
         }
@@ -177,6 +179,41 @@ export class PresenceRepository {
         });
 
         return profilesInArea;
+    }
+
+    async getSessionsInArea(
+        latitude: CDecimal,
+        longitude: CDecimal,
+        radiusKm: CDecimal
+    ) {
+        const activeSessions = await prisma.lPSession.findMany({
+            where: {
+                status: {
+                    not: "CONCLUDED",
+                },
+            },
+            include: {
+                presence: true,
+                creator: {
+                    include: {
+                        fakePresence: true,
+                    },
+                },
+            },
+        });
+
+        const sessionsInArea = activeSessions.filter((session) => {
+            const distance = this.calculateDistance(
+                latitude,
+                longitude,
+                session.presence.latitude,
+                session.presence.longitude
+            );
+
+            return distance.lessThan(radiusKm);
+        });
+
+        return sessionsInArea;
     }
 
     private calculateDistance(

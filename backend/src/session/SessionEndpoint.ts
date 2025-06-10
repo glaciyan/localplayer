@@ -2,8 +2,12 @@ import { Elysia, status, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import lpsessionController from "./session.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
+import { UNAUTHORIZED } from "../errors.ts";
+import { mklog } from "../logger.ts";
 
-const SessionDTOMap = (session: any) => ({
+const log = mklog("lpsession");
+
+export const SessionDTOMap = (session: any) => ({
     id: session.id,
     createdAt: session.createdAt,
     updateAt: session.updateAt,
@@ -18,6 +22,19 @@ const SessionDTOMap = (session: any) => ({
         status: p.status,
         participant: ProfileDTOMap(p.participant),
     })),
+});
+
+export const SessionDTOMapWithoutParticipants = (session: any) => ({
+    id: session.id,
+    createdAt: session.createdAt,
+    updateAt: session.updateAt,
+    status: session.status,
+    name: session.name,
+    presence: {
+        latitude: session.presence.latitude,
+        longitude: session.presence.longitude,
+    },
+    creator: ProfileDTOMap(session.creator),
 });
 
 export const SessionEndpoint = new Elysia({ prefix: "session" }) //
@@ -106,11 +123,52 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
     )
     .get(
         "requests/sent",
-        async () => {
-            //
+        async ({ profile }) => {
+            const requests = await lpsessionController.getSentRequests(
+                profile.id
+            );
+
+            return requests.map((r) => ({
+                createdAt: r.createdAt,
+                status: r.status,
+                participantId: r.participantId,
+                sessionId: r.sessionId,
+            }));
         },
         {
             cookie: "session",
             requireProfile: true,
+        }
+    )
+    .post(
+        "requests/respond",
+        async ({ profile, body: { participantId, sessionId, accept } }) => {
+            const session = await lpsessionController.getSession(sessionId);
+
+            if (!session) {
+                log.http(`could not find session with id ${sessionId}`);
+                return status(404);
+            }
+
+            if (session.creatorId !== profile.id) {
+                return status(403, UNAUTHORIZED);
+            }
+
+            const request = await lpsessionController.respondRequest(
+                participantId,
+                sessionId,
+                accept
+            );
+
+            return request;
+        },
+        {
+            cookie: "session",
+            requireProfile: true,
+            body: t.Object({
+                participantId: t.Number(),
+                sessionId: t.Number(),
+                accept: t.Boolean(),
+            }),
         }
     );

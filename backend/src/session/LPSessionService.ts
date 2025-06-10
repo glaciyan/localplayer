@@ -125,4 +125,33 @@ export class LPSessionService {
 
         return session;
     }
+
+    async getSentRequests(profileId: number) {
+        const session = await prisma.lPSessionParticipation.findMany({
+            where: {
+                participantId: profileId,
+                // status: "PENDING",
+            },
+            include: {
+                participant: ParticipantInclude,
+            },
+        });
+
+        return session;
+    }
+
+    async respondRequest(
+        participantId: number,
+        sessionId: number,
+        accept: boolean
+    ) {
+        const participation = await prisma.lPSessionParticipation.update({
+            where: { participantId_sessionId: { participantId, sessionId } },
+            data: {
+                status: accept ? "ACCEPTED" : "DECLINED",
+            },
+        });
+
+        return participation;
+    }
 }

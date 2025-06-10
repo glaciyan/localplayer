@@ -109,4 +109,18 @@ export class PresenceService {
 
         return profiles;
     }
+
+    async getSessionsInArea(
+        latitude: string,
+        longitude: string,
+        radiusKm: string
+    ) {
+        const { lat, lng } = this.convertCoords(latitude, longitude);
+
+        const rad = this.handler.decimal(radiusKm);
+
+        const profiles = await this.handler.getSessionsInArea(lat, lng, rad);
+
+        return profiles;
+    }
 }

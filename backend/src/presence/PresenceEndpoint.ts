@@ -4,6 +4,7 @@ import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { Decimal } from "@prisma/client/runtime/client";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
+import { SessionDTOMap, SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
 
 const log = mklog("presence-api");
 
@@ -138,7 +139,16 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 radiusKm
             );
 
-            return profiles.map((p) => ProfileDTOMap(p));
+            const sessions = await presenceController.getSessionsInArea(
+                latitude,
+                longitude,
+                radiusKm
+            );
+
+            return {
+                profiles: profiles.map((p) => ProfileDTOMap(p)),
+                sessions: sessions.map((s) => SessionDTOMapWithoutParticipants(s)),
+            };
         },
         {
             cookie: "session",
