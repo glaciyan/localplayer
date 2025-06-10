@@ -35,8 +35,8 @@ export class ProfileService {
             biography: profile.biography,
             createdAt: profile.createdAt,
             presence: {
-                longitude: profile.presence?.longitude,
-                latitude: profile.presence?.latitude,
+                longitude: profile.fakePresence?.longitude,
+                latitude: profile.fakePresence?.latitude,
             }
         };
     }
