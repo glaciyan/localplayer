@@ -109,17 +109,26 @@ export class PresenceRepository {
                 return { real, fake };
             }
 
-            return { real };
+            return { real, fake: null };
         } catch (error) {
             return null;
         }
     }
 
-    async deletePresence(id: number): Promise<boolean> {
+    async deletePresence(
+        id: number,
+        fakePresenceId: number | null
+    ): Promise<boolean> {
         try {
             await prisma.mapPresence.delete({
                 where: { id: id },
             });
+
+            if (fakePresenceId) {
+                await prisma.mapPresence.delete({
+                    where: { id: fakePresenceId },
+                });
+            }
             return true;
         } catch (error) {
             return false;

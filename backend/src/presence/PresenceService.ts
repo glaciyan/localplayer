@@ -30,8 +30,8 @@ export class PresenceService {
         return await this.handler.updatePresence(id, fakeId, lat, lng, this.handler.decimal(radiusMeters));
     }
 
-    async deletePresence(id: number) {
-        return await this.handler.deletePresence(id);
+    async deletePresence(id: number, fakePresenceId: number | null) {
+        return await this.handler.deletePresence(id, fakePresenceId);
     }
 
     async setProfilePresence(
@@ -96,7 +96,7 @@ export class PresenceService {
             return false;
         }
 
-        return await this.deletePresence(profile.presenceId);
+        return await this.deletePresence(profile.presenceId, profile.fakePresenceId);
     }
 
     async getProfilesInArea(
