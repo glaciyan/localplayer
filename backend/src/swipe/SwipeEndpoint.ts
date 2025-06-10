@@ -3,7 +3,6 @@ import { AuthService } from "../authentication/AuthService.ts";
 import { swipeController } from "./swipe.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { notificationController } from "../notification/notification.ts";
-import { mklog } from "../logger.ts";
 
 enum RatingOptions {
     good = "good",

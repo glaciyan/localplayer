@@ -5,6 +5,7 @@ import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
 
 export const NotificationDTOMap = (notif: any) => ({
+    id: notif.id,
     createdAt: notif.createdAt,
     title: notif.title,
     message: notif.message,
