@@ -94,6 +94,8 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return requests.map((r) => ({
                 createdAt: r.createdAt,
                 status: r.status,
+                participantId: r.participantId,
+                sessionId: r.sessionId,
                 participant: ProfileDTOMap(r.participant),
             }));
         },
