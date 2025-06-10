@@ -10,9 +10,13 @@ post {
   auth: none
 }
 
+headers {
+  secret: {{open_secret}}
+}
+
 body:json {
   {
-    "name": "kevin",
+    "name": "user2",
     "password": "asdfasdf"
   }
 }

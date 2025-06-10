@@ -1,4 +1,4 @@
-import { Elysia, status } from "elysia";
+import { Elysia, status, t } from "elysia";
 import userController from "./user.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
@@ -6,37 +6,36 @@ import { sessionController } from "../authentication/session/session.ts";
 
 const log = mklog("user-api");
 
+const NOT_SO_SECRET_SECRET = "tF_LgyuKrvOMIwVBg8WMSw";
+
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
-    // .get(
-    //     "/:id",
-    //     async ({ params: { id }, user }) => {
-    //         log.http(`Get user request from user ${user.username}`);
-    //         const requestedUser = await userController.getPublicUser(id);
-    //         if (requestedUser === null) {
-    //             return status(404, "User Not Found");
-    //         }
-
-    //         return requestedUser;
-    //     },
-    //     {
-    //         cookie: "session",
-    //         requireSession: true,
-    //     }
-    // )
     .post(
         "/signup",
-        async ({ body }) => {
-            const success = await userController.register(body.name, body.password);
+        async ({ body, headers }) => {
+            if (headers.secret !== NOT_SO_SECRET_SECRET) {
+                return status(403);
+            }
+
+            const success = await userController.register(
+                body.name,
+                body.password
+            );
             return status(success ? 200 : 500);
         },
         {
             body: "userAuth",
+            headers: t.Object({
+                secret: t.String(),
+            }),
         }
     )
     .post(
         "/login",
-        async ({ body, cookie: { id } }) => {
+        async ({ headers, body, cookie: { id } }) => {
+            if (headers.secret !== NOT_SO_SECRET_SECRET) {
+                return status(403);
+            }
             // make sure user is not logged on
             if (id.value) {
                 const session = await sessionController.getSession(id.value);
@@ -61,9 +60,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 return status(401);
             }
 
-            const { sessionToken, expiresOn } = await sessionController.createSession(
-                goodLogin.id
-            );
+            const { sessionToken, expiresOn } =
+                await sessionController.createSession(goodLogin.id);
 
             // set cookie
             id.set({
@@ -83,6 +81,9 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         {
             body: "userAuth",
             cookie: "optionalSession",
+            headers: t.Object({
+                secret: t.String(),
+            }),
         }
     )
     .post(

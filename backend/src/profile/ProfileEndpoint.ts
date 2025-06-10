@@ -5,6 +5,17 @@ import { AuthService } from "../authentication/AuthService.ts";
 
 const log = mklog("profile-api");
 
+export const ProfileDTOMap = (p: any) => ({
+    createdAt: p.createdAt,
+    handle: p.handle,
+    displayName: p.displayName,
+    biography: p.biography,
+    presence: {
+        latitude: p.fakePresence?.latitude,
+        longitude: p.fakePresence?.longitude,
+    },
+});
+
 export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
     .use(AuthService)
     .get(
@@ -49,7 +60,7 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 return status(404, "Profile Not Found");
             }
 
-            return profile;
+            return ProfileDTOMap(profile);
         },
         {
             cookie: "session",

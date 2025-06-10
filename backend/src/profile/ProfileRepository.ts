@@ -2,10 +2,7 @@ import { prisma } from "../database.ts";
 import { Profile } from "../generated/prisma/client.ts";
 
 export class ProfileRepository {
-    async getProfileByOwner(
-        index: number,
-        ownerId: number
-    ) {
+    async getProfileByOwner(index: number, ownerId: number) {
         return await prisma.profile.findUnique({
             where: {
                 ownerId_profileOwnerIndex: {
@@ -14,7 +11,8 @@ export class ProfileRepository {
                 },
             },
             include: {
-                fakePresence: true,
+                fakePresence: { omit: { id: true } },
+                presence: { omit: { id: true } },
             },
         });
     }
@@ -25,7 +23,8 @@ export class ProfileRepository {
                 id,
             },
             include: {
-                fakePresence: true,
+                fakePresence: { omit: { id: true } },
+                presence: { omit: { id: true } },
             },
         });
 

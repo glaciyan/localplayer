@@ -9,7 +9,7 @@ export class PresenceService {
         this.handler = handler;
     }
 
-    private validateCoords(lat: CDecimal, lng: CDecimal) {
+    public validateCoords(lat: CDecimal, lng: CDecimal) {
         if (lat.lessThan(-90) || lat.greaterThan(90)) {
             throw new CustomValidationError("latitude is out of range");
         }
@@ -17,6 +17,13 @@ export class PresenceService {
         if (lng.lessThan(-180) || lng.greaterThan(180)) {
             throw new CustomValidationError("longitude is out of range");
         }
+    }
+
+    public convertCoords(latitude: string, longitude: string) {
+        const lat = this.handler.decimal(latitude);
+        const lng = this.handler.decimal(longitude);
+        this.validateCoords(lat, lng);
+        return { lat, lng };
     }
 
     async getPresence(id: number, fakePresenceId: number | null) {
@@ -41,9 +48,7 @@ export class PresenceService {
         longitude: string,
         radiusMeters: string
     ) {
-        const lat = this.handler.decimal(latitude);
-        const lng = this.handler.decimal(longitude);
-        this.validateCoords(lat, lng);
+        const { lat, lng } = this.convertCoords(latitude, longitude);
 
         return await this.handler.updatePresence(
             id,
@@ -65,14 +70,12 @@ export class PresenceService {
         fakingRadiusMeters: string
     ) {
         // Get current profile to check if it has a presence
-        const profile = await profileController.getFullPublicProfile(profileId);
+        const profile = await profileController.getPublicProfile(profileId);
         if (!profile) {
             return null;
         }
 
-        const lat = this.handler.decimal(latitude);
-        const lng = this.handler.decimal(longitude);
-        this.validateCoords(lat, lng);
+        const { lat, lng } = this.convertCoords(latitude, longitude);
 
         if (profile.presenceId) {
             const out = await this.updatePresence(
@@ -115,7 +118,7 @@ export class PresenceService {
     }
 
     async removeProfilePresence(profileId: number) {
-        const profile = await profileController.getFullPublicProfile(profileId);
+        const profile = await profileController.getPublicProfile(profileId);
         if (!profile || !profile.presenceId) {
             return false;
         }
@@ -131,9 +134,7 @@ export class PresenceService {
         longitude: string,
         radiusKm: string
     ) {
-        const lat = this.handler.decimal(latitude);
-        const lng = this.handler.decimal(longitude);
-        this.validateCoords(lat, lng);
+        const { lat, lng } = this.convertCoords(latitude, longitude);
 
         const rad = this.handler.decimal(radiusKm);
 

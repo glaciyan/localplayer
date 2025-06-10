@@ -1,0 +1,15 @@
+meta {
+  name: Get Session
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/session/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 1
+}

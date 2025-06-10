@@ -100,6 +100,7 @@ model LPSessionParticipation {
 enum SessionRequestStatus {
   PENDING
   ACCEPTED
+  OPEN_ACCEPTED
   DECLINED
 }
 
@@ -114,8 +115,15 @@ model LPSession {
   presenceId Int
   presence   MapPresence @relation(fields: [presenceId], references: [id])
 
-  status       String
+  status       LPSessionStatus
+  name         String
   participants LPSessionParticipation[]
+}
+
+enum LPSessionStatus {
+  OPEN
+  CLOSED
+  CONCLUDED
 }
 
 model Swipe {
