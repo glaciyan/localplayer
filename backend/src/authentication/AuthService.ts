@@ -6,7 +6,7 @@ import profileController from "../profile/profile.ts";
 
 const log = mklog("auth");
 
-const resolveSession = async (id: Cookie<string | undefined> | undefined) => {
+const resolveSession = async (id: Cookie<string | undefined> | undefined, request: Request) => {
     if (!id?.value) {
         log.http("No session was given");
         return false;
@@ -20,6 +20,8 @@ const resolveSession = async (id: Cookie<string | undefined> | undefined) => {
         log.http(`Session ${sessionId} was not found in the session store`);
         return false;
     }
+
+    log.http(`${session.user.id}:${session.user.username} ${request.method} ${request.url}`)
 
     return { user: session.user, sessionId: sessionId };
 };
@@ -43,8 +45,8 @@ export const AuthService = new Elysia() //
     })
     .macro({
         requireSession: {
-            async resolve({ status, cookie: { id } }) {
-                const session = await resolveSession(id);
+            async resolve({ status, cookie: { id }, request }) {
+                const session = await resolveSession(id, request);
                 if (session === false) {
                     return status(401, UNAUTHORIZED);
                 }
@@ -53,8 +55,8 @@ export const AuthService = new Elysia() //
             },
         },
         requireProfile: {
-            async resolve({ status, cookie: { id }, headers }) {
-                const session = await resolveSession(id);
+            async resolve({ status, cookie: { id }, headers, request }) {
+                const session = await resolveSession(id, request);
 
                 if (session === false) {
                     return status(401, UNAUTHORIZED);
@@ -77,10 +79,6 @@ export const AuthService = new Elysia() //
                     return status(400, "Invalid profile ID");
                 }
 
-                // Verify profile exists and belongs to user
-                log.http(
-                    `Looking for ownerId=${session.user.id} and index=${index_parsed}`
-                );
                 const profile = await profileController.getProfile(
                     session.user.id,
                     index_parsed
