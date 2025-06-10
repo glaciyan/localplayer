@@ -50,25 +50,44 @@ export class PresenceService {
         const lng = this.handler.decimal(longitude);
         this.validateCoords(lat, lng);
 
-        let presence;
         if (profile.presenceId) {
-            presence = await this.updatePresence(
+            const out = await this.updatePresence(
                 profile.presenceId,
                 profile.fakePresenceId,
                 latitude,
                 longitude,
                 fakingRadiusMeters
             );
+
+            return {
+                real: {
+                    latitude: out?.real.latitude,
+                    longitude: out?.real.longitude,
+                },
+                fake: {
+                    latitude: out?.fake?.latitude,
+                    longitude: out?.fake?.longitude,
+                }
+            }
         } else {
-            presence = await this.handler.createPresenceForProfile(
+            const out = await this.handler.createPresenceForProfile(
                 profileId,
                 lat,
                 lng,
                 this.handler.decimal(fakingRadiusMeters)
             );
-        }
 
-        return presence;
+            return {
+                real: {
+                    latitude: out?.presence?.latitude,
+                    longitude: out?.presence?.longitude,
+                },
+                fake: {
+                    latitude: out?.fakePresence?.latitude,
+                    longitude: out?.fakePresence?.longitude,
+                }
+            }
+        }
     }
 
     async removeProfilePresence(profileId: number) {
