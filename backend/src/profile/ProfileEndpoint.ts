@@ -10,10 +10,12 @@ export const ProfileDTOMap = (p: any) => ({
     handle: p.handle,
     displayName: p.displayName,
     biography: p.biography,
-    presence: {
-        latitude: p.fakePresence?.latitude,
-        longitude: p.fakePresence?.longitude,
-    },
+    presence: p.fakePresence
+        ? {
+              latitude: p.fakePresence?.latitude,
+              longitude: p.fakePresence?.longitude,
+          }
+        : null,
 });
 
 export const ProfileEndpoint = new Elysia({ prefix: "/profile" })

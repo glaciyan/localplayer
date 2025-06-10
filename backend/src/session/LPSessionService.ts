@@ -1,18 +1,20 @@
 import { prisma } from "../database.ts";
 import { CustomValidationError } from "../errors.ts";
+import { Profile } from "../generated/prisma/client.ts";
 import { LPSessionStatus } from "../generated/prisma/enums.ts";
 import { mklog } from "../logger.ts";
+import { notificationController } from "../notification/notification.ts";
 import presenceController from "../presence/presence.ts";
 
 const log = mklog("lpsession-controller");
 
-const ParticipantInclude = {
+export const ParticipantInclude = {
     include: {
         fakePresence: true,
     },
 } as const;
 
-const SessionIncludes = {
+export const SessionIncludes = {
     presence: {
         omit: {
             id: true,
@@ -72,12 +74,12 @@ export class LPSessionService {
         });
     }
 
-    async joinSession(id: number, profileId: number) {
+    async joinSession(id: number, profile: Profile) {
         const session = await prisma.lPSession.findUnique({
             where: {
                 id,
-                creatorId: { not: profileId },
-                participants: { none: { participantId: profileId } },
+                creatorId: { not: profile.id },
+                participants: { none: { participantId: profile.id } },
             },
         });
 
@@ -93,7 +95,7 @@ export class LPSessionService {
                 status: session.status === "OPEN" ? "OPEN_ACCEPTED" : "PENDING",
                 participant: {
                     connect: {
-                        id: profileId,
+                        id: profile.id,
                     },
                 },
                 session: {
@@ -102,6 +104,16 @@ export class LPSessionService {
                     },
                 },
             },
+        });
+
+        await notificationController.createNotification({
+            from: profile.id,
+            to: session.creatorId,
+            title: `${
+                profile.displayName || profile.handle
+            } has requested to join your session`,
+            message: null,
+            lpSessionId: session.id,
         });
 
         return {
@@ -143,7 +155,8 @@ export class LPSessionService {
     async respondRequest(
         participantId: number,
         sessionId: number,
-        accept: boolean
+        accept: boolean,
+        profile: Profile
     ) {
         const participation = await prisma.lPSessionParticipation.update({
             where: { participantId_sessionId: { participantId, sessionId } },
@@ -152,6 +165,25 @@ export class LPSessionService {
             },
         });
 
+        await notificationController.createNotification({
+            from: profile.id,
+            to: participantId,
+            title: `${
+                profile.displayName || profile.handle
+            } has accepted your request.`,
+            message: null,
+            lpSessionId: sessionId,
+        });
+
         return participation;
+    }
+
+    async closeSession(sessionId: number) {
+        return await prisma.lPSession.update({
+            where: { id: sessionId },
+            data: {
+                status: "CONCLUDED",
+            },
+        });
     }
 }

@@ -89,7 +89,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
         async ({ params: { id }, profile }) => {
             const request = await lpsessionController.joinSession(
                 id,
-                profile.id
+                profile
             );
             return request;
         },
@@ -157,7 +157,8 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             const request = await lpsessionController.respondRequest(
                 participantId,
                 sessionId,
-                accept
+                accept,
+                profile
             );
 
             return request;
@@ -169,6 +170,30 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 participantId: t.Number(),
                 sessionId: t.Number(),
                 accept: t.Boolean(),
+            }),
+        }
+    )
+    .post(
+        "/close/:id",
+        async ({ params: { id }, profile }) => {
+            const session = await lpsessionController.getSession(id);
+
+            if (!session) {
+                log.http(`could not find session with id ${id}`);
+                return status(404);
+            }
+
+            if (session.creatorId !== profile.id) {
+                return status(403, UNAUTHORIZED);
+            }
+
+            return await lpsessionController.closeSession(session.id);
+        },
+        {
+            cookie: "session",
+            requireProfile: true,
+            params: t.Object({
+                id: t.Number(),
             }),
         }
     );

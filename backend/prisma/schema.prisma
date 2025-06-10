@@ -55,7 +55,7 @@ model Profile {
   displayName String?
   biography   String?
 
-  realPresenceId Int? @map("presenceId")
+  realPresenceId Int?         @map("presenceId")
   realPresence   MapPresence? @relation("realPresence", fields: [realPresenceId], references: [id])
 
   fakePresenceId Int?
@@ -100,8 +100,9 @@ model LPSessionParticipation {
 enum SessionRequestStatus {
   PENDING
   ACCEPTED
-  OPEN_ACCEPTED
   DECLINED
+
+  OPEN_ACCEPTED
 }
 
 model LPSession {
@@ -118,6 +119,8 @@ model LPSession {
   status       LPSessionStatus
   name         String
   participants LPSessionParticipation[]
+
+  lpsessionnotif Notification[] @relation("lpsessionnotif")
 }
 
 enum LPSessionStatus {
@@ -148,7 +151,13 @@ enum SwipeType {
 model Notification {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
+
+  title   String
+  message String?
+  read    Boolean @default(false)
+
+  session   LPSession? @relation("lpsessionnotif", fields: [sessionId], references: [id])
+  sessionId Int?
 
   sender   Profile? @relation("notificationsSent", fields: [senderId], references: [id])
   senderId Int?

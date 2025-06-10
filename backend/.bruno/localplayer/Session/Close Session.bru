@@ -1,0 +1,15 @@
+meta {
+  name: Close Session
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{host}}/session/close/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 9
+}

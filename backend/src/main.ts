@@ -11,6 +11,8 @@ import { SessionCleanCrontab } from "./authentication/session/SessionCleanCronta
 import { ProfileEndpoint } from "./profile/ProfileEndpoint.ts";
 import { PresenceEndpoint } from "./presence/PresenceEndpoint.ts";
 import { SessionEndpoint } from "./session/SessionEndpoint.ts";
+import { SwipeEndpoint } from "./swipe/SwipeEndpoint.ts";
+import { NotificationEndpoint } from "./notification/NotificationEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");
@@ -39,7 +41,7 @@ const main = async () => {
 
             if (code === "CustomValidationError") {
                 return status(422, {
-                    type: "VALIDATION",
+                    type: "validation",
                     message: error.message,
                 });
             }
@@ -61,7 +63,10 @@ const main = async () => {
 
             if (code === "INVALID_FILE_TYPE") return;
 
-            if (code === "NOT_FOUND") return;
+            if (code === "NOT_FOUND") {
+                log.warn(`NOT_FOUND ${path}`);
+                return;
+            }
 
             if (code === "PARSE") return;
 
@@ -93,6 +98,8 @@ const main = async () => {
         .use(ProfileEndpoint)
         .use(PresenceEndpoint)
         .use(SessionEndpoint)
+        .use(SwipeEndpoint)
+        .use(NotificationEndpoint)
         .use(cors())
         .listen(PORT);
 
