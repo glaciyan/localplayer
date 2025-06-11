@@ -1,0 +1,19 @@
+meta {
+  name: Create/Edit Presence
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/presence/current
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "latitude": "300",
+    "longitude": "1",
+    "fakingRadiusMeters": "3000"
+  }
+}

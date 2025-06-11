@@ -1,0 +1,4 @@
+DATABASE_URL="file:./data/data.db"
+LOG_LEVEL=debug
+DB_LOG=false
+SERVER_PORT=3030

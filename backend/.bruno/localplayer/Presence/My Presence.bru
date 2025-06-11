@@ -1,0 +1,11 @@
+meta {
+  name: My Presence
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/presence/current
+  body: none
+  auth: inherit
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Accept Request
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{host}}/session/requests/respond
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "participantId": 2,
+    "sessionId": 15,
+    "accept": false
+  }
+}

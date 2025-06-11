@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------
+// Base Models for Basic functionality
+// ---------------------------------------------
+
+model User {
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  passwordHash String
+  Sessions     AuthSession[]
+  Profiles     Profile[]
+}
+
+model AuthSession {
+  id         Int      @id @default(autoincrement())
+  secureId   String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  validUntil DateTime
+}
+
+// ---------------------------------------------
+// LocalPlayer Models
+// ---------------------------------------------
+
+model MapPresence {
+  id          Int         @id @default(autoincrement())
+  Profile     Profile[]   @relation("realPresence")
+  ProfileFake Profile[]   @relation("fakePresence")
+  LPSession   LPSession[]
+
+  latitude  Decimal
+  longitude Decimal
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  owner             User @relation(fields: [ownerId], references: [id])
+  ownerId           Int
+  profileOwnerIndex Int
+
+  handle      String
+  displayName String?
+  biography   String?
+
+  realPresenceId Int?         @map("presenceId")
+  realPresence   MapPresence? @relation("realPresence", fields: [realPresenceId], references: [id])
+
+  fakePresenceId Int?
+  fakePresence   MapPresence? @relation("fakePresence", fields: [fakePresenceId], references: [id])
+
+  sessionsMade         LPSession[]
+  sessionParticipating LPSessionParticipation[]
+  swipesMade           Swipe[]                  @relation("swipesMade")
+  swipesReceived       Swipe[]                  @relation("swipesReceived")
+  spotifyDisplay       MusicDisplay?
+
+  notificationsSent     Notification[] @relation("notificationsSent")
+  notificationsReceived Notification[] @relation("notificationsReceived")
+
+  @@unique([ownerId, profileOwnerIndex])
+}
+
+model MusicDisplay {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int     @unique
+}
+
+model LPSessionParticipation {
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  status SessionRequestStatus
+
+  participantId Int
+  participant   Profile @relation(fields: [participantId], references: [id])
+
+  sessionId Int
+  session   LPSession @relation(fields: [sessionId], references: [id])
+
+  @@id([participantId, sessionId])
+}
+
+enum SessionRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+
+  OPEN_ACCEPTED
+}
+
+model LPSession {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  creator   Profile @relation(fields: [creatorId], references: [id])
+  creatorId Int
+
+  presenceId Int
+  presence   MapPresence @relation(fields: [presenceId], references: [id])
+
+  status       LPSessionStatus
+  name         String
+  participants LPSessionParticipation[]
+
+  lpsessionnotif Notification[] @relation("lpsessionnotif")
+}
+
+enum LPSessionStatus {
+  OPEN
+  CLOSED
+  CONCLUDED
+}
+
+model Swipe {
+  createdAt DateTime @default(now())
+
+  type SwipeType
+
+  swiperId Int
+  swiper   Profile @relation("swipesMade", fields: [swiperId], references: [id])
+
+  swipeeId Int
+  swipee   Profile @relation("swipesReceived", fields: [swipeeId], references: [id])
+
+  @@id([swiperId, swipeeId])
+}
+
+enum SwipeType {
+  POSITIVE
+  NEGATIVE
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  title   String
+  message String?
+  read    Boolean @default(false)
+
+  session   LPSession? @relation("lpsessionnotif", fields: [sessionId], references: [id])
+  sessionId Int?
+
+  sender   Profile? @relation("notificationsSent", fields: [senderId], references: [id])
+  senderId Int?
+
+  recipient   Profile @relation("notificationsReceived", fields: [recipientId], references: [id])
+  recipientId Int
+}
