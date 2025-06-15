@@ -60,7 +60,7 @@ class ProfileCard extends StatelessWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ProfileAvatar(avatarLink: profile.avatarLink, color: Colors.green),
+                                ProfileAvatar(avatarLink: profile.avatarLink, color: Colors.green, scale: 100,),
                                 SizedBox(width: 16,),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

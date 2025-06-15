@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 class ProfileAvatar extends StatelessWidget {
   final String avatarLink;
   final Color color;
+  final int scale;
+
 
   const ProfileAvatar({
     super.key,
+    required this.scale,
     required this.avatarLink,
     required this.color,
   });
@@ -14,8 +17,8 @@ class ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 100,
+      width: 200,
+      height: 200,
       decoration: BoxDecoration(
         color: Colors.green,
         shape: BoxShape.circle,

@@ -7,10 +7,9 @@ import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/go_router/router.dart';
 import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_block.dart';
-import 'package:localplayer/features/map/presentation/blocs/map_block.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
-
+import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
