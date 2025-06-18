@@ -10,6 +10,8 @@ import 'package:localplayer/features/feed/presentation/blocs/feed_block.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,12 +49,36 @@ class MyApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'localplayers',
           theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromRGBO(187, 158, 100, 100),
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Color.fromRGBO(186, 158, 99, 1)
+            ),
+          textTheme: TextTheme(
+            bodyLarge: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
+            bodyMedium: GoogleFonts.poppins(
+              fontSize: 16,
+              color: Colors.white
+            ),
+            bodySmall: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Colors.white
+            ),
+            titleMedium: GoogleFonts.poppins(
+              fontSize: 16,
+              color: Colors.white
+            ),
+            titleLarge: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
             ),
           ),
-          routerConfig: router,
+        ),
+        routerConfig: router,
         ),
       ),
     );
