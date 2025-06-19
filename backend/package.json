@@ -1,13 +1,15 @@
 {
     "name": "backend",
     "module": "src/main.ts",
+    "main": "./src/main.ts",
     "type": "module",
     "private": true,
     "version": "0.0.1",
     "scripts": {
         "compile": "bun build --compile --target=bun --outfile=server --minify-syntax --minify-whitespace ./src/main.ts",
         "typecheck": "tsc --noEmit",
-        "ci": "bunx prisma db push; bun ./src/main.ts"
+        "ci": "bunx prisma db push; bun ./src/main.ts",
+        "start": "bun run ./src/main.ts"
     },
     "devDependencies": {
         "@types/bun": "latest",
