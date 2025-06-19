@@ -6,7 +6,8 @@
     "version": "0.0.1",
     "scripts": {
         "compile": "bun build --compile --target=bun --outfile=server --minify-syntax --minify-whitespace ./src/main.ts",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "ci": "bunx prisma db push; bun ./src/main.ts"
     },
     "devDependencies": {
         "@types/bun": "latest",
