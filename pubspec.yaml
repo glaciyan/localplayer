@@ -48,10 +48,10 @@ dependencies:
   http: ^1.4.0
   oauth2: ^2.0.3
   audioplayers: ^6.4.0
-  flutter_map: ^8.1.1
   latlong2: ^0.9.1
   colorful_iconify_flutter: ^0.0.5
   ini: ^2.1.0
+  flutter_map: ^8.1.1
 
 dev_dependencies:
   flutter_test:
@@ -66,10 +66,8 @@ dev_dependencies:
   equatable: ^2.0.7
   latlong2: ^0.9.1
   flutter_map: ^8.1.1
-<<<<<<< HEAD
-=======
   tcard: ^1.3.5
->>>>>>> 5a4b61a (swiping changed. Swipecontroller implemented)
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -121,3 +119,4 @@ flutter:
   assets:
     - assets/profiles.json
     - assets/config.ini
+    - assets/LocalPlayer.png

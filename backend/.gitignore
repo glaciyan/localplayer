@@ -1,0 +1,6 @@
+node_modules
+build
+logs
+/src/generated/prisma
+data
+.env

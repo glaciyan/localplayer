@@ -1,0 +1,20 @@
+meta {
+  name: Create Session
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/session
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "latitude": "1",
+    "longitude": "1",
+    "name": "Usr2 Session",
+    "open": false
+  }
+}

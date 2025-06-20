@@ -1,0 +1,32 @@
+{
+    "name": "backend",
+    "module": "src/main.ts",
+    "main": "./src/main.ts",
+    "type": "module",
+    "private": true,
+    "version": "0.0.1",
+    "scripts": {
+        "compile": "bun build --compile --target=bun --outfile=server --minify-syntax --minify-whitespace ./src/main.ts",
+        "typecheck": "tsc --noEmit",
+        "ci": "bunx prisma db push; bun ./src/main.ts",
+        "start": "bun run ./src/main.ts"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "prisma": "^6.9.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "@elysiajs/cors": "^1.3.3",
+        "@elysiajs/cron": "^1.3.0",
+        "@elysiajs/swagger": "^1.3.0",
+        "@prisma/client": "^6.9.0",
+        "base64url": "^3.0.1",
+        "chalk": "^5.4.1",
+        "date-fns": "^4.1.0",
+        "elysia": "^1.3.4",
+        "winston": "^3.17.0"
+    }
+}
