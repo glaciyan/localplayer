@@ -3,6 +3,7 @@ import userController from "./user.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { sessionController } from "../authentication/session/session.ts";
+import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
@@ -34,7 +35,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         "/login",
         async ({ headers, body, cookie: { id } }) => {
             if (headers.secret !== NOT_SO_SECRET_SECRET) {
-                return status(403);
+                return status(403, UNAUTHORIZED);
             }
             // make sure user is not logged on
             if (id.value) {

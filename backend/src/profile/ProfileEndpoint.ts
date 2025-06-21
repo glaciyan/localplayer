@@ -6,6 +6,7 @@ import { AuthService } from "../authentication/AuthService.ts";
 const log = mklog("profile-api");
 
 export const ProfileDTOMap = (p: any) => ({
+    id: p.id,
     createdAt: p.createdAt,
     handle: p.handle,
     displayName: p.displayName,
