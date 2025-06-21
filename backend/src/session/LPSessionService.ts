@@ -110,6 +110,11 @@ export class LPSessionService {
             throw new CustomValidationError("You are already in this session");
         }
 
+        if (session.status === "CONCLUDED") {
+            log.error(`${profile.handle}:${profile.id} has tried to join a concluded session.`);
+            throw new CustomValidationError("This session has already ended.");
+        }
+
         const request = await prisma.lPSessionParticipation.create({
             data: {
                 status: session.status === "OPEN" ? "OPEN_ACCEPTED" : "PENDING",
