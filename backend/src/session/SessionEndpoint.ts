@@ -47,6 +47,24 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             open: t.Boolean(),
         }),
     })
+    .get(
+        "/",
+        async ({ profile }) => {
+            const session = await lpsessionController.findRunningSession(profile.id);
+            if (!session) {
+                return status(404, "null");
+            }
+
+            return SessionDTOMap(session);
+        },
+        {
+            cookie: "session",
+            requireProfile: true,
+            detail: {
+                description: "Get your current session. Returns 404 and `null` if you are not running a session.",
+            },
+        }
+    )
     .post(
         "/",
         async ({ body, profile }) => {
@@ -57,6 +75,10 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 body.name,
                 body.open ? "OPEN" : "CLOSED"
             );
+
+            if (session === null) {
+                return status(403, "You already have an open session");
+            }
 
             return SessionDTOMap(session);
         },

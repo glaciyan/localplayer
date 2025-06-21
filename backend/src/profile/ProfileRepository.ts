@@ -1,6 +1,25 @@
 import { prisma } from "../database.ts";
 import { Profile } from "../generated/prisma/client.ts";
 
+export const PublicProfileIncludes = {
+    fakePresence: true,
+    realPresence: true,
+    _count: {
+        select: {
+            swipesReceived: {
+                where: {
+                    type: "POSITIVE",
+                },
+            },
+        },
+    },
+} as const;
+
+export const PublicProfileIncludesWithoutLikeCount = {
+    fakePresence: true,
+    realPresence: true,
+} as const;
+
 export class ProfileRepository {
     async getProfileByOwner(index: number, ownerId: number) {
         return await prisma.profile.findUnique({
@@ -10,10 +29,7 @@ export class ProfileRepository {
                     profileOwnerIndex: index,
                 },
             },
-            include: {
-                fakePresence: { omit: { id: true } },
-                realPresence: { omit: { id: true } },
-            },
+            include: PublicProfileIncludes,
         });
     }
 
@@ -22,19 +38,7 @@ export class ProfileRepository {
             where: {
                 id,
             },
-            include: {
-                fakePresence: { omit: { id: true } },
-                realPresence: { omit: { id: true } },
-                _count: {
-                    select: {
-                        swipesReceived: {
-                            where: {
-                                type: "POSITIVE",
-                            },
-                        },
-                    },
-                },
-            },
+            include: PublicProfileIncludes,
         });
 
         return result;

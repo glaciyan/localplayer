@@ -5,6 +5,7 @@ import { LPSessionStatus } from "../generated/prisma/enums.ts";
 import { mklog } from "../logger.ts";
 import { notificationController } from "../notification/notification.ts";
 import presenceController from "../presence/presence.ts";
+import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
 
 const log = mklog("lpsession-controller");
 
@@ -21,18 +22,30 @@ export const SessionIncludes = {
         },
     },
     creator: {
-        include: {
-            fakePresence: true,
-        },
+        include: PublicProfileIncludes
     },
     participants: {
         include: {
-            participant: ParticipantInclude,
+            participant: {
+                include: PublicProfileIncludes
+            },
         },
     },
 } as const;
 
 export class LPSessionService {
+    async findRunningSession(profileId: number) {
+        return await prisma.lPSession.findFirst({
+            where: {
+                creatorId: profileId,
+                status: {
+                    not: "CONCLUDED",
+                },
+            },
+            include: SessionIncludes,
+        });
+    }
+
     async createSession(
         profileId: number,
         latitude: string,
@@ -44,6 +57,13 @@ export class LPSessionService {
             latitude,
             longitude
         );
+
+        const runningSession = await this.findRunningSession(profileId);
+
+        if (runningSession) {
+            log.warn(`${profileId} already has a running session`)
+            return null;
+        }
 
         const session = await prisma.lPSession.create({
             data: {
