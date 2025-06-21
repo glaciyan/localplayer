@@ -33,6 +33,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
                 title: `${
                     profile.displayName || profile.handle
                 } liked your profile.`,
+                notifType: "LIKED",
                 message: null,
             });
 

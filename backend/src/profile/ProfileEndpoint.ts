@@ -11,6 +11,7 @@ export const ProfileDTOMap = (p: any) => ({
     handle: p.handle,
     displayName: p.displayName,
     biography: p.biography,
+    likes: p._count.swipesReceived,
     presence: p.fakePresence
         ? {
               latitude: p.fakePresence?.latitude,
@@ -69,6 +70,8 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             if (profile === null) {
                 return status(404, "Profile Not Found");
             }
+
+            log.info(JSON.stringify(profile))
 
             return ProfileDTOMap(profile);
         },

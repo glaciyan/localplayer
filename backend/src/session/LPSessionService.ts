@@ -113,6 +113,7 @@ export class LPSessionService {
                 profile.displayName || profile.handle
             } has requested to join your session`,
             message: null,
+            notifType: "SESSION_REQUESTED",
             lpSessionId: session.id,
         });
 
@@ -172,6 +173,7 @@ export class LPSessionService {
                 profile.displayName || profile.handle
             } has accepted your request.`,
             message: null,
+            notifType: "SESSION_REQUEST_ACCEPTED",
             lpSessionId: sessionId,
         });
 

@@ -1,4 +1,5 @@
 import { prisma } from "../database.ts";
+import { NotificationType } from "../generated/prisma/index.ts";
 import { SortOrder } from "../generated/prisma/internal/prismaNamespace.ts";
 import { mklog } from "../logger.ts";
 import { SessionIncludes } from "../session/LPSessionService.ts";
@@ -11,12 +12,14 @@ export class NotificationService {
         to,
         title,
         message,
+        notifType,
         lpSessionId,
     }: {
         from: number;
         to: number;
         title: string;
         message: string | null;
+        notifType: NotificationType;
         lpSessionId?: number;
     }) {
         log.info(
@@ -44,6 +47,7 @@ export class NotificationService {
                 }),
                 title,
                 message,
+                type: notifType,
                 read: false,
             },
         });

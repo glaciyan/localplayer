@@ -25,6 +25,15 @@ export class ProfileRepository {
             include: {
                 fakePresence: { omit: { id: true } },
                 realPresence: { omit: { id: true } },
+                _count: {
+                    select: {
+                        swipesReceived: {
+                            where: {
+                                type: "POSITIVE",
+                            },
+                        },
+                    },
+                },
             },
         });
 

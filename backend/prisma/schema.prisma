@@ -156,6 +156,7 @@ model Notification {
   title   String
   message String?
   read    Boolean @default(false)
+  type NotificationType
 
   session   LPSession? @relation("lpsessionnotif", fields: [sessionId], references: [id])
   sessionId Int?
@@ -165,4 +166,10 @@ model Notification {
 
   recipient   Profile @relation("notificationsReceived", fields: [recipientId], references: [id])
   recipientId Int
+}
+
+enum NotificationType {
+  LIKED
+  SESSION_REQUESTED
+  SESSION_REQUEST_ACCEPTED
 }
