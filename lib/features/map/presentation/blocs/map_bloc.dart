@@ -97,18 +97,30 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     });
 
     on<UpdateCameraPosition>((event, emit) {
+      final expandedBounds = flutter_map.LatLngBounds(
+        LatLng(
+          event.visibleBounds.southWest.latitude - 0.05, // Add ~5.5km south
+          event.visibleBounds.southWest.longitude - 0.05, // Add ~5.5km west
+        ),
+        LatLng(
+          event.visibleBounds.northEast.latitude + 0.05, // Add ~5.5km north
+          event.visibleBounds.northEast.longitude + 0.05, // Add ~5.5km east
+        ),
+      );
+
+      // Filter people for the expanded bounds instead of just visible bounds
       final visiblePeople = people.where((person) {
         final pos = person['position'] as LatLng;
-        return event.visibleBounds.contains(pos);
+        return expandedBounds.contains(pos); // Use expanded bounds
       }).toList();
 
       emit(MapReady(
         latitude: event.latitude, 
         longitude: event.longitude,
         visiblePeople: visiblePeople,
-        visibleBounds: event.visibleBounds,
+        visibleBounds: expandedBounds, // Use expanded bounds
         zoom: event.zoom
-        ));
+      ));
     });
 
     on<SelectPlayer>((event, emit) {
