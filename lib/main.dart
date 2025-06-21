@@ -14,6 +14,7 @@ import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localplayer/features/map/map_module.dart';
 import 'package:flutter/foundation.dart';
+import 'package:localplayer/features/feed/feed_module.dart';
 
 
 void main() async {
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         providers: <BlocProvider<dynamic>> [
           BlocProvider<MatchBloc> (create: (_) => MatchModule.provideBloc()..add(LoadProfiles())),
           BlocProvider<ChatBloc>(create: (_) => ChatBloc()),
-          BlocProvider<FeedBloc>(create: (_) => FeedBloc()),
+          BlocProvider<FeedBloc>(create: (_) => FeedModule.provideBloc()),
           BlocProvider<MapBloc>(create: (_) => MapModule.provideBloc()),
           // add NavigationBloc if needed
         ],
