@@ -4,7 +4,7 @@ import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { Decimal } from "@prisma/client/runtime/client";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
-import { SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
+import { SessionDTOMapWithoutParticipantsAndCreator } from "../session/SessionEndpoint.ts";
 
 const log = mklog("presence-api");
 
@@ -136,7 +136,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
     )
     .get(
         "/nearby",
-        async ({ query, user }) => {
+        async ({ query, user, profile }) => {
             const { latitude, longitude, radiusKm = "10" } = query;
 
             log.http(
@@ -144,31 +144,35 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             );
 
             const profiles = await presenceController.getProfilesInArea(
-                latitude,
-                longitude,
-                radiusKm
-            );
-
-            const sessions = await presenceController.getSessionsInArea(
+                profile.id,
                 latitude,
                 longitude,
                 radiusKm
             );
 
             return {
-                profiles: profiles.map((p) => ProfileDTOMap(p)),
-                sessions: sessions.map((s) =>
-                    SessionDTOMapWithoutParticipants(s)
-                ),
+                profiles: profiles.map((p) => {
+                    const session = p.sessionsMade[0];
+                    if (session) {
+                        return {
+                            ...ProfileDTOMap(p),
+                            session: SessionDTOMapWithoutParticipantsAndCreator(
+                                p.sessionsMade[0]
+                            ),
+                        };
+                    } else {
+                        return { ...ProfileDTOMap(p), session: null };
+                    }
+                }),
             };
         },
         {
             cookie: "session",
-            requireSession: true,
+            requireProfile: true,
             query: "areaQuery",
             detail: {
                 description:
-                    "List all nearby Profiles and Sessions in a radius.",
+                    "List all nearby Profiles in a radius. If a Profile is hosting a session it can be foudn in `session` otherwise `null`.",
             },
         }
     );

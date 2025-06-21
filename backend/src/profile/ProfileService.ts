@@ -19,7 +19,7 @@ export class ProfileService {
         return await this.handler.getMyProfiles(userId);
     }
 
-    async updateProfile(id: number, displayName?: string, biography?: string) {
-        return await this.handler.updateProfile(id, displayName, biography);
+    async updateProfile(id: number, displayName?: string, biography?: string, spotifyLink?: string) {
+        return await this.handler.updateProfile(id, displayName, biography, spotifyLink);
     }
 }
