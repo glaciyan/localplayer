@@ -5,20 +5,20 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 LatLng generateRandomLatLngWithinBounds(
-  LatLngBounds bounds,
-  List<LatLng> placedPoints, {
-  double minDistance = 0.001,
-  int maxAttempts = 20,
+  final LatLngBounds bounds,
+  final List<LatLng> placedPoints, {
+  final double minDistance = 0.001,
+  final int maxAttempts = 20,
 }) {
-  final random = Random();
+  final Random random = Random();
 
   for (int attempt = 0; attempt < maxAttempts; attempt++) {
-    final lat = bounds.south + random.nextDouble() * (bounds.north - bounds.south);
-    final lng = bounds.west + random.nextDouble() * (bounds.east - bounds.west);
-    final candidate = LatLng(lat, lng);
+    final double lat = bounds.south + random.nextDouble() * (bounds.north - bounds.south);
+    final double lng = bounds.west + random.nextDouble() * (bounds.east - bounds.west);
+    final LatLng candidate = LatLng(lat, lng);
 
-    bool tooClose = placedPoints.any((point) {
-      final distance = (candidate.latitude - point.latitude).abs() +
+    final bool tooClose = placedPoints.any((final LatLng point) {
+      final double distance = (candidate.latitude - point.latitude).abs() +
                        (candidate.longitude - point.longitude).abs();
       return distance < minDistance;
     });
@@ -32,14 +32,12 @@ LatLng generateRandomLatLngWithinBounds(
   );
 }
 
-LatLngBounds expandBounds(LatLngBounds bounds, {double paddingDegrees = 0.05}) {
-  return LatLngBounds(
+LatLngBounds expandBounds(final LatLngBounds bounds, {final double paddingDegrees = 0.05}) => LatLngBounds(
     LatLng(bounds.south - paddingDegrees, bounds.west - paddingDegrees),
     LatLng(bounds.north + paddingDegrees, bounds.east + paddingDegrees),
   );
-}
 
-double calculateScale(int listeners, {int maxListeners = 10000000}) {
+double calculateScale(final int listeners, {final int maxListeners = 10000000}) {
   const double minScale = 0.8;
   const double maxScale = 1.4;
 

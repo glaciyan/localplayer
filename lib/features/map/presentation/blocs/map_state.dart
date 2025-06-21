@@ -1,4 +1,5 @@
 import 'package:flutter_map/flutter_map.dart';
+import 'package:localplayer/core/domain/models/profile.dart';
 
 abstract class MapState {}
 
@@ -8,7 +9,7 @@ class MapReady extends MapState {
   final double latitude;
   final double longitude;
   final LatLngBounds visibleBounds;
-  final List<Map<String, dynamic>> visiblePeople;
+  final List<Profile> visiblePeople;
   final double zoom;
 
   MapReady({
@@ -20,29 +21,27 @@ class MapReady extends MapState {
   });
 
   MapReady copyWith({
-    double? latitude,
-    double? longitude,
-    LatLngBounds? visibleBounds,
-    List<Map<String, dynamic>>? visiblePeople,
-    double? scale
-  }) {
-    return MapReady(
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      visibleBounds: visibleBounds ?? this.visibleBounds,
-      visiblePeople: visiblePeople ?? this.visiblePeople,
-      zoom: scale ?? this.zoom,
-    );
-  }
+    final double? latitude,
+    final double? longitude,
+    final LatLngBounds? visibleBounds,
+    final List<Profile>? visiblePeople,
+    final double? scale
+  }) => MapReady(
+    latitude: latitude ?? this.latitude,
+    longitude: longitude ?? this.longitude,
+    visibleBounds: visibleBounds ?? this.visibleBounds,
+    visiblePeople: visiblePeople ?? this.visiblePeople,
+    zoom: scale ?? this.zoom,
+  );
 }
 
 class MapProfileSelected extends MapState {
   final double latitude;
   final double longitude;
   final LatLngBounds visibleBounds;
-  final List<Map<String, dynamic>> visiblePeople;
+  final List<Profile> visiblePeople;
   final double zoom;
-  final Map<String, dynamic> selectedPerson;
+  final Profile selectedPerson;
 
   MapProfileSelected({
     required this.latitude, 
@@ -54,20 +53,18 @@ class MapProfileSelected extends MapState {
   });
 
   MapProfileSelected copyWith({
-    double? latitude,
-    double? longitude,
-    LatLngBounds? visibleBounds,
-    List<Map<String, dynamic>>? visiblePeople,
-    double? zoom,
-    Map<String, dynamic>? selectedPerson
-  }) {
-    return MapProfileSelected(
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      visibleBounds: visibleBounds ?? this.visibleBounds,
-      visiblePeople: visiblePeople ?? this.visiblePeople,
-      zoom: zoom ?? this.zoom,
-      selectedPerson: selectedPerson ?? this.selectedPerson,
-    );
-  }
+    final double? latitude,
+    final double? longitude,
+    final LatLngBounds? visibleBounds,
+    final List<Profile>? visiblePeople,
+    final double? zoom,
+    final Profile? selectedPerson
+  }) => MapProfileSelected(
+    latitude: latitude ?? this.latitude,
+    longitude: longitude ?? this.longitude,
+    visibleBounds: visibleBounds ?? this.visibleBounds,
+    visiblePeople: visiblePeople ?? this.visiblePeople,
+    zoom: zoom ?? this.zoom,
+    selectedPerson: selectedPerson ?? this.selectedPerson,
+  );
 }

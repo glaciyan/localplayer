@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:localplayer/core/domain/models/profile.dart';
 
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
@@ -9,31 +10,32 @@ import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
 import 'package:localplayer/features/map/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
+import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 
 class MapWidget extends StatelessWidget {  
   const MapWidget({super.key});
 
-  final int maxOnScreen = 10;
-  final double minScale = 0.75;
-  final double maxScale = 1;
-  final int maxListeners = 1000000;
+  static final int maxOnScreen = 10;
+  static final double minScale = 0.75;
+  static final double maxScale = 1;
+  static final int maxListeners = 1000000;
 
   @override
-  Widget build(BuildContext context) {
-    final mapController = MapModule.provideController(context, context.read<MapBloc>());
+  Widget build(final BuildContext context) {
+    final IMapController mapController = MapModule.provideController(context, context.read<MapBloc>());
 
     return BlocBuilder<MapBloc, MapState>(
-      builder: (context, state) {
-        final sortedPeople = (state is MapReady)
+      builder: (final BuildContext context, final MapState state) {
+        final List<Profile> sortedPeople = (state is MapReady)
             ? (state.visiblePeople
-                .where((person) => person['listeners'] != null)
+                .where((final Profile person) => person.listeners > 0)
                 .toList()
-              ..sort((a, b) => (b['listeners'] as int).compareTo(a['listeners'] as int)))
-            : <Map<String, dynamic>>[];
+              ..sort((final Profile a, final Profile b) => (b.listeners).compareTo(a.listeners)))
+            : <Profile>[];
 
         return Scaffold(
           body: Stack(
-            children: [
+            children: <Widget> [
               FlutterMap(
                 options: MapOptions(
                   initialRotation: 0.0,
@@ -44,7 +46,7 @@ class MapWidget extends StatelessWidget {
                   initialCenter: LatLng(51.509364, -0.128928), // London
                   initialZoom: 13.0,
                   maxZoom: 20,
-                  onPositionChanged: (position, hasGesture) {
+                  onPositionChanged: (final MapCamera position, final bool hasGesture) {
                     if (state is MapReady) {
                       mapController.updateCameraPosition(
                         position.center.latitude,
@@ -56,21 +58,21 @@ class MapWidget extends StatelessWidget {
                     }
                   },
                 ),
-                children: [
+                children: <Widget> [
                   TileLayer(
                     retinaMode: RetinaMode.isHighDensity(context),
                     urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-                    subdomains: ['a', 'b', 'c'],
+                    subdomains: <String> ['a', 'b', 'c'],
                     userAgentPackageName: 'com.example.app',
                   ),
                   if (state is MapReady)
                     MarkerLayer(
-                      markers: sortedPeople.map((person) {
-                        final int listenerCount = person['listeners'] ?? 0;
+                      markers: sortedPeople.map((final Profile person) {
+                        final int listenerCount = person.listeners;
                         final double scale = calculateScale(listenerCount, maxListeners: maxListeners);
 
                         return Marker(
-                          point: person['position'],
+                          point: person.position,
                           width: 100 * scale * state.zoom/10,
                           height: 100 * scale * state.zoom/10,
                           child: GestureDetector(
@@ -78,8 +80,8 @@ class MapWidget extends StatelessWidget {
                               mapController.selectProfile(person);
                             },
                             child: ProfileAvatar(
-                              avatarLink: person['avatar'],
-                              color: person['color'],
+                              avatarLink: person.avatarUrl,
+                              color: person.color,
                               scale: scale,
                             ),
                           ),
@@ -100,18 +102,18 @@ class MapWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
-                          children: [
+                          children: <Widget> [
                             ProfileCard(
-                              backgroundLink: state.selectedPerson['background'] ?? state.selectedPerson['avatar'],
+                              backgroundLink: state.selectedPerson.backgroundUrl,
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
+                                children: <Widget> [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
+                                    children: <Widget> [
                                       IconButton(
                                         onPressed: () {
                                           mapController.deselectProfile(state.selectedPerson);
@@ -126,10 +128,10 @@ class MapWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
+                                children: <Widget> [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: <Widget> [
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: Size(200, 60),

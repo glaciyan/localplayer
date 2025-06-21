@@ -6,24 +6,24 @@ import 'package:localplayer/core/services/spotify/presentation/blocs/track_previ
 import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 
 class SpotifyModule {
-  static TrackPreviewCubit provideCubit(ConfigService config) {
-    final apiService = SpotifyApiService(
+  static TrackPreviewCubit provideCubit(final ConfigService config) {
+    final SpotifyApiService apiService = SpotifyApiService(
       clientId: config.clientId,
       clientSecret: config.clientSecret,
     );
 
     final ITrackRepository repository = TrackRepositoryImpl(apiService);
-    final getTrackUseCase = GetTrackUseCase(repository);
+    final GetTrackUseCase getTrackUseCase = GetTrackUseCase(repository);
 
     return TrackPreviewCubit(getTrackUseCase);
   }
 
-  static SpotifyApiService provideService(ConfigService config) =>
+  static SpotifyApiService provideService(final ConfigService config) =>
       SpotifyApiService(
         clientId: config.clientId,
         clientSecret: config.clientSecret,
       );
 
-  static ITrackRepository provideRepository(ConfigService config) =>
+  static ITrackRepository provideRepository(final ConfigService config) =>
       TrackRepositoryImpl(provideService(config));
 }

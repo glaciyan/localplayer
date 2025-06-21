@@ -8,29 +8,37 @@ import 'package:localplayer/core/go_router/router.dart';
 import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/match/match_module.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:localplayer/features/map/map_module.dart';
+import 'package:flutter/foundation.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final config = ConfigService();
+  final ConfigService config = ConfigService();
   await config.load();
 
   runApp(MyApp(config: config));
 }
 
-
 class MyApp extends StatelessWidget {
   final ConfigService config;
   const MyApp({required this.config, super.key});
 
+  // keine ahnung was das soll aber wegen linter rules
   @override
-  Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ConfigService>('config', config));
+  }
+
+  @override
+  Widget build(final BuildContext context) => MultiRepositoryProvider(
+      providers: <RepositoryProvider<dynamic>> [
         RepositoryProvider<SpotifyApiService>(
           create: (_) => SpotifyModule.provideService(config),
         ),
@@ -39,11 +47,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => MatchModule.provideBloc()..add(LoadProfiles())),
-          BlocProvider(create: (_) => ChatBloc()),
-          BlocProvider(create: (_) => FeedBloc()),
-          BlocProvider(create: (_) => MapBloc()),
+        providers: <BlocProvider<dynamic>> [
+          BlocProvider<MatchBloc> (create: (_) => MatchModule.provideBloc()..add(LoadProfiles())),
+          BlocProvider<ChatBloc>(create: (_) => ChatBloc()),
+          BlocProvider<FeedBloc>(create: (_) => FeedBloc()),
+          BlocProvider<MapBloc>(create: (_) => MapModule.provideBloc()),
           // add NavigationBloc if needed
         ],
         child: MaterialApp.router(
@@ -83,4 +91,3 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}

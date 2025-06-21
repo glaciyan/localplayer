@@ -14,10 +14,10 @@ class TrackPreviewCubit extends Cubit<TrackPreviewState> {
 
   TrackPreviewCubit(this.useCase) : super(TrackPreviewState());
 
-  void loadTrack(String trackId) async {
+  void loadTrack(final String trackId) async {
     emit(TrackPreviewState(loading: true));
     try {
-      final track = await useCase(trackId);
+      final TrackEntity track = await useCase(trackId);
       emit(TrackPreviewState(track: track));
     } catch (e) {
       emit(TrackPreviewState(error: e.toString()));

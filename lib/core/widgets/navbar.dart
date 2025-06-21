@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:flutter/foundation.dart';
 
 class Navbar extends StatelessWidget {
   final int selectedIndex;
@@ -15,11 +16,17 @@ class Navbar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('selectedIndex', selectedIndex));
+    properties.add(ObjectFlagProperty<ValueChanged<int>>('onTap', onTap, ifPresent: 'has callback'));
+  }
+
+  @override
+  Widget build(final BuildContext context) => NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: onTap,
-      destinations: const [
+      destinations: <NavigationDestination> [
         NavigationDestination(
           icon: Iconify(Mdi.map_marker_outline, size: icon_size),
           selectedIcon: Iconify(Mdi.map_marker, size: icon_size),
@@ -42,5 +49,4 @@ class Navbar extends StatelessWidget {
         ),
       ],
     );
-  }
 }

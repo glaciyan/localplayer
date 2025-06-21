@@ -5,12 +5,10 @@ class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const WithNavBar(
+  Widget build(final BuildContext context) => const WithNavBar(
       selectedIndex: 2,
       child: Center(
         child: Text("Feed Screen"),
       ),
     );
-  }
 }

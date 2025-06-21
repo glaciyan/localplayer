@@ -34,14 +34,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       body: FadeTransition(
         opacity: _fade,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: <Widget> [
               Image.asset('assets/LocalPlayer.png', width: 160),
               const SizedBox(height: 16),
               const Text(
@@ -54,5 +53,4 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         ),
       ),
     );
-  }
 }

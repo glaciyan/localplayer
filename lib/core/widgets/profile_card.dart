@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/core/domain/models/profile.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileCard extends StatelessWidget {
   final Profile? profile;
@@ -14,15 +15,21 @@ class ProfileCard extends StatelessWidget {
     this.profile,
     this.backgroundLink,
   });
-  
+
   @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Profile?>('profile', profile));
+    properties.add(StringProperty('backgroundLink', backgroundLink));
+  }
+
+  @override
+  Widget build(final BuildContext context) => SizedBox.expand(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         clipBehavior: Clip.antiAlias,
         child: Stack(
-          children: [
+          children: <Widget> [
             
             // background image
             Positioned.fill(
@@ -49,24 +56,24 @@ class ProfileCard extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children:[
+                  children: <Widget> [
                     Expanded(
                       child: SingleChildScrollView(
                         physics: BouncingScrollPhysics(),
                         child: Column(
-                          children: [
+                          children: <Widget> [
                             SizedBox(height: 30,),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
+                                children: <Widget> [
                                   ProfileAvatar(avatarLink: backgroundLink ?? '',color: Colors.green, scale: 1),
                                   SizedBox(width: 16,),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,         
-                                      children:[
+                                      children: <Widget> [
                                         Text(
                                           'Test Profile Name',
                                           style: Theme.of(context).textTheme.titleLarge,
@@ -148,7 +155,7 @@ class ProfileCard extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.center,
-                      colors: [
+                      colors: <Color> [
                         Colors.black.withAlpha(150), // dark fade to add contrast
                         Colors.transparent,
                       ],
@@ -160,5 +167,4 @@ class ProfileCard extends StatelessWidget {
         )
       )
     );
-  }
 }
