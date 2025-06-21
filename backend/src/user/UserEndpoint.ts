@@ -58,7 +58,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             if (goodLogin === null) {
-                return status(401);
+                return status(403, UNAUTHORIZED);
             }
 
             const { sessionToken, expiresOn } =

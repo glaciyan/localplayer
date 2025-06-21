@@ -9,8 +9,10 @@ export const ProfileDTOMap = (p: any) => ({
     id: p.id,
     createdAt: p.createdAt,
     handle: p.handle,
-    displayName: p.displayName,
+    displayName: p.displayName ?? p.handle,
     biography: p.biography,
+    likes: p._count.swipesReceived,
+    spotifyId: p.spotifyId,
     presence: p.fakePresence
         ? {
               latitude: p.fakePresence?.latitude,
@@ -70,6 +72,8 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 return status(404, "Profile Not Found");
             }
 
+            log.info(JSON.stringify(profile));
+
             return ProfileDTOMap(profile);
         },
         {
@@ -90,7 +94,8 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             const updatedProfile = await profileController.updateProfile(
                 profile.id,
                 body.displayName,
-                body.biography
+                body.biography,
+                body.spotifyLink
             );
 
             if (updatedProfile === null) {
@@ -105,6 +110,7 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             body: t.Object({
                 displayName: t.Optional(t.String()),
                 biography: t.Optional(t.String()),
+                spotifyLink: t.Optional(t.String()),
             }),
             detail: {
                 description: "Edit your current profile.",
