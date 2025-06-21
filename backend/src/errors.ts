@@ -1,7 +1,4 @@
-export const UNAUTHORIZED = {
-    type: "UNAUTHORIZED",
-    message: "You need to be logged in to access this endpoint",
-};
+export const UNAUTHORIZED = "You need to be logged in.";
 
 export class CustomValidationError extends Error {
     constructor(message: string) {
