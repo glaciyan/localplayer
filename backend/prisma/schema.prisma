@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
@@ -55,6 +55,7 @@ model Profile {
   handle      String
   displayName String?
   biography   String?
+  spotifyId   String?
 
   realPresenceId Int?         @map("presenceId")
   realPresence   MapPresence? @relation("realPresence", fields: [realPresenceId], references: [id])
@@ -66,7 +67,7 @@ model Profile {
   sessionParticipating LPSessionParticipation[]
   swipesMade           Swipe[]                  @relation("swipesMade")
   swipesReceived       Swipe[]                  @relation("swipesReceived")
-  spotifyDisplay       MusicDisplay?
+  spotifyDisplay       MusicDisplay[]
 
   notificationsSent     Notification[] @relation("notificationsSent")
   notificationsReceived Notification[] @relation("notificationsReceived")
@@ -78,9 +79,15 @@ model MusicDisplay {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
+  service   Service
+  tackId    String
 
   profile   Profile @relation(fields: [profileId], references: [id])
   profileId Int     @unique
+}
+
+enum Service {
+  SPOTIFY
 }
 
 model LPSessionParticipation {
@@ -155,8 +162,8 @@ model Notification {
 
   title   String
   message String?
-  read    Boolean @default(false)
-  type NotificationType
+  read    Boolean          @default(false)
+  type    NotificationType
 
   session   LPSession? @relation("lpsessionnotif", fields: [sessionId], references: [id])
   sessionId Int?
