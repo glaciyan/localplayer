@@ -4,43 +4,45 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
+import 'package:localplayer/core/domain/models/profile.dart';
 
 class MapController implements IMapController {
   final BuildContext context;
   final Function(map_event.MapEvent) addEvent;
   double _currentZoom = 13.0;
   LatLngBounds? _currentBounds;
-  List<Map<String, dynamic>> _visiblePeople = [];
+  final List<Profile> _visiblePeople = [];
 
   MapController(this.context, this.addEvent);
 
   @override
-  void selectProfile(Map<String, dynamic> profile) {
-    addEvent(map_event.SelectPlayer(profile));
+  void selectProfile(final Profile profile) {
+    addEvent(map_event.SelectPlayer(profile, _visiblePeople));
   }
 
   @override
-  void requestJoinSession(Map<String, dynamic> profile) {
-    addEvent(map_event.RequestJoinSession(profile));
+  void requestJoinSession(final Profile profile) {
+    addEvent(map_event.RequestJoinSession(profile, _visiblePeople));
   }
   
   @override
-  void deselectProfile(Map<String, dynamic> profile) {
-    addEvent(map_event.DeselectPlayer(profile));
+  void deselectProfile(final Profile profile) {
+    addEvent(map_event.DeselectPlayer(profile, _visiblePeople));
   }
 
 
   @override
   void updateCameraPosition(
-    double latitude,
-    double longitude,
-    List<Map<String, dynamic>> visiblePeople,
-    LatLngBounds visibleBounds,
-    double zoom,
+    final double latitude,
+    final double longitude,
+    final List<Profile> visiblePeople,
+    final LatLngBounds visibleBounds,
+    final double zoom,
   ) {
     _currentZoom = zoom;
     _currentBounds = visibleBounds;
-    _visiblePeople = visiblePeople;
+    _visiblePeople.clear();
+    _visiblePeople.addAll(visiblePeople);
     
     addEvent(map_event.UpdateCameraPosition(
       latitude,
@@ -61,5 +63,5 @@ class MapController implements IMapController {
   );
 
   @override
-  List<Map<String, dynamic>> get visiblePeople => _visiblePeople;
+  List<Profile> get visiblePeople => _visiblePeople;
 }
