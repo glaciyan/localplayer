@@ -18,7 +18,7 @@ class MapRepository implements IMapRepository {
   }) async {
     final Response<dynamic> response = await apiClient.get(
       '/presence/nearby',
-      queryParameters: {
+      queryParameters: <String, String> {
         'latitude': latitude.toString(),
         'longitude': longitude.toString(),
         'radiusKm': radiusKm.toString(),

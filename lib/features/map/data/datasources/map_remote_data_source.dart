@@ -9,7 +9,7 @@ class MapRemoteDataSource {
   Future<List<Profile>> fetchNearbyProfiles(final double latitude,final double longitude, final double radiusKm) async {
     final Response<dynamic> response = await apiClient.get(
       '/presence/nearby',
-      queryParameters: {
+      queryParameters: <String, String> {
         'latitude': latitude.toString(),
         'longitude': longitude.toString(),
         'radiusKm': radiusKm.toString(),

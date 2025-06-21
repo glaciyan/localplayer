@@ -33,7 +33,6 @@ class ApiClient {
       options: options,
     );
   
-
   Future<Response<dynamic>> patch(
     final String path, {
     final dynamic data,

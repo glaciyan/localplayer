@@ -5,12 +5,10 @@ class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const WithNavBar(
+  Widget build(final BuildContext context) => const WithNavBar(
       selectedIndex: 3,
       child: Center(
         child: Text("Chat Screen"),
       ),
     );
-  }
 }

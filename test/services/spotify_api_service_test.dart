@@ -26,9 +26,9 @@ void main() {
     });
 
     test('should fetch track by ID', () async {
-      final trackId = '1n8wr8tRHs5jmBxNWXedcn';
+      final String trackId = '1n8wr8tRHs5jmBxNWXedcn';
       
-      final result = await service.fetchTrack(trackId);
+      final Map<String, dynamic> result = await service.fetchTrack(trackId);
       
       expect(result, isA<Map<String, dynamic>>());
       expect(result['id'], equals(trackId));
@@ -38,21 +38,21 @@ void main() {
 
     test('should fetch artist profile picture', () async {
       // Test mit einer bekannten Artist ID
-      final artistId = '1n8wr8tRHs5jmBxNWXedcn'; // Ed Sheeran
+      final String artistId = '1n8wr8tRHs5jmBxNWXedcn'; // Ed Sheeran
       
-      final result = await service.fetchArtistProfilePicture(artistId);
+      final List<dynamic> result = await service.fetchArtistProfilePicture(artistId);
       
-      expect(result, isA<List>());
+      expect(result, isA<List<dynamic>>());
       expect(result.isNotEmpty, isTrue);
     });
 
     test('should fetch top tracks for artist', () async {
-      final artistId = '1n8wr8tRHs5jmBxNWXedcn'; // Ed Sheeran
+      final String artistId = '1n8wr8tRHs5jmBxNWXedcn'; // Ed Sheeran
       
-      final result = await service.fetchTopTracks(artistId);
+      final Map<String, dynamic> result = await service.fetchTopTracks(artistId);
       
       expect(result, isA<Map<String, dynamic>>());
-      expect(result['tracks'], isA<List>());
+      expect(result['tracks'], isA<List<dynamic>>());
     });
   });
 }

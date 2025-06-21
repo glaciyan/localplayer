@@ -2,26 +2,18 @@ import '../../domain/entities/track_entity.dart';
 
 class TrackModel extends TrackEntity {
   TrackModel({
-    required String id,
-    required String name,
-    required String artist,
-    required String imageUrl,
-    required String? previewUrl,
-  }) : super(
-          id: id,
-          name: name,
-          artist: artist,
-          imageUrl: imageUrl,
-          previewUrl: previewUrl,
-        );
+    required super.id,
+    required super.name,
+    required super.artist,
+    required super.imageUrl,
+    required super.previewUrl,
+  });
 
-  factory TrackModel.fromJson(Map<String, dynamic> json) {
-    return TrackModel(
-      id: json['id'],
-      name: json['name'],
-      artist: json['artists'][0]['name'],
-      imageUrl: json['album']['images'][0]['url'],
-      previewUrl: json['preview_url'],
+  factory TrackModel.fromJson(final Map<String, dynamic> json) => TrackModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      artist: ((json['artists'] as List<dynamic>)[0] as Map<String, dynamic>)['name'] as String,
+      imageUrl: (((json['album'] as Map<String, dynamic>)['images'] as List<dynamic>)[0] as Map<String, dynamic>)['url'] as String,
+      previewUrl: json['preview_url'] as String?,
     );
-  }
 }

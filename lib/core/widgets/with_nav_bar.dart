@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localplayer/core/widgets/navbar.dart';
+import 'package:flutter/foundation.dart';
 
 class WithNavBar extends StatelessWidget {
   final Widget child;
@@ -12,7 +13,14 @@ class WithNavBar extends StatelessWidget {
     required this.selectedIndex,
   });
 
-  void _onNavTap(BuildContext context, int index) {
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Widget>('child', child));
+    properties.add(IntProperty('selectedIndex', selectedIndex));
+  }
+
+  void _onNavTap(final BuildContext context, final int index) {
     switch (index) {
       case 0: context.go('/map'); break;
       case 1: context.go('/swipe'); break;
@@ -22,13 +30,11 @@ class WithNavBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       body: child,
       bottomNavigationBar: Navbar(
         selectedIndex: selectedIndex,
-        onTap: (index) => _onNavTap(context, index),
+        onTap: (final int index) => _onNavTap(context, index),
       ),
     );
-  }
 }

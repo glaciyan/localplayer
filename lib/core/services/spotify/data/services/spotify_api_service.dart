@@ -10,19 +10,19 @@ class SpotifyApiService {
 
   Future<String> _getAccessToken() async {
     if (_accessToken != null) return _accessToken!;
-    final credentials = base64Encode(utf8.encode('$clientId:$clientSecret'));
-    final response = await http.post(
+    final String credentials = base64Encode(utf8.encode('$clientId:$clientSecret'));
+    final http.Response response = await http.post(
       Uri.parse('https://accounts.spotify.com/api/token'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Basic $credentials',
         'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: {
+      }, 
+      body: <String, String> {
         'grant_type': 'client_credentials',
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
       _accessToken = data['access_token'];
       return _accessToken!;
     } else {
@@ -30,11 +30,11 @@ class SpotifyApiService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchTrack(String trackId) async {
-    final token = await _getAccessToken();
-    final response = await http.get(
+  Future<Map<String, dynamic>> fetchTrack(final String trackId) async {
+    final String token = await _getAccessToken();
+    final http.Response response = await http.get(
       Uri.parse('https://api.spotify.com/v1/tracks/$trackId'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Bearer $token',
       },
     );
@@ -45,28 +45,28 @@ class SpotifyApiService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchArtistProfilePicture(String artistId) async {
-    final token = await _getAccessToken();
-    final response = await http.get(
+  Future<List<dynamic>> fetchArtistProfilePicture(final String artistId) async {
+    final String token = await _getAccessToken();
+    final http.Response response = await http.get(
       Uri.parse('https://api.spotify.com/v1/artists/$artistId'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Bearer $token',
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final images = data['images'];
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List<dynamic> images = data['images'];
       return images;
     } else {
       throw Exception('Artist profile picture fetch error: ${response.body}');
     }
   }
 
-  Future<Map<String, dynamic>> fetchTopTracks(String artistId, {String countryCode = 'DE'}) async {
-    final token = await _getAccessToken();
-    final response = await http.get(
+  Future<Map<String, dynamic>> fetchTopTracks(final String artistId, {final String countryCode = 'DE'}) async {
+    final String token = await _getAccessToken();
+    final http.Response response = await http.get(
       Uri.parse('https://api.spotify.com/v1/artists/$artistId/top-tracks?market=$countryCode'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Bearer $token',
       },
     );

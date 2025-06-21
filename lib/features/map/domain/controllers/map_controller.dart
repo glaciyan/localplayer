@@ -11,7 +11,7 @@ class MapController implements IMapController {
   final Function(map_event.MapEvent) addEvent;
   double _currentZoom = 13.0;
   LatLngBounds? _currentBounds;
-  final List<Profile> _visiblePeople = [];
+  final List<Profile> _visiblePeople = <Profile> [];
 
   MapController(this.context, this.addEvent);
 
