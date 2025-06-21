@@ -1,6 +1,8 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
 import { mklog } from "../logger.ts";
+import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
+import { SessionIncludes } from "../session/LPSessionService.ts";
 
 const log = mklog("presence-repo");
 
@@ -148,6 +150,7 @@ export class PresenceRepository {
     }
 
     async getProfilesInArea(
+        excludeProfile: number,
         latitude: CDecimal,
         longitude: CDecimal,
         radiusKm: CDecimal
@@ -157,9 +160,20 @@ export class PresenceRepository {
                 realPresenceId: {
                     not: null,
                 },
+                id: {
+                    not: excludeProfile,
+                },
             },
             include: {
-                fakePresence: true,
+                ...PublicProfileIncludes,
+                sessionsMade: {
+                    where: {
+                        status: {
+                            not: "CONCLUDED",
+                        },
+                    },
+                    include: SessionIncludes,
+                },
             },
         });
 
@@ -195,9 +209,7 @@ export class PresenceRepository {
             include: {
                 presence: true,
                 creator: {
-                    include: {
-                        fakePresence: true,
-                    },
+                    include: PublicProfileIncludes,
                 },
             },
         });

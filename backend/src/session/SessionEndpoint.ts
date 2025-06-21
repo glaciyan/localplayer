@@ -8,16 +8,7 @@ import { mklog } from "../logger.ts";
 const log = mklog("lpsession");
 
 export const SessionDTOMap = (session: any) => ({
-    id: session.id,
-    createdAt: session.createdAt,
-    updateAt: session.updateAt,
-    status: session.status,
-    name: session.name,
-    presence: {
-        latitude: session.presence.latitude,
-        longitude: session.presence.longitude,
-    },
-    creator: ProfileDTOMap(session.creator),
+    ...SessionDTOMapWithoutParticipants(session),
     participations: session.participants.map((p: any) => ({
         status: p.status,
         participant: ProfileDTOMap(p.participant),
@@ -25,6 +16,11 @@ export const SessionDTOMap = (session: any) => ({
 });
 
 export const SessionDTOMapWithoutParticipants = (session: any) => ({
+    ...SessionDTOMapWithoutParticipantsAndCreator(session),
+    creator: ProfileDTOMap(session.creator),
+});
+
+export const SessionDTOMapWithoutParticipantsAndCreator = (session: any) => ({
     id: session.id,
     createdAt: session.createdAt,
     updateAt: session.updateAt,
@@ -34,7 +30,6 @@ export const SessionDTOMapWithoutParticipants = (session: any) => ({
         latitude: session.presence.latitude,
         longitude: session.presence.longitude,
     },
-    creator: ProfileDTOMap(session.creator),
 });
 
 export const SessionEndpoint = new Elysia({ prefix: "session" }) //
@@ -50,7 +45,9 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
     .get(
         "/",
         async ({ profile }) => {
-            const session = await lpsessionController.findRunningSession(profile.id);
+            const session = await lpsessionController.findRunningSession(
+                profile.id
+            );
             if (!session) {
                 return status(404, "null");
             }
@@ -61,7 +58,8 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             cookie: "session",
             requireProfile: true,
             detail: {
-                description: "Get your current session. Returns 404 and `null` if you are not running a session.",
+                description:
+                    "Get your current session. Returns 404 and `null` if you are not running a session.",
             },
         }
     )

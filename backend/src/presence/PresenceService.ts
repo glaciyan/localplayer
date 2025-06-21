@@ -97,6 +97,7 @@ export class PresenceService {
     }
 
     async getProfilesInArea(
+        excludeProfile: number,
         latitude: string,
         longitude: string,
         radiusKm: string
@@ -105,7 +106,7 @@ export class PresenceService {
 
         const rad = this.handler.decimal(radiusKm);
 
-        const profiles = await this.handler.getProfilesInArea(lat, lng, rad);
+        const profiles = await this.handler.getProfilesInArea(excludeProfile, lat, lng, rad);
 
         return profiles;
     }
