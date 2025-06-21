@@ -47,4 +47,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/profiles.json
+    - assets/config.ini
     - assets/LocalPlayer.png
