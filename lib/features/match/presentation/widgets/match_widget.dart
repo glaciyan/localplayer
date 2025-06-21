@@ -46,7 +46,6 @@ class _MatchWidgetState extends State<MatchWidget> {
 
           final cards = _profiles.map((profile) {
             return ProfileCard(
-              avatarLink: profile.getAvatarLink(),
               backgroundLink: profile.getBckgroundLink(),
             );
           }).toList();
