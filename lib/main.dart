@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localplayer/spotify/data/services/config_service.dart';
-import 'package:localplayer/spotify/data/services/spotify_api_service.dart';
-import 'package:localplayer/spotify/data/spotify_module.dart';
-import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
+import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_api_service.dart';
+import 'package:localplayer/core/services/spotify/data/spotify_module.dart';
+import 'package:localplayer/core/services/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/go_router/router.dart';
 import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
-import 'package:localplayer/features/feed/presentation/blocs/feed_block.dart';
+import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
@@ -55,12 +55,12 @@ class MyApp extends StatelessWidget {
             ),
           textTheme: TextTheme(
             bodyLarge: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
             bodyMedium: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 17,
               color: Colors.white
             ),
             bodySmall: GoogleFonts.poppins(

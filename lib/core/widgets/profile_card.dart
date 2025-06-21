@@ -1,17 +1,18 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
+import 'package:localplayer/core/domain/models/profile.dart';
 
 class ProfileCard extends StatelessWidget {
-  final String avatarLink;
-  final String backgroundLink;
+  final Profile? profile;
+  final String? backgroundLink;
 
   const ProfileCard({
     super.key,
-    required this.avatarLink,
-    required this.backgroundLink
+    this.profile,
+    this.backgroundLink,
   });
   
   @override
@@ -26,7 +27,7 @@ class ProfileCard extends StatelessWidget {
             // background image
             Positioned.fill(
               child: Image.network(
-                backgroundLink,
+                backgroundLink ?? '',
                 fit: BoxFit.cover
               )
             ),
@@ -43,73 +44,96 @@ class ProfileCard extends StatelessWidget {
             ),
 
             // profile card
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children:[
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ProfileAvatar(avatarLink: avatarLink,color: Colors.green),
-                                SizedBox(width: 16,),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-
-                                  children:[
-                                    Text('Artist', style: Theme.of(context).textTheme.titleLarge),
-                                    Text('Artist Genre', style: Theme.of(context).textTheme.bodyMedium),
-                                    Text('27.365 Monthly Listeners', style: Theme.of(context).textTheme.bodySmall)
-                                    ]
-                                ),
-                                Spacer(flex: 5,)
-                              ],
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children:[
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 30,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ProfileAvatar(avatarLink: backgroundLink ?? '',color: Colors.green, scale: 1),
+                                  SizedBox(width: 16,),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,         
+                                      children:[
+                                        Text(
+                                          'Test Profile Name',
+                                          style: Theme.of(context).textTheme.titleLarge,
+                                          overflow: TextOverflow.ellipsis,
+                                          ),
+                                        Text(
+                                          'Artist Genre',
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          overflow: TextOverflow.ellipsis,
+                                          ),
+                                        Text(
+                                          '27.365 Monthly Listeners',
+                                          style: Theme.of(context).textTheme.bodySmall,
+                                          overflow: TextOverflow.ellipsis,
+                                          )
+                                        ]
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 16,),
-
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              style: Theme.of(context).textTheme.bodySmall,
-                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
-                          ),
-
-                          SizedBox(height: 20,),
-                          SpotifyPreviewContainer(trackId: '3Lc2iEewvM7KoJi9zcN5bx'),
-                          SizedBox(height: 20,),
-                          SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
-                          SizedBox(height: 20,),
-
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(
-                              style: Theme.of(context).textTheme.bodySmall,
-                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
-                          ),
-
-
-                          SizedBox(height: 20,),
-                          SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
-                          SizedBox(height: 20,),
-                          SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
-                          SizedBox(height: 20,),
-                          Text(style: Theme.of(context).textTheme.bodySmall,'[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
-                          SizedBox(height: 20,),
-                          SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
-
-                          SizedBox(height: 200,),
-                        ],
+                            SizedBox(height: 16,),
+              
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                style: Theme.of(context).textTheme.bodySmall,
+                                '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+                            ),
+              
+                            SizedBox(height: 20,),
+                            SpotifyPreviewContainer(trackId: '3Lc2iEewvM7KoJi9zcN5bx'),
+                            SizedBox(height: 20,),
+                            SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
+                            SizedBox(height: 20,),
+              
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                style: Theme.of(context).textTheme.bodySmall,
+                                '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                ),
+                            ),
+              
+              
+                            SizedBox(height: 20,),
+                            SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
+                            SizedBox(height: 20,),
+                            SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
+                            SizedBox(height: 20,),
+                            Text(style: Theme.of(context).textTheme.bodySmall,
+                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            SizedBox(height: 20,),
+                            SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
+              
+                            SizedBox(height: 200,),
+                          ],
+                        )
                       )
-                    )
-                  ) 
-                ],
+                    ) 
+                  ],
+                ),
               ),
             ),
 

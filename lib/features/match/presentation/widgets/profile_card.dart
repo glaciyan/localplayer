@@ -8,7 +8,7 @@ import 'package:iconify_flutter/icons/icon_park_solid.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 
 class ProfileCard extends StatelessWidget {

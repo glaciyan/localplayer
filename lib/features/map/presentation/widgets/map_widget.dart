@@ -7,15 +7,15 @@ import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
-import 'package:localplayer/core/modules/map_module.dart';
+import 'package:localplayer/features/map/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 
 class MapWidget extends StatelessWidget {  
   const MapWidget({super.key});
 
-  final int maxOnScreen = 5;
+  final int maxOnScreen = 10;
   final double minScale = 0.75;
-  final double maxScale = 1.125;
+  final double maxScale = 1;
   final int maxListeners = 1000000;
 
   @override
@@ -97,21 +97,33 @@ class MapWidget extends StatelessWidget {
                       onDoubleTap: () {
                         mapController.deselectProfile(state.selectedPerson);
                       },
-                      onVerticalDragDown: (details) {
-                        if(details.globalPosition.dy < 100) {
-                          mapController.deselectProfile(state.selectedPerson);
-                        }
-                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
                           children: [
                             ProfileCard(
-                              avatarLink: state.selectedPerson['avatar'],
                               backgroundLink: state.selectedPerson['background'] ?? state.selectedPerson['avatar'],
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(40.0),
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          mapController.deselectProfile(state.selectedPerson);
+                                        },
+                                        icon: Icon(Icons.close, size: 40, color: Theme.of(context).colorScheme.onPrimary),
+                                      ),
+                                    ]
+                                  )
+                              ])
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -120,7 +132,6 @@ class MapWidget extends StatelessWidget {
                                     children: [
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-    
                                           minimumSize: Size(200, 60),
                                           backgroundColor: Colors.green,
                                           shape: RoundedRectangleBorder(
@@ -128,9 +139,8 @@ class MapWidget extends StatelessWidget {
                                           ),
                                         ),
                                         onPressed: () {
-                                          print('Request to join Session of ${state.selectedPerson}');
                                           mapController.requestJoinSession(state.selectedPerson);
-                                        }, 
+                                        },
                                         child: Text('Request to join Session', 
                                           style: Theme.of(context).textTheme.bodyMedium
                                         ),
