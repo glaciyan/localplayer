@@ -1,38 +1,68 @@
-include: package:austerity/analysis_options.yaml
+include: package:lints/strict.yaml
 
-linter:
-  rules:
-    - always_specify_types
-    - prefer_final_parameters
-    - omit_local_variable_types
 analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
   errors:
     always_specify_types: warning
-    avoid_final_parameters: ignore
-    avoid_renaming_method_parameters: warning
-    avoid_types_on_closure_parameters: ignore
-    invalid_annotation_target: ignore
-    omit_local_variable_types: ignore
-    one_member_abstracts: ignore
-    prefer_final_parameters: warning
-    public_member_api_docs: ignore
-    sort_constructors_first: ignore
-    avoid_escaping_inner_quotes: warning
-    prefer_single_quotes: warning
-    unused_local_variable: warning
     avoid_print: warning
     prefer_final_locals: warning
+    prefer_final_parameters: warning
+    unused_local_variable: warning
     unused_field: warning
+    unused_import: warning
     prefer_expression_function_bodies: warning
     require_trailing_commas: warning
     cascade_invocations: warning
     discarded_futures: warning
     lines_longer_than_80_chars: warning
-    unused_import: warning
+    invalid_annotation_target: warning
+    avoid_types_on_closure_parameters: warning
+    avoid_escaping_inner_quotes: warning
+    prefer_single_quotes: warning
+    avoid_dynamic_calls: warning
+    avoid_returning_null_for_future: warning
+    avoid_returning_null: warning
+    avoid_slow_async_io: warning
+    unnecessary_lambdas: warning
+    use_super_parameters: warning
+    annotate_overrides: warning
+    avoid_unused_constructor_parameters: warning
+    cancel_subscriptions: warning
+    close_sinks: warning
+    comment_references: warning
+    diagnostic_describe_all_properties: warning
+    type_annotate_public_apis: warning
+    unsafe_html: warning
+
   exclude:
     - "**/*.g.dart"
-    - "**/*.graphql.dart"
     - "**/*.freezed.dart"
+    - "**/*.graphql.dart"
     - "**/generated/**"
     - "generated/**"
     - "test/mocks.mocks.dart"
+
+linter:
+  rules:
+    - always_specify_types
+    - prefer_final_parameters
+    - prefer_final_locals
+    - avoid_print
+    - avoid_dynamic_calls
+    - avoid_returning_null_for_future
+    - avoid_returning_null
+    - avoid_slow_async_io
+    - prefer_expression_function_bodies
+    - require_trailing_commas
+    - unnecessary_lambdas
+    - use_super_parameters
+    - annotate_overrides
+    - avoid_unused_constructor_parameters
+    - cancel_subscriptions
+    - close_sinks
+    - comment_references
+    - diagnostic_describe_all_properties
+    - type_annotate_public_apis
+    - unsafe_html
