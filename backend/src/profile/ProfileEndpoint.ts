@@ -9,7 +9,7 @@ export const ProfileDTOMap = (p: any) => ({
     id: p.id,
     createdAt: p.createdAt,
     handle: p.handle,
-    displayName: p.displayName,
+    displayName: p.displayName ?? p.handle,
     biography: p.biography,
     likes: p._count.swipesReceived,
     presence: p.fakePresence
