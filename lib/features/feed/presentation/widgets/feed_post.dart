@@ -5,13 +5,17 @@ import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
-import 'package:localplayer/core/widgets/profile_card.dart';
-import 'package:localplayer/core/domain/models/profile.dart';
 
 class FeedPost extends StatefulWidget {
   final NotificationModel post;
 
   const FeedPost({super.key, required this.post});
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NotificationModel>('post', post));
+  }
 
   @override
   State<FeedPost> createState() => _FeedPostState();
@@ -104,7 +108,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: <Widget> [
                               Text(
                                 widget.post.title,
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -122,9 +126,9 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         ),
                       ],
                     ),
-                    if (_isExpanded) ...[
+                    if (_isExpanded) ...<Widget> [
                       const SizedBox(height: 16),
-                      if (_shouldShowMap) ...[
+                      if (_shouldShowMap) ...<Widget> [
                         // Map content - fills available space
                         Expanded(
                           child: Card(
@@ -162,7 +166,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                               });
                               
                               // Simulate API call
-                              await Future.delayed(const Duration(seconds: 2));
+                              await Future<void>.delayed(const Duration(seconds: 2));
                               
                               setState(() {
                                 _isLoading = false;
@@ -184,7 +188,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             ),
                           ),
                         ),
-                      ] else if (_sessionInvite) ...[
+                      ] else if (_sessionInvite) ...<Widget> [
                         // Session invite content
                         Text(
                           'Session Invite',
@@ -205,7 +209,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             ),
                           ),
                         ),
-                      ] else ...[
+                      ] else ...<Widget> [
                         Text(
                           'Expanded content here...',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
