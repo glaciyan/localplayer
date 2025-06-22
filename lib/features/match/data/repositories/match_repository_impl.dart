@@ -9,16 +9,16 @@ class MatchRepositoryImpl implements MatchRepository {
   Future<List<UserProfile>> fetchProfiles() async {
     final String jsonString = await rootBundle.loadString('assets/profiles.json');
     final List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList.map((e) => UserProfile.fromJson(e)).toList();
+    return jsonList.map((final dynamic e) => UserProfile.fromJson(e)).toList();
   }
 
   @override
-  Future<void> like(UserProfile user) async {
-    print('Liked: ${user.name}');
+  Future<void> like(final UserProfile user) async {
+    //print('Liked: ${user.name}');
   }
 
   @override
-  Future<void> dislike(UserProfile user) async {
-    print('Disliked: ${user.name}');
+  Future<void> dislike(final UserProfile user) async {
+    //print('Disliked: ${user.name}');
   }
 }

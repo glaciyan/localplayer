@@ -24,6 +24,8 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => NavigationBar(
+    overlayColor: MaterialStateProperty.all(Colors.transparent) ,
+      backgroundColor: Theme.of(context).colorScheme.primary?.withValues(alpha:0),
       selectedIndex: selectedIndex,
       onDestinationSelected: onTap,
       destinations: <NavigationDestination> [
@@ -43,8 +45,8 @@ class Navbar extends StatelessWidget {
           label: 'Feed',
         ),
         NavigationDestination(
-          icon: Iconify(Mdi.chat_outline, size: icon_size),
-          selectedIcon: Iconify(Mdi.chat, size: icon_size),
+          icon: Iconify(Mdi.face_profile, size: icon_size),
+          selectedIcon: Iconify(Mdi.face_profile, size: icon_size),
           label: 'Sessions',
         ),
       ],
