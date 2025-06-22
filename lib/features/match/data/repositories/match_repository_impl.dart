@@ -14,11 +14,11 @@ class MatchRepositoryImpl implements MatchRepository {
 
   @override
   Future<void> like(UserProfile user) async {
-    print('Liked: ${user.name}');
+    print('Liked: ${user.displayName}');
   }
 
   @override
   Future<void> dislike(UserProfile user) async {
-    print('Disliked: ${user.name}');
+    print('Disliked: ${user.displayName}');
   }
 }

@@ -13,6 +13,7 @@ class WithNavBar extends StatelessWidget {
   });
 
   void _onNavTap(BuildContext context, int index) {
+    if (index == selectedIndex) return; 
     switch (index) {
       case 0: context.go('/map'); break;
       case 1: context.go('/swipe'); break;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart';
 
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
@@ -9,13 +10,12 @@ import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
 import 'package:localplayer/core/modules/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
-class MapWidget extends StatelessWidget {  
+class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
 
   final int maxOnScreen = 5;
-  final double minScale = 0.75;
-  final double maxScale = 1.125;
   final int maxListeners = 1000000;
 
   @override
@@ -24,12 +24,16 @@ class MapWidget extends StatelessWidget {
 
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
-        final sortedPeople = (state is MapReady)
-            ? (state.visiblePeople
-                .where((person) => person['listeners'] != null)
-                .toList()
-              ..sort((a, b) => (b['listeners'] as int).compareTo(a['listeners'] as int)))
-            : <Map<String, dynamic>>[];
+        List<ProfileWithSpotify> sortedPeople = [];
+        double currentZoom = 13.0;
+
+        if (state is MapReady || state is MapProfileSelected) {
+          final visiblePeople = (state as dynamic).visiblePeople;
+          currentZoom = (state as dynamic).zoom;
+
+          sortedPeople = List<ProfileWithSpotify>.from(visiblePeople)
+            ..sort((a, b) => _getListeners(b.user).compareTo(_getListeners(a.user)));
+        }
 
         return Scaffold(
           body: Stack(
@@ -41,7 +45,7 @@ class MapWidget extends StatelessWidget {
                     rotationThreshold: 360,
                     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
-                  initialCenter: LatLng(51.509364, -0.128928), // London
+                  initialCenter: LatLng(51.509364, -0.128928),
                   initialZoom: 13.0,
                   maxZoom: 20,
                   onPositionChanged: (position, hasGesture) {
@@ -51,7 +55,7 @@ class MapWidget extends StatelessWidget {
                         position.center.longitude,
                         state.visiblePeople,
                         position.visibleBounds,
-                        position.zoom
+                        position.zoom,
                       );
                     }
                   },
@@ -63,53 +67,53 @@ class MapWidget extends StatelessWidget {
                     subdomains: ['a', 'b', 'c'],
                     userAgentPackageName: 'com.example.app',
                   ),
-                  if (state is MapReady)
+                  if (state is MapReady || state is MapProfileSelected)
                     MarkerLayer(
-                      markers: sortedPeople.map((person) {
-                        final int listenerCount = person['listeners'] ?? 0;
-                        final double scale = calculateScale(listenerCount, maxListeners: maxListeners);
+                      markers: sortedPeople
+                          .take(maxOnScreen)
+                          .map((profile) {
+                            final user = profile.user;
+                            final int listenerCount = _getListeners(user);
+                            final double scale = calculateScale(listenerCount, maxListeners: maxListeners);
 
-                        return Marker(
-                          point: person['position'],
-                          width: 100 * scale * state.zoom/10,
-                          height: 100 * scale * state.zoom/10,
-                          child: GestureDetector(
-                            onTap: () {
-                              mapController.selectProfile(person);
-                            },
-                            child: ProfileAvatar(
-                              avatarLink: person['avatar'],
-                              color: person['color'],
-                              scale: scale,
-                            ),
-                          ),
-                        );
-                      })
-                      .take(maxOnScreen)
-                      .toList(),
+                            return Marker(
+                              point: _getLatLng(user),
+                              width: 100 * scale * currentZoom / 10,
+                              height: 100 * scale * currentZoom / 10,
+                              child: GestureDetector(
+                                onTap: () {
+                                  mapController.selectProfile(profile);
+                                },
+                                child: ProfileAvatar(
+                                  avatarLink: profile.artist.imageUrl,
+                                  color: user.color ?? Colors.blue,
+                                  scale: scale,
+                                ),
+                              ),
+                            );
+                          })
+                          .toList(),
                     ),
                 ],
               ),
+
               if (state is MapProfileSelected)
                 SafeArea(
                   child: Center(
                     child: GestureDetector(
                       onDoubleTap: () {
-                        mapController.deselectProfile(state.selectedPerson);
+                        mapController.deselectProfile(state.selectedUser);
                       },
                       onVerticalDragDown: (details) {
-                        if(details.globalPosition.dy < 100) {
-                          mapController.deselectProfile(state.selectedPerson);
+                        if (details.globalPosition.dy < 100) {
+                          mapController.deselectProfile(state.selectedUser);
                         }
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
                           children: [
-                            ProfileCard(
-                              avatarLink: state.selectedPerson['avatar'],
-                              backgroundLink: state.selectedPerson['background'] ?? state.selectedPerson['avatar'],
-                            ),
+                            ProfileCard(profile: state.selectedUser),
                             Padding(
                               padding: const EdgeInsets.all(40.0),
                               child: Column(
@@ -120,23 +124,22 @@ class MapWidget extends StatelessWidget {
                                     children: [
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-    
-                                          minimumSize: Size(200, 60),
+                                          minimumSize: const Size(200, 60),
                                           backgroundColor: Colors.green,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20),
                                           ),
                                         ),
                                         onPressed: () {
-                                          print('Request to join Session of ${state.selectedPerson}');
-                                          mapController.requestJoinSession(state.selectedPerson);
-                                        }, 
-                                        child: Text('Request to join Session', 
-                                          style: Theme.of(context).textTheme.bodyMedium
+                                          mapController.requestJoinSession(state.selectedUser);
+                                        },
+                                        child: Text(
+                                          'Request to join Session',
+                                          style: Theme.of(context).textTheme.bodyMedium,
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -149,7 +152,15 @@ class MapWidget extends StatelessWidget {
             ],
           ),
         );
-      }
+      },
     );
+  }
+
+  int _getListeners(UserProfile user) {
+    return user.listeners ?? 0;
+  }
+
+  LatLng _getLatLng(UserProfile user) {
+    return user.position ?? LatLng(51.509364, -0.128928);
   }
 }

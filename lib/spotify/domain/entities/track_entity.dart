@@ -6,7 +6,7 @@ class TrackEntity {
   final String imageUrl;
   final String? previewUrl;
 
-  TrackEntity({
+  const TrackEntity({
     required this.id,
     required this.name,
     required this.artist,

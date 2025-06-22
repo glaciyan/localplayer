@@ -1,6 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart' as flutter_map;
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'map_event.dart';
 import 'map_state.dart';
 import 'package:flutter/material.dart';
@@ -8,148 +12,131 @@ import 'package:flutter/material.dart';
 
 
 class MapBloc extends Bloc<MapEvent, MapState> {
+  final IMapRepository mapRepository;
+  final ISpotifyRepository spotifyRepository;
 
-  final List<Map<String, dynamic>> people = [
-    {
-      'id': 1,
-      'name': 'Travis',
-      'position': LatLng(51.5155, -0.1421), // Soho / Fitzrovia
-      'avatar': 'https://i1.sndcdn.com/avatars-000614099139-aooibr-t200x200.jpg',
-      'color': Colors.orange,
-      'listeners': 200000,
-    },
-    {
-      'id': 1,
-      'name': 'Caye',
-      'position': LatLng(51.5300, -0.1230), // Camden
-      'avatar': 'https://i1.sndcdn.com/avatars-000701366305-hu9f0i-t120x120.jpg',
-      'color': Colors.green,
-      'listeners': 40000,
-    },
-    {
-      'id': 1,
-      'name': 'Prayne',
-      'position': LatLng(51.4750, -0.2050), // Hammersmith
-      'avatar': 'https://i1.sndcdn.com/avatars-hqOFChrylqxxfERP-y7l2xg-t500x500.jpg',
-      'color': Colors.orange,
-      'listeners': 400550,
-    },
-    {
-      'id': 1,
-      'name': 'Ski',
-      'position': LatLng(51.4600, -0.1150), // Brixton
-      'avatar': 'https://i1.sndcdn.com/avatars-LdxjRhrIRcy3D2uY-RaxmNw-t500x500.jpg',
-      'color': Colors.green,
-      'listeners': 2193809,
-    },
-    {
-      'id': 1,
-      'name': 'Trip',
-      'position': LatLng(51.4300, -0.1500), // Clapham
-      'avatar': 'https://i1.sndcdn.com/avatars-000452119941-gi041q-t500x500.jpg',
-      'color': Colors.orange,
-      'listeners': 12123124,
-    },
-    {
-      'id': 1,
-      'name': 'caye',
-      'position': LatLng(51.4800, -0.0014), // Greenwich
-      'avatar': 'https://i1.sndcdn.com/avatars-h506nrS9VS2UeYd6-ipLOlQ-t500x500.jpg',
-      'color': Colors.green,
-      'listeners': 21312,
-    },
-    {
-      'id': 1,
-      'name': 'sol',
-      'position': LatLng(51.4600, -0.3000), // Richmond
-      'avatar': 'https://i1.sndcdn.com/avatars-IzVpz6VYWsyEg3af-kIOmow-t500x500.jpg',
-      'color': Colors.orange,
-      'listeners': 2193083,
-    },
-    {
-      'id': 1,
-      'name': 'Bob',
-      'position': LatLng(51.3700, -0.1000), // Croydon
-      'avatar': 'https://i1.sndcdn.com/avatars-000701366305-hu9f0i-t120x120.jpg',
-      'color': Colors.green,
-      'listeners': 21903,
+  List<ProfileWithSpotify> _allProfiles = [];
+
+  MapBloc({
+    required this.mapRepository,
+    required this.spotifyRepository,
+  }) : super(MapInitial()) {
+    on<LoadMapProfiles>(_onLoadMapProfiles);
+    on<InitializeMap>(_onInitializeMap);
+    on<UpdateCameraPosition>(_onUpdateCameraPosition);
+    on<SelectPlayer>(_onSelectPlayer);
+    on<DeselectPlayer>(_onDeselectPlayer);
+    on<RequestJoinSession>(_onRequestJoinSession);
+  }
+
+  Future<void> _onLoadMapProfiles(LoadMapProfiles event, Emitter<MapState> emit) async {
+    emit(MapLoading());
+
+    try {
+      _allProfiles = await mapRepository.fetchProfiles();
+
+      add(InitializeMap()); // Continue with map setup
+    } catch (e) {
+      emit(MapError("Failed to load map profiles: $e"));
     }
-  ];
+  }
 
-  MapBloc() : super(MapInitial()) {
-    
-    on<InitializeMap>((event, emit) {
-      double initLatitude = 37.7749;
-      double initLongitude = -122.4194;
-      double initZoom = 12;
+  void _onInitializeMap(InitializeMap event, Emitter<MapState> emit) {
+    const double initLatitude = 37.7749;
+    const double initLongitude = -122.4194;
+    const double initZoom = 12;
 
-      final sw = LatLng(initLatitude - 0.01, initLongitude - 0.01);
-      final ne = LatLng(initLatitude + 0.01, initLongitude + 0.01);
-      final bounds = flutter_map.LatLngBounds(sw, ne);
+    final bounds = flutter_map.LatLngBounds(
+      LatLng(initLatitude - 0.01, initLongitude - 0.01),
+      LatLng(initLatitude + 0.01, initLongitude + 0.01),
+    );
 
-      emit(MapReady(
-        latitude: initLatitude, 
-        longitude:initLongitude,
-        visiblePeople:people,
+    final visible = _allProfiles.where((p) => bounds.contains(p.user.position)).toList();
+
+    emit(MapReady(
+      latitude: initLatitude,
+      longitude: initLongitude,
+      visiblePeople: visible,
+      visibleBounds: bounds,
+      zoom: initZoom,
+    ));
+  }
+
+  void _onUpdateCameraPosition(UpdateCameraPosition event, Emitter<MapState> emit) {
+    final visible = _allProfiles.where((p) => event.visibleBounds.contains(p.user.position)).toList();
+
+    emit(MapReady(
+      latitude: event.latitude,
+      longitude: event.longitude,
+      visiblePeople: visible,
+      visibleBounds: event.visibleBounds,
+      zoom: event.zoom,
+    ));
+  }
+
+  Future<void> _onSelectPlayer(SelectPlayer event, Emitter<MapState> emit) async {
+    final pos = event.selectedUser.position;
+    final bounds = flutter_map.LatLngBounds(
+      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
+      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
+    );
+
+    try {
+      final artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
+      final selected = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
+
+      emit(MapProfileSelected(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
         visibleBounds: bounds,
-        zoom: initZoom
-        )); // Default location
-    });
-
-    on<UpdateCameraPosition>((event, emit) {
-      final visiblePeople = people.where((person) {
-        final pos = person['position'] as LatLng;
-        return event.visibleBounds.contains(pos);
-      }).toList();
-
-      emit(MapReady(
-        latitude: event.latitude, 
-        longitude: event.longitude,
-        visiblePeople: visiblePeople,
-        visibleBounds: event.visibleBounds,
-        zoom: event.zoom
-        ));
-    });
-
-    on<SelectPlayer>((event, emit) {
-      emit(MapProfileSelected(
-        latitude: event.selectedPerson['position'].latitude,
-        longitude: event.selectedPerson['position'].longitude,
-        visibleBounds: flutter_map. LatLngBounds(
-          LatLng(event.selectedPerson['position'].latitude - 0.01, event.selectedPerson['position'].longitude - 0.01),
-          LatLng(event.selectedPerson['position'].latitude + 0.01, event.selectedPerson['position'].longitude + 0.01)
-        ),
-        visiblePeople: people,
+        visiblePeople: _allProfiles,
         zoom: 12,
-        selectedPerson: event.selectedPerson
-            ));
-    });
-
-    on<DeselectPlayer>((event, emit) {
-      emit(MapReady(
-        latitude: event.selectedPerson['position'].latitude,
-        longitude: event.selectedPerson['position'].longitude,
-        visiblePeople: people,
-        visibleBounds: flutter_map.LatLngBounds(
-          LatLng(event.selectedPerson['position'].latitude - 0.01, event.selectedPerson['position'].longitude - 0.01),
-          LatLng(event.selectedPerson['position'].latitude + 0.01, event.selectedPerson['position'].longitude + 0.01)
-        ),
-        zoom: 12
-        ));
-    });
-
-    on<RequestJoinSession>((event, emit) {
-      emit(MapProfileSelected(
-        latitude: event.selectedPerson['position'].latitude,
-        longitude: event.selectedPerson['position'].longitude,
-        visiblePeople: people,
-        visibleBounds: flutter_map.LatLngBounds(
-          LatLng(event.selectedPerson['position'].latitude - 0.01, event.selectedPerson['position'].longitude - 0.01),
-          LatLng(event.selectedPerson['position'].latitude + 0.01, event.selectedPerson['position'].longitude + 0.01)
-        ),
-        zoom: 12,
-        selectedPerson: event.selectedPerson
+        selectedUser: selected,
       ));
-    });
+    } catch (e) {
+      emit(MapError("Failed to load Spotify data: $e"));
+    }
+  }
+
+  void _onDeselectPlayer(DeselectPlayer event, Emitter<MapState> emit) {
+    final pos = event.selectedUser.position;
+    final bounds = flutter_map.LatLngBounds(
+      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
+      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
+    );
+
+    final visible = _allProfiles.where((p) => bounds.contains(p.user.position)).toList();
+
+    emit(MapReady(
+      latitude: pos.latitude,
+      longitude: pos.longitude,
+      visiblePeople: visible,
+      visibleBounds: bounds,
+      zoom: 12,
+    ));
+  }
+
+  Future<void> _onRequestJoinSession(RequestJoinSession event, Emitter<MapState> emit) async {
+    final pos = event.selectedUser.position;
+    final bounds = flutter_map.LatLngBounds(
+      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
+      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
+    );
+
+    try {
+      final artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
+      final enriched = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
+
+      emit(MapProfileSelected(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+        visibleBounds: bounds,
+        visiblePeople: _allProfiles,
+        zoom: 12,
+        selectedUser: enriched,
+      ));
+    } catch (e) {
+      emit(MapError("Failed to reload Spotify data: $e"));
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:localplayer/features/match/domain/controllers/IMatchController.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 
 class MatchController implements IMatchController {
@@ -10,13 +10,13 @@ class MatchController implements IMatchController {
   MatchController(this.context, this.addEvent);
 
   @override
-  void like(UserProfile profile) {
-    addEvent(LikePressed(profile));
+  void like(ProfileWithSpotify profile) {
+    addEvent(LikePressed(profile.user));
   }
 
   @override
-  void dislike(UserProfile profile) {
-    addEvent(DislikePressed(profile));
+  void dislike(ProfileWithSpotify profile) {
+    addEvent(DislikePressed(profile.user));
   }
 
   @override

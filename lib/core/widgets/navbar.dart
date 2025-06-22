@@ -6,7 +6,7 @@ import 'package:iconify_flutter/icons/mdi.dart';
 class Navbar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  static const double? icon_size = 30;
+  static const double icon_size = 30;
 
   const Navbar({
     super.key,
@@ -36,9 +36,9 @@ class Navbar extends StatelessWidget {
           label: 'Feed',
         ),
         NavigationDestination(
-          icon: Iconify(Mdi.chat_outline, size: icon_size),
-          selectedIcon: Iconify(Mdi.chat, size: icon_size),
-          label: 'Sessions',
+          icon: Iconify(Mdi.user, size: icon_size),
+          selectedIcon: Iconify(Mdi.user, size: icon_size),
+          label: 'Profile',
         ),
       ],
     );
