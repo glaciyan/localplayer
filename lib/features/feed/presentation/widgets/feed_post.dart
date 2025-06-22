@@ -40,9 +40,9 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
     if (_shouldShowMap) {
       return 500.0; // Taller for map posts
     } else if (_sessionInvite) {
-      return 2.0; // Taller for session invite posts
+      return 200.0; // Taller for session invite posts
     } else {
-      return 120.0; // Standard height for other posts
+      return 110.0; // Standard height for other posts
     }
   }
 
@@ -58,10 +58,10 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
       });
     },
     child: AnimatedSize(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       child: SizedBox(
-        height: _isExpanded ? _expandedHeight : 120.0,
+        height: _isExpanded ? _expandedHeight : 110.0,
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           clipBehavior: Clip.antiAlias,
@@ -94,28 +94,33 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget> [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget> [
                         ProfileAvatar(
                           avatarLink: widget.post.backgroundLink,
                           color: Colors.white,
                           scale: 0.75,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget> [
                               Text(
+                                overflow: TextOverflow.ellipsis,
                                 widget.post.title,
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
+                                overflow: TextOverflow.ellipsis,
                                 widget.post.type.toString(),
                                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
@@ -198,6 +203,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         ),
                         const SizedBox(height: 8),
                         SizedBox(
+                          height: 200,
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
