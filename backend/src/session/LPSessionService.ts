@@ -5,6 +5,7 @@ import { LPSessionStatus } from "../generated/prisma/enums.ts";
 import { mklog } from "../logger.ts";
 import { notificationController } from "../notification/notification.ts";
 import presenceController from "../presence/presence.ts";
+import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
 
 const log = mklog("lpsession-controller");
 
@@ -21,18 +22,30 @@ export const SessionIncludes = {
         },
     },
     creator: {
-        include: {
-            fakePresence: true,
-        },
+        include: PublicProfileIncludes
     },
     participants: {
         include: {
-            participant: ParticipantInclude,
+            participant: {
+                include: PublicProfileIncludes
+            },
         },
     },
 } as const;
 
 export class LPSessionService {
+    async findRunningSession(profileId: number) {
+        return await prisma.lPSession.findFirst({
+            where: {
+                creatorId: profileId,
+                status: {
+                    not: "CONCLUDED",
+                },
+            },
+            include: SessionIncludes,
+        });
+    }
+
     async createSession(
         profileId: number,
         latitude: string,
@@ -44,6 +57,13 @@ export class LPSessionService {
             latitude,
             longitude
         );
+
+        const runningSession = await this.findRunningSession(profileId);
+
+        if (runningSession) {
+            log.warn(`${profileId} already has a running session`)
+            return null;
+        }
 
         const session = await prisma.lPSession.create({
             data: {
@@ -90,6 +110,11 @@ export class LPSessionService {
             throw new CustomValidationError("You are already in this session");
         }
 
+        if (session.status === "CONCLUDED") {
+            log.error(`${profile.handle}:${profile.id} has tried to join a concluded session.`);
+            throw new CustomValidationError("This session has already ended.");
+        }
+
         const request = await prisma.lPSessionParticipation.create({
             data: {
                 status: session.status === "OPEN" ? "OPEN_ACCEPTED" : "PENDING",
@@ -113,6 +138,7 @@ export class LPSessionService {
                 profile.displayName || profile.handle
             } has requested to join your session`,
             message: null,
+            notifType: "SESSION_REQUESTED",
             lpSessionId: session.id,
         });
 
@@ -172,6 +198,7 @@ export class LPSessionService {
                 profile.displayName || profile.handle
             } has accepted your request.`,
             message: null,
+            notifType: "SESSION_REQUEST_ACCEPTED",
             lpSessionId: sessionId,
         });
 

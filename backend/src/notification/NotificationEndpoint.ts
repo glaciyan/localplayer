@@ -6,6 +6,7 @@ import { SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts"
 
 export const NotificationDTOMap = (notif: any) => ({
     id: notif.id,
+    type: notif.type,
     createdAt: notif.createdAt,
     title: notif.title,
     message: notif.message,

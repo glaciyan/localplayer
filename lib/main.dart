@@ -15,25 +15,28 @@ import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart'
 import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/go_router/router.dart';
 import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
-import 'package:localplayer/features/feed/presentation/blocs/feed_block.dart';
+import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/match/match_module.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localplayer/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
+import 'package:localplayer/features/map/map_module.dart';
+import 'package:flutter/foundation.dart';
+import 'package:localplayer/features/feed/feed_module.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final config = ConfigService();
+  final ConfigService config = ConfigService();
   await config.load();
   final dio = Dio();
   final userRepo = UserModule.provideRepository(dio);
   runApp(MyApp(config: config, userRepo: userRepo,));
 }
-
 
 class MyApp extends StatelessWidget {
   final ConfigService config;
@@ -44,6 +47,13 @@ class MyApp extends StatelessWidget {
     required this.userRepo,
     super.key,
   });
+
+  // keine ahnung was das soll aber wegen linter rules
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ConfigService>('config', config));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +89,7 @@ class MyApp extends StatelessWidget {
               config,
             ),
           ),
-          BlocProvider(create: (_) => FeedBloc()),
+          BlocProvider<FeedBloc>(create: (_) => FeedModule.provideBloc()),
           BlocProvider(
             create: (context) => MapBloc(
               mapRepository: context.read<IMapRepository>(),

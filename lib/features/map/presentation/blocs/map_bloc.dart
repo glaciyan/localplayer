@@ -7,8 +7,8 @@ import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'map_event.dart';
 import 'map_state.dart';
-import 'package:flutter/material.dart';
-
+import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
+import 'package:localplayer/core/domain/models/profile.dart';
 
 
 class MapBloc extends Bloc<MapEvent, MapState> {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 class ProfileAvatar extends StatelessWidget {
   final String avatarLink;
   final Color color;
@@ -12,8 +14,16 @@ class ProfileAvatar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('avatarLink', avatarLink));
+    properties.add(ColorProperty('color', color));
+    properties.add(DoubleProperty('scale', scale));
+  }
+
+  
+  @override
+  Widget build(final BuildContext context) => Container(
       width: 100 * scale,
       height: 100 * scale,
       decoration: BoxDecoration(
@@ -40,5 +50,4 @@ class ProfileAvatar extends StatelessWidget {
         ),
       ),
     );
-  }
 }

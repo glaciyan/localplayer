@@ -1,13 +1,10 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localplayer/core/ui/app/app_placeholder.dart';
 import 'package:go_router/go_router.dart';
 // Importing MyHomePage for the home route if needed in the future
 import 'package:localplayer/core/widgets/splash_screen.dart';
+import 'package:localplayer/features/feed/presentation/screens/feed_screen.dart';
 import 'package:localplayer/features/map/presentation/screens/map_screen.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
 import 'package:localplayer/features/match/presentation/screens/match_screen.dart';
-import 'package:localplayer/features/match/match_module.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
+
 import 'package:localplayer/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:localplayer/features/profile/presentation/screens/profile_screen.dart';
 
@@ -28,7 +25,7 @@ final router = GoRouter(
       ),
     GoRoute(
       path: '/feed',
-      builder: (context, state) => const AppPlaceholder(title: "Feed"),
+      builder: (context, state) => const FeedScreen(),
     ),
     GoRoute(
       path: '/profile',

@@ -15,6 +15,7 @@ class MapController implements IMapController {
   LatLngBounds? _currentBounds;
   List<ProfileWithSpotify> _visiblePeople = [];
 
+
   MapController(this.context, this.addEvent);
 
   @override

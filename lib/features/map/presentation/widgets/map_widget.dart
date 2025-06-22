@@ -5,10 +5,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 
 import 'package:localplayer/core/widgets/profile_avatar.dart';
+import 'package:localplayer/features/map/domain/controllers/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
-import 'package:localplayer/core/modules/map_module.dart';
+import 'package:localplayer/features/map/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
@@ -19,8 +20,8 @@ class MapWidget extends StatelessWidget {
   final int maxListeners = 1000000;
 
   @override
-  Widget build(BuildContext context) {
-    final mapController = MapModule.provideController(context, context.read<MapBloc>());
+  Widget build(final BuildContext context) {
+    final IMapController mapController = MapModule.provideController(context, context.read<MapBloc>());
 
     return BlocBuilder<MapBloc, MapState>(
       builder: (context, state) {
@@ -37,7 +38,7 @@ class MapWidget extends StatelessWidget {
 
         return Scaffold(
           body: Stack(
-            children: [
+            children: <Widget> [
               FlutterMap(
                 options: MapOptions(
                   initialRotation: 0.0,
@@ -48,7 +49,7 @@ class MapWidget extends StatelessWidget {
                   initialCenter: LatLng(51.509364, -0.128928),
                   initialZoom: 13.0,
                   maxZoom: 20,
-                  onPositionChanged: (position, hasGesture) {
+                  onPositionChanged: (final MapCamera position, final bool hasGesture) {
                     if (state is MapReady) {
                       mapController.updateCameraPosition(
                         position.center.latitude,
@@ -60,11 +61,11 @@ class MapWidget extends StatelessWidget {
                     }
                   },
                 ),
-                children: [
+                children: <Widget> [
                   TileLayer(
                     retinaMode: RetinaMode.isHighDensity(context),
                     urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-                    subdomains: ['a', 'b', 'c'],
+                    subdomains: <String> ['a', 'b', 'c'],
                     userAgentPackageName: 'com.example.app',
                   ),
                   if (state is MapReady || state is MapProfileSelected)
@@ -115,13 +116,13 @@ class MapWidget extends StatelessWidget {
                           children: [
                             ProfileCard(profile: state.selectedUser),
                             Padding(
-                              padding: const EdgeInsets.all(40.0),
+                              padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
+                                children: <Widget> [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: <Widget> [
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(200, 60),
