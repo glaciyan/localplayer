@@ -2,6 +2,7 @@ import { Elysia, status, t } from "elysia";
 import profileController from "./profile.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
+import { SwipeType } from "../generated/prisma/enums.ts";
 
 const log = mklog("profile-api");
 
@@ -11,7 +12,12 @@ export const ProfileDTOMap = (p: any) => ({
     handle: p.handle,
     displayName: p.displayName ?? p.handle,
     biography: p.biography,
-    likes: p._count.swipesReceived,
+    likes: p.swipesReceived.filter(
+        (swipe: { type: SwipeType }) => swipe.type === "POSITIVE"
+    ).length,
+    dislikes: p.swipesReceived.filter(
+        (swipe: { type: SwipeType }) => swipe.type === "NEGATIVE"
+    ).length,
     spotifyId: p.spotifyId,
     presence: p.fakePresence
         ? {

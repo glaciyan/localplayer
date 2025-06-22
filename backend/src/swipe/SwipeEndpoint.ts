@@ -14,6 +14,9 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
     .post(
         "/:rating/:swipeeId",
         async ({ params: { swipeeId, rating }, profile }) => {
+            if (profile.id === swipeeId) {
+                return status(422, "You cannot rate yourself.")
+            }
             const result = await swipeController.createSwipe(
                 profile.id,
                 swipeeId,

@@ -7,15 +7,16 @@ const log = mklog("profile-repo");
 export const PublicProfileIncludes = {
     fakePresence: true,
     realPresence: true,
-    _count: {
-        select: {
-            swipesReceived: {
-                where: {
-                    type: "POSITIVE",
-                },
-            },
-        },
-    },
+    swipesReceived: true,
+    // _count: {
+    //     select: {
+    //         swipesReceived: {
+    //             where: {
+    //                 type: "POSITIVE",
+    //             },
+    //         },
+    //     },
+    // },
 } as const;
 
 export const PublicProfileIncludesWithoutLikeCount = {
