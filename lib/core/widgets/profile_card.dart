@@ -1,170 +1,117 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/spotify/presentation/widgets/spotifiy_profile_container.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
-import 'package:localplayer/core/domain/models/profile.dart';
-import 'package:flutter/foundation.dart';
+import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
 
 class ProfileCard extends StatelessWidget {
-  final Profile? profile;
-  final String? backgroundLink;
+  final ProfileWithSpotify profile;
 
-  const ProfileCard({
-    super.key,
-    this.profile,
-    this.backgroundLink,
-  });
+  const ProfileCard({super.key, required this.profile});
 
   @override
-  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Profile?>('profile', profile));
-    properties.add(StringProperty('backgroundLink', backgroundLink));
-  }
-
-  @override
-  Widget build(final BuildContext context) => SizedBox.expand(
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: <Widget> [
-            
-            // background image
-            Positioned.fill(
-              child: Image.network(
-                backgroundLink ?? '',
-                fit: BoxFit.cover
-              )
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.network(profile.artist.imageUrl, fit: BoxFit.cover),
+          ),
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
+              child: Container(color: Colors.black.withOpacity(0.5)),
             ),
-            
-            // blur effect
-            Positioned.fill(
-              child:
-                BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.5),
-                  )
-                )
-            ),
+          ),
 
-            // profile card
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget> [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        child: Column(
-                          children: <Widget> [
-                            SizedBox(height: 30,),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget> [
-                                  ProfileAvatar(avatarLink: backgroundLink ?? '',color: Colors.green, scale: 1),
-                                  SizedBox(width: 16,),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,         
-                                      children: <Widget> [
-                                        Text(
-                                          'Test Profile Name',
-                                          style: Theme.of(context).textTheme.titleLarge,
-                                          overflow: TextOverflow.ellipsis,
-                                          ),
-                                        Text(
-                                          'Artist Genre',
-                                          style: Theme.of(context).textTheme.bodyMedium,
-                                          overflow: TextOverflow.ellipsis,
-                                          ),
-                                        Text(
-                                          '27.365 Monthly Listeners',
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                          overflow: TextOverflow.ellipsis,
-                                          )
-                                        ]
-                                    ),
-                                  ),
-                                ],
-                              ),
+          // Foreground content
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // USER INFO
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ProfileAvatar(
+                              avatarLink: profile.artist.imageUrl,
+                              color: profile.user.color ?? Colors.white,
                             ),
-                            SizedBox(height: 16,),
-              
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                style: Theme.of(context).textTheme.bodySmall,
-                                '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.'),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(profile.user.displayName, style: Theme.of(context).textTheme.titleLarge),
+                                Text(profile.user.location, style: Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
-              
-                            SizedBox(height: 20,),
-                            SpotifyPreviewContainer(trackId: '3Lc2iEewvM7KoJi9zcN5bx'),
-                            SizedBox(height: 20,),
-                            SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
-                            SizedBox(height: 20,),
-              
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                style: Theme.of(context).textTheme.bodySmall,
-                                '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                ),
-                            ),
-              
-              
-                            SizedBox(height: 20,),
-                            SpotifyPreviewContainer(trackId: '5GYgYjeC02l8fSkQ4ffyqd'),
-                            SizedBox(height: 20,),
-                            SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
-                            SizedBox(height: 20,),
-                            Text(style: Theme.of(context).textTheme.bodySmall,
-                              '[Your Name] is a visual artist creating expressive works inspired by emotion, nature, and daily life. Their art invites reflection through bold color, texture, and storytelling.',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            SizedBox(height: 20,),
-                            SpotifyPreviewContainer(trackId: '0PvFJmanyNQMseIFrU708S'),
-              
-                            SizedBox(height: 200,),
                           ],
-                        )
-                      )
-                    ) 
-                  ],
-                ),
-              ),
-            ),
+                        ),
+                        const SizedBox(height: 16),
 
+                        if (profile.user.biography.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Text(
+                              profile.user.biography,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
 
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: 350, 
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: <Color> [
-                        Colors.black.withAlpha(150), // dark fade to add contrast
-                        Colors.transparent,
+                        const Divider(height: 20, thickness: 1, color: Colors.white30),
+
+                        // SPOTIFY ARTIST INFO
+                        Text(profile.artist.name, style: Theme.of(context).textTheme.titleMedium),
+                        Text(profile.artist.genres, style: Theme.of(context).textTheme.bodySmall),
+
+                        const SizedBox(height: 12),
+
+                        for (final id in profile.artist.tracks.take(3).map((t) => t.id))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: SpotifyPreviewContainer(trackId: id),
+                          ),
+
+                        const SizedBox(height: 100), // Leave scroll space
                       ],
                     ),
                   ),
                 ),
+              ],
             ),
-          ],
-        )
-      )
+          ),
+
+          // Bottom gradient
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 300,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.black87, Colors.transparent],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
 }

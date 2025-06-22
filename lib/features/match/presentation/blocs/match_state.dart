@@ -1,5 +1,6 @@
 // features/match/presentation/blocs/match/match_state.dart
 import 'package:equatable/equatable.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 
@@ -15,12 +16,12 @@ class MatchInitial extends MatchState {}
 class MatchLoading extends MatchState {}
 
 class MatchLoaded extends MatchState {
-  final List<UserProfile> profiles;
+  final List<ProfileWithSpotify> profiles;
   final int currentIndex;
 
   const MatchLoaded(this.profiles, {this.currentIndex = 0});
 
-  UserProfile get currentProfile => profiles[currentIndex];
+  ProfileWithSpotify get currentProfile => profiles[currentIndex];
 
   bool get hasMore => currentIndex < profiles.length - 1;
 
@@ -34,6 +35,7 @@ class MatchLoaded extends MatchState {
   @override
   List<Object?> get props => [profiles, currentIndex];
 }
+
 
 
 class MatchError extends MatchState {

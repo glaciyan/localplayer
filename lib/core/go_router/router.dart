@@ -1,48 +1,36 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+// Importing MyHomePage for the home route if needed in the future
 import 'package:localplayer/core/widgets/splash_screen.dart';
-import 'package:localplayer/features/map/presentation/screens/map_screen.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
-import 'package:localplayer/features/match/presentation/screens/match_screen.dart';
-import 'package:localplayer/features/match/match_module.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
-import 'package:flutter/material.dart';
-import 'package:localplayer/core/ui/app/placeholder_screen.dart';
 import 'package:localplayer/features/feed/presentation/screens/feed_screen.dart';
-import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
-import 'package:localplayer/features/feed/feed_module.dart';
-import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
+import 'package:localplayer/features/map/presentation/screens/map_screen.dart';
+import 'package:localplayer/features/match/presentation/screens/match_screen.dart';
 
+import 'package:localplayer/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:localplayer/features/profile/presentation/screens/profile_screen.dart';
 
-final GoRouter router = GoRouter(
+final router = GoRouter(
   initialLocation: '/splash',
-  routes: <GoRoute> [
+  routes: [
     GoRoute(
       path: '/splash',
-      builder: (final BuildContext context, final GoRouterState state) => const SplashScreen(),
+      builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
       path: '/map',
-      builder: (final BuildContext context, final GoRouterState state) => const MapScreen(),
+      builder: (context, state) => const MapScreen(),
     ),
     GoRoute(
       path: '/swipe',
-      builder: (final BuildContext context, final GoRouterState state) => BlocProvider<MatchBloc>(
-        create: (_) => MatchModule.provideBloc()..add(LoadProfiles()),
-        child: const MatchScreen(),
+      builder: (context, state) => const MatchScreen(),
       ),
-    ),
     GoRoute(
       path: '/feed',
-      builder: (final BuildContext context, final GoRouterState state) => BlocProvider<FeedBloc>(
-        create: (_) => FeedModule.provideBloc()..add(TestEvent()),
-        child: const FeedScreen(),
-      ),
+      builder: (context, state) => const FeedScreen(),
     ),
     GoRoute(
       path: '/profile',
-      builder: (final BuildContext context, final GoRouterState state) 
-      => const PlaceholderScreen(title: "Profile", selectedIndex: 3),
+      builder: (context, state) => const ProfileScreen()
     ),
+    GoRoute(path: '/profile/edit', builder: (_, __) => EditProfileScreen()),
   ],
 );

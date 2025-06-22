@@ -6,7 +6,6 @@ class ProfileAvatar extends StatelessWidget {
   final Color color;
   final double scale;
 
-
   const ProfileAvatar({
     super.key,
     this.scale = 1,
@@ -28,21 +27,26 @@ class ProfileAvatar extends StatelessWidget {
       width: 100 * scale,
       height: 100 * scale,
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: color,
         shape: BoxShape.circle,
       ),
-      padding: EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       child: ClipOval(
         child: AspectRatio(
           aspectRatio: 1,
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.rotationX(0.1),            
-            child: Image.network(
-              avatarLink,
-              fit: BoxFit.cover,
-            ),
-          ),
+          child: avatarLink.isEmpty
+              ? const Icon(Icons.person, size: 40, color: Colors.white)
+              : Image.network(
+                  avatarLink,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.person_off, size: 40, color: Colors.white);
+                  },
+                ),
         ),
       ),
     );

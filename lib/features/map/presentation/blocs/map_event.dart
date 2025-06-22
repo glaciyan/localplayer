@@ -1,5 +1,5 @@
 import 'package:flutter_map/flutter_map.dart';
-import 'package:localplayer/core/domain/models/profile.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 abstract class MapEvent {}
 
@@ -8,33 +8,29 @@ class InitializeMap extends MapEvent {}
 class UpdateCameraPosition extends MapEvent {
   final double latitude;
   final double longitude;
-  final List<Profile> visiblePeople;
+  final List<UserProfile> visiblePeople;
   final LatLngBounds visibleBounds;
   final double zoom;
 
   UpdateCameraPosition(this.latitude, this.longitude, this.visiblePeople, this.visibleBounds, this.zoom);
 }
+class LoadMapProfiles extends MapEvent {
+  LoadMapProfiles();
+}
 
 class SelectPlayer extends MapEvent {
-  final Profile selectedPerson;
-  final List<Profile> visiblePeople;
+  final UserProfile selectedUser;
 
-  
-  SelectPlayer(this.selectedPerson, this.visiblePeople);
+  SelectPlayer(this.selectedUser);
 }
 
 class DeselectPlayer extends MapEvent {
-  final Profile selectedPerson;
-  final List<Profile> visiblePeople;
+  final UserProfile selectedUser;
 
-
-  DeselectPlayer(this.selectedPerson, this.visiblePeople);
+  DeselectPlayer(this.selectedUser);
 }
-
 class RequestJoinSession extends MapEvent {
-  final Profile selectedPerson;
-  final List<Profile> visiblePeople;
+  final UserProfile selectedUser;
 
-
-  RequestJoinSession(this.selectedPerson, this.visiblePeople);
+  RequestJoinSession(this.selectedUser);
 }

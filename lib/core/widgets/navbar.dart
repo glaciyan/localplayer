@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 class Navbar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  static const double? icon_size = 30;
+  static const double icon_size = 30;
 
   const Navbar({
     super.key,
@@ -45,9 +45,9 @@ class Navbar extends StatelessWidget {
           label: 'Feed',
         ),
         NavigationDestination(
-          icon: Iconify(Mdi.face_profile, size: icon_size),
-          selectedIcon: Iconify(Mdi.face_profile, size: icon_size),
-          label: 'Sessions',
+          icon: Iconify(Mdi.user, size: icon_size),
+          selectedIcon: Iconify(Mdi.user, size: icon_size),
+          label: 'Profile',
         ),
       ],
     );
