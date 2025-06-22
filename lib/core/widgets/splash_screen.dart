@@ -43,11 +43,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             children: <Widget> [
               Image.asset('assets/LocalPlayer.png', width: 160),
               const SizedBox(height: 16),
-              const Text(
-                'Music connects, we will show you how',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
             ],
           ),
         ),

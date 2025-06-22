@@ -9,17 +9,11 @@ class FeedController implements IFeedController {
   FeedController(this.context, this.addEvent);
 
   @override
+  void testEvent() => addEvent(TestEvent());
+
+  @override
   void loadFeed() => addEvent(LoadFeed());
 
   @override
   void refreshFeed() => addEvent(RefreshFeed());
-
-  @override
-  void loadMorePosts() => addEvent(LoadMorePosts());
-
-  @override
-  void likePost(String postId) => addEvent(LikePost(postId));
-
-  @override
-  void unlikePost(String postId) => addEvent(UnlikePost(postId));
 }

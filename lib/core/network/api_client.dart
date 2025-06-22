@@ -6,7 +6,7 @@ class ApiClient {
 
   ApiClient({final String? baseUrl})
       : _dio = Dio(BaseOptions(
-          baseUrl: baseUrl ?? 'http://localhost:3030/', // Set your default base URL
+          baseUrl: baseUrl ?? 'https://localplayer.fly.dev/swagger', // Set your default base URL
           connectTimeout: const Duration(seconds: 10),
           receiveTimeout: const Duration(seconds: 10),
         ));

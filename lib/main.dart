@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white
-            ),
+            ),  
           ),
         ),
         routerConfig: router,
