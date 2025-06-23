@@ -11,6 +11,7 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
     .get(
         "/preview",
         async ({ query: { trackId } }) => {
+            // https://stackoverflow.com/a/79238027
             log.info(`Trying to fetch preview for ${trackId}`);
             const response = await fetch(`https://open.spotify.com/embed/track/${trackId}`);
             const htmlPage = await response.text();
@@ -21,7 +22,7 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
             const mp3Url = matches ? matches[1] : null;
 
             if (!mp3Url) {
-                log.error(`Could not find mp3 for sond ${trackId}`);
+                log.error(`Could not find mp3 for song ${trackId}`);
                 return status(404);
             }
 
