@@ -1,0 +1,15 @@
+meta {
+  name: Song Preview
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://api.spotify.com/v1/tracks/{{id}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: BQAOkHDBcLtMCPheej1uK5fgsthoTDU3BDwy8U0oQaXb_EOmxmdNCpTbSl986F8gsWulOsCK-XJmY5w_GIXju3pCcvJK7sZERqGpdTCtAWzvUTXNAG-FXZe_T7NeadAJ556jZNIKVYA
+}
