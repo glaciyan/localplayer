@@ -39,13 +39,11 @@ class ProfileAvatar extends StatelessWidget {
               : Image.network(
                   avatarLink,
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
+                  loadingBuilder: (final BuildContext context, final Widget child, final ImageChunkEvent? loadingProgress) {
                     if (loadingProgress == null) return child;
                     return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                   },
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.person_off, size: 40, color: Colors.white);
-                  },
+                  errorBuilder: (final BuildContext context, final Object error, final StackTrace? stackTrace) => const Icon(Icons.person_off, size: 40, color: Colors.white),
                 ),
         ),
       ),

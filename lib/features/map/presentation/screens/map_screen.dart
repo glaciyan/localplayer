@@ -12,8 +12,7 @@ class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
+  Widget build(final BuildContext context) => BlocProvider<MapBloc>(
       create: (_) => MapBloc(
         mapRepository: context.read<IMapRepository>(),
         spotifyRepository: context.read<ISpotifyRepository>(),
@@ -23,5 +22,4 @@ class MapScreen extends StatelessWidget {
         child: MapWidget(),
       ),
     );
-  }
 }

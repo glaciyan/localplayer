@@ -4,26 +4,26 @@ import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
+import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
 
 class MapRepository implements IMapRepository {
   final ISpotifyRepository spotifyRepository;
-
   const MapRepository(this.spotifyRepository);
 
   @override
   Future<List<ProfileWithSpotify>> fetchProfiles() async {
     final List<UserProfile> rawProfiles = _fakeProfiles;
 
-    final enriched = await Future.wait(
-      rawProfiles.map((user) async {
-        final artist = await spotifyRepository.fetchArtistData(user.spotifyId);
+    final List<ProfileWithSpotify> enriched = await Future.wait(
+      rawProfiles.map((final UserProfile user) async {
+        final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
         return ProfileWithSpotify(user: user, artist: artist);
       }),
     );
 
     return enriched;
   }
-  static const List<UserProfile> _fakeProfiles = [
+  static const List<UserProfile> _fakeProfiles = <UserProfile> [
     UserProfile(
       handle: '@cgmar',
       displayName: 'Tanaka',

@@ -2,11 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
-import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotifiy_profile_container.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/spotify/domain/entities/track_entity.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileCard extends StatelessWidget {
   final ProfileWithSpotify profile;
@@ -14,12 +13,17 @@ class ProfileCard extends StatelessWidget {
   const ProfileCard({super.key, required this.profile});
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
+  }
+
+  @override
+  Widget build(final BuildContext context) => Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: Stack(
-        children: [
+        children: <Widget> [
           // Background image
           Positioned.fill(
             child: Image.network(profile.artist.imageUrl, fit: BoxFit.cover),
@@ -27,7 +31,7 @@ class ProfileCard extends StatelessWidget {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
-              child: Container(color: Colors.black.withOpacity(0.5)),
+              child: Container(color: Colors.black.withValues(alpha: 0.5)),
             ),
           ),
 
@@ -35,17 +39,17 @@ class ProfileCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
             child: Column(
-              children: [
+              children: <Widget> [
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget> [
                         // USER INFO
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
+                          children: <Widget> [
                             ProfileAvatar(
                               avatarLink: profile.artist.imageUrl,
                               color: profile.user.color ?? Colors.white,
@@ -53,7 +57,7 @@ class ProfileCard extends StatelessWidget {
                             const SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: <Widget> [
                                 Text(profile.user.displayName, style: Theme.of(context).textTheme.titleLarge),
                                 Text(profile.user.location, style: Theme.of(context).textTheme.bodySmall),
                               ],
@@ -79,7 +83,7 @@ class ProfileCard extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
-                        for (final id in profile.artist.tracks.take(3).map((t) => t.id))
+                        for (final String id in profile.artist.tracks.take(3).map((final TrackEntity track) => track.id))
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: SpotifyPreviewContainer(trackId: id),
@@ -105,7 +109,7 @@ class ProfileCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Colors.black87, Colors.transparent],
+                  colors: <Color> [Colors.black87, Colors.transparent],
                 ),
               ),
             ),
@@ -113,5 +117,4 @@ class ProfileCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

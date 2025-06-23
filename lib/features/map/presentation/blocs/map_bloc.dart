@@ -3,19 +3,17 @@ import 'package:flutter_map/flutter_map.dart' as flutter_map;
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
+import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
 import 'map_event.dart';
 import 'map_state.dart';
-import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
-import 'package:localplayer/core/domain/models/profile.dart';
 
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final IMapRepository mapRepository;
   final ISpotifyRepository spotifyRepository;
 
-  List<ProfileWithSpotify> _allProfiles = [];
+  List<ProfileWithSpotify> _allProfiles = <ProfileWithSpotify> [];
 
   MapBloc({
     required this.mapRepository,
@@ -29,7 +27,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<RequestJoinSession>(_onRequestJoinSession);
   }
 
-  Future<void> _onLoadMapProfiles(LoadMapProfiles event, Emitter<MapState> emit) async {
+  Future<void> _onLoadMapProfiles(final LoadMapProfiles event, final Emitter<MapState> emit) async {
     emit(MapLoading());
 
     try {
@@ -41,17 +39,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
-  void _onInitializeMap(InitializeMap event, Emitter<MapState> emit) {
+  void _onInitializeMap(final InitializeMap event, final Emitter<MapState> emit) {
     const double initLatitude = 37.7749;
     const double initLongitude = -122.4194;
     const double initZoom = 12;
 
-    final bounds = flutter_map.LatLngBounds(
+    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(initLatitude - 0.01, initLongitude - 0.01),
       LatLng(initLatitude + 0.01, initLongitude + 0.01),
     );
 
-    final visible = _allProfiles.where((p) => bounds.contains(p.user.position)).toList();
+    final List<ProfileWithSpotify> visible = _allProfiles.where((final ProfileWithSpotify profile) => bounds.contains(profile.user.position)).toList();
 
     emit(MapReady(
       latitude: initLatitude,
@@ -62,8 +60,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     ));
   }
 
-  void _onUpdateCameraPosition(UpdateCameraPosition event, Emitter<MapState> emit) {
-    final visible = _allProfiles.where((p) => event.visibleBounds.contains(p.user.position)).toList();
+  void _onUpdateCameraPosition(final UpdateCameraPosition event, final Emitter<MapState> emit) {
+    final List<ProfileWithSpotify> visible = _allProfiles.where((final ProfileWithSpotify profile) => event.visibleBounds.contains(profile.user.position)).toList();
 
     emit(MapReady(
       latitude: event.latitude,
@@ -74,16 +72,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     ));
   }
 
-  Future<void> _onSelectPlayer(SelectPlayer event, Emitter<MapState> emit) async {
-    final pos = event.selectedUser.position;
-    final bounds = flutter_map.LatLngBounds(
+  Future<void> _onSelectPlayer(final SelectPlayer event, final Emitter<MapState> emit) async {
+    final LatLng pos = event.selectedUser.position;
+    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
       LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
     );
 
     try {
-      final artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
-      final selected = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
+      final SpotifyArtistData artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
+      final ProfileWithSpotify selected = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
 
       emit(MapProfileSelected(
         latitude: pos.latitude,
@@ -98,14 +96,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
-  void _onDeselectPlayer(DeselectPlayer event, Emitter<MapState> emit) {
-    final pos = event.selectedUser.position;
-    final bounds = flutter_map.LatLngBounds(
+  void _onDeselectPlayer(final DeselectPlayer event, final Emitter<MapState> emit) {
+    final LatLng pos = event.selectedUser.position;
+    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
       LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
     );
 
-    final visible = _allProfiles.where((p) => bounds.contains(p.user.position)).toList();
+    final List<ProfileWithSpotify> visible = _allProfiles.where((final ProfileWithSpotify profile) => bounds.contains(profile.user.position)).toList();
 
     emit(MapReady(
       latitude: pos.latitude,
@@ -116,16 +114,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     ));
   }
 
-  Future<void> _onRequestJoinSession(RequestJoinSession event, Emitter<MapState> emit) async {
-    final pos = event.selectedUser.position;
-    final bounds = flutter_map.LatLngBounds(
+  Future<void> _onRequestJoinSession(final RequestJoinSession event, final Emitter<MapState> emit) async {
+    final LatLng pos = event.selectedUser.position;
+    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
       LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
     );
 
     try {
-      final artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
-      final enriched = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
+      final SpotifyArtistData artistData = await spotifyRepository.fetchArtistData(event.selectedUser.spotifyId);
+      final ProfileWithSpotify enriched = ProfileWithSpotify(user: event.selectedUser, artist: artistData);
 
       emit(MapProfileSelected(
         latitude: pos.latitude,

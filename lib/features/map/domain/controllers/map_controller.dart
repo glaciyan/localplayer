@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:localplayer/features/map/domain/controllers/map_controller_interface.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+
 
 class MapController implements IMapController {
   final BuildContext context;
@@ -13,33 +13,33 @@ class MapController implements IMapController {
 
   double _currentZoom = 13.0;
   LatLngBounds? _currentBounds;
-  List<ProfileWithSpotify> _visiblePeople = [];
+  List<ProfileWithSpotify> _visiblePeople = <ProfileWithSpotify>[];
 
 
   MapController(this.context, this.addEvent);
 
   @override
-  void selectProfile(ProfileWithSpotify profile) {
+  void selectProfile(final ProfileWithSpotify profile) {
     addEvent(map_event.SelectPlayer(profile.user));
   }
 
   @override
-  void requestJoinSession(ProfileWithSpotify profile) {
+  void requestJoinSession(final ProfileWithSpotify profile) {
     addEvent(map_event.RequestJoinSession(profile.user));
   }
 
   @override
-  void deselectProfile(ProfileWithSpotify profile) {
+  void deselectProfile(final ProfileWithSpotify profile) {
     addEvent(map_event.DeselectPlayer(profile.user));
   }
 
   @override
   void updateCameraPosition(
-    double latitude,
-    double longitude,
-    List<ProfileWithSpotify> visiblePeople,
-    LatLngBounds visibleBounds,
-    double zoom,
+    final double latitude,
+    final double longitude,
+    final List<ProfileWithSpotify> visiblePeople,
+    final LatLngBounds visibleBounds,
+    final double zoom,
   ) {
     _currentZoom = zoom;
     _currentBounds = visibleBounds;
@@ -48,7 +48,7 @@ class MapController implements IMapController {
     addEvent(map_event.UpdateCameraPosition(
       latitude,
       longitude,
-      visiblePeople.map((e) => e.user).toList(),
+      visiblePeople.map((final ProfileWithSpotify profile) => profile.user).toList(),
       visibleBounds,
       zoom,
     ));
