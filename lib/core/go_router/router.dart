@@ -7,30 +7,33 @@ import 'package:localplayer/features/match/presentation/screens/match_screen.dar
 
 import 'package:localplayer/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:localplayer/features/profile/presentation/screens/profile_screen.dart';
+import 'package:flutter/material.dart';
 
-final router = GoRouter(
+final GoRouter router = GoRouter(
   initialLocation: '/splash',
-  routes: [
+  routes: <GoRoute> [
     GoRoute(
       path: '/splash',
-      builder: (context, state) => const SplashScreen(),
+      builder: (final BuildContext context, final GoRouterState state) => const SplashScreen(),
     ),
     GoRoute(
       path: '/map',
-      builder: (context, state) => const MapScreen(),
+      builder: (final BuildContext context, final GoRouterState state) => const MapScreen(),
     ),
     GoRoute(
       path: '/swipe',
-      builder: (context, state) => const MatchScreen(),
+      builder: (final BuildContext context, final GoRouterState state) => const MatchScreen(),
       ),
     GoRoute(
       path: '/feed',
-      builder: (context, state) => const FeedScreen(),
+      builder: (final BuildContext context, final GoRouterState state) => const FeedScreen(),
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => const ProfileScreen()
+      builder: (final BuildContext context, final GoRouterState state) => const ProfileScreen()
     ),
-    GoRoute(path: '/profile/edit', builder: (_, __) => EditProfileScreen()),
+    GoRoute(
+      path: '/profile/edit', 
+      builder: (final BuildContext context, final GoRouterState state) => EditProfileScreen()),
   ],
 );

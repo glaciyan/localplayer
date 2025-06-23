@@ -2,17 +2,24 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/spotify/domain/entities/track_entity.dart';
 import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:flutter/foundation.dart';
 
 class SpotifyProfileWidget extends StatelessWidget {
   final SpotifyArtistData artist;
 
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<SpotifyArtistData>('artist', artist));
+  }
+
   const SpotifyProfileWidget({super.key, required this.artist});
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
+  Widget build(final BuildContext context) => Stack(
+      children: <Widget>[
         // Background image with blur
         Positioned.fill(
           child: Image.network(artist.imageUrl, fit: BoxFit.cover),
@@ -20,7 +27,7 @@ class SpotifyProfileWidget extends StatelessWidget {
         Positioned.fill(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
-            child: Container(color: Colors.black.withOpacity(0.5)),
+            child: Container(color: Colors.black.withValues(alpha: 0.5)),
           ),
         ),
 
@@ -28,19 +35,19 @@ class SpotifyProfileWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
           child: Column(
-            children: [
+            children: <Widget>[
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text(artist.name, style: Theme.of(context).textTheme.titleLarge),
                       const SizedBox(height: 4),
                       Text(artist.genres, style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 20),
                       Text(artist.biography, style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 20),
-                      for (final track in artist.tracks.take(3))
+                      for (final TrackEntity track in artist.tracks.take(3))
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: SpotifyPreviewContainer(trackId: track.id),
@@ -65,12 +72,11 @@ class SpotifyProfileWidget extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.center,
-                colors: [Colors.black87, Colors.transparent],
+                colors: <Color> [Colors.black87, Colors.transparent],
               ),
             ),
           ),
         ),
       ],
     );
-  }
 }

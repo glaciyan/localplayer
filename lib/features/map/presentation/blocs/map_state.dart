@@ -1,6 +1,5 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 abstract class MapState {}
 
@@ -28,20 +27,18 @@ class MapReady extends MapState {
   });
 
   MapReady copyWith({
-    double? latitude,
-    double? longitude,
-    LatLngBounds? visibleBounds,
-    List<ProfileWithSpotify>? visiblePeople,
-    double? zoom,
-  }) {
-    return MapReady(
+    final double? latitude,
+    final double? longitude,
+    final LatLngBounds? visibleBounds,
+    final List<ProfileWithSpotify>? visiblePeople,
+    final double? zoom,
+  }) => MapReady(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       visibleBounds: visibleBounds ?? this.visibleBounds,
       visiblePeople: visiblePeople ?? this.visiblePeople,
       zoom: zoom ?? this.zoom,
     );
-  }
 }
 
 class MapProfileSelected extends MapState {
@@ -62,14 +59,13 @@ class MapProfileSelected extends MapState {
   });
 
   MapProfileSelected copyWith({
-    double? latitude,
-    double? longitude,
-    LatLngBounds? visibleBounds,
-    List<ProfileWithSpotify>? visiblePeople,
-    double? zoom,
-    ProfileWithSpotify? selectedUser,
-  }) {
-    return MapProfileSelected(
+    final double? latitude,
+    final double? longitude,
+    final LatLngBounds? visibleBounds,
+    final List<ProfileWithSpotify>? visiblePeople,
+    final double? zoom,
+    final ProfileWithSpotify? selectedUser,
+  }) => MapProfileSelected(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       visibleBounds: visibleBounds ?? this.visibleBounds,
@@ -77,5 +73,4 @@ class MapProfileSelected extends MapState {
       zoom: zoom ?? this.zoom,
       selectedUser: selectedUser ?? this.selectedUser,
     );
-  }
 }

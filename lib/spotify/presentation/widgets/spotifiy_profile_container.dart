@@ -1,11 +1,11 @@
 // lib/presentation/widgets/spotify/spotify_profile_container.dart
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
 import 'package:localplayer/spotify/presentation/blocs/spotify_profile_state.dart';
+import 'package:flutter/foundation.dart';
 
 class SpotifyProfileContainer extends StatelessWidget {
   final String spotifyId;
@@ -20,11 +20,18 @@ class SpotifyProfileContainer extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final repository = RepositoryProvider.of<ISpotifyRepository>(context);
-        final cubit = SpotifyProfileCubit(repository);
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('spotifyId', spotifyId));
+    properties.add(StringProperty('preloadNextId', preloadNextId));
+    properties.add(ObjectFlagProperty<Widget Function(BuildContext context, SpotifyArtistData artist)>.has('builder', builder));
+  }
+
+  @override
+  Widget build(final BuildContext context) => BlocProvider<SpotifyProfileCubit>(
+      create: (final BuildContext context) {
+        final ISpotifyRepository repository = RepositoryProvider.of<ISpotifyRepository>(context);
+        final SpotifyProfileCubit cubit = SpotifyProfileCubit(repository);
         cubit.loadProfile(spotifyId);
 
         if (preloadNextId != null) {
@@ -34,7 +41,7 @@ class SpotifyProfileContainer extends StatelessWidget {
         return cubit;
       },
       child: BlocBuilder<SpotifyProfileCubit, SpotifyProfileState>(
-        builder: (context, state) {
+        builder: (final BuildContext context, final SpotifyProfileState state) {
           if (state.loading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -48,6 +55,5 @@ class SpotifyProfileContainer extends StatelessWidget {
         },
       ),
     );
-  }
 }
 

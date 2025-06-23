@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
+import 'package:flutter/foundation.dart';
 
 
 class ProfileWidget extends StatelessWidget {
@@ -16,9 +17,8 @@ class ProfileWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
+  Widget build(final BuildContext context) => Column(
+      children: <Widget> [
         // Scrollable profile content
         Expanded(
           child: ProfileCard(profile: profile),
@@ -28,7 +28,7 @@ class ProfileWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           child: Row(
-            children: [
+            children: <Widget> [
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: onEdit,
@@ -49,5 +49,12 @@ class ProfileWidget extends StatelessWidget {
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onEdit', onEdit));
+    properties.add(ObjectFlagProperty<VoidCallback>.has('onCreateSession', onCreateSession));
   }
 }

@@ -28,8 +28,7 @@ class UserProfile {
     this.listeners,
   });
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
+  factory UserProfile.fromJson(final Map<String, dynamic> json) => UserProfile(
       handle: json['handle'] ?? '',
       displayName: json['displayName'] ?? '',
       biography: json['biography'] ?? '',
@@ -41,9 +40,8 @@ class UserProfile {
       color: json['color'],
       listeners: json['listeners'],
     );
-  }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic> {
     'handle': handle,
     'displayName': displayName,
     'biography': biography,
@@ -57,18 +55,17 @@ class UserProfile {
   };
 
   UserProfile copyWith({
-    String? handle,
-    String? displayName,
-    String? biography,
-    String? avatarLink,
-    String? backgroundLink,
-    String? location,
-    String? spotifyId,
-    LatLng? position,
-    Color? color,
-    int? listeners,
-  }) {
-    return UserProfile(
+    final String? handle,
+    final String? displayName,
+    final String? biography,
+    final String? avatarLink,
+    final String? backgroundLink,
+    final String? location,
+    final String? spotifyId,
+    final LatLng? position,
+    final Color? color,
+    final int? listeners,
+  }) => UserProfile(
       handle: handle ?? this.handle,
       displayName: displayName ?? this.displayName,
       biography: biography ?? this.biography,
@@ -80,5 +77,4 @@ class UserProfile {
       color: color ?? this.color,
       listeners: listeners ?? this.listeners,
     );
-  }
 }

@@ -2,5 +2,5 @@
 import 'package:localplayer/spotify/domain/entities/track_entity.dart';
 
 abstract class ITrackRepository {
-  Future<TrackEntity> getTrackById(String trackId);
+  Future<TrackEntity> getTrackById(final String trackId);
 }

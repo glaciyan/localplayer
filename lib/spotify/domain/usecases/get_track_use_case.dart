@@ -6,7 +6,5 @@ class GetTrackUseCase {
 
   GetTrackUseCase(this.repository);
 
-  Future<TrackEntity> call(String trackId) {
-    return repository.getTrackById(trackId);
-  }
+  Future<TrackEntity> call(final String trackId) => repository.getTrackById(trackId);
 }

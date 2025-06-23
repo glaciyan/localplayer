@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
+import 'package:flutter/foundation.dart';
 
 class AvatarSection extends StatelessWidget {
   final ProfileWithSpotify profile;
@@ -8,9 +9,8 @@ class AvatarSection extends StatelessWidget {
   const AvatarSection({super.key, required this.profile});
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
+  Widget build(final BuildContext context) => Row(
+      children: <Widget> [
         ProfileAvatar(
           avatarLink: profile.user.avatarLink,
           color: profile.user.color ?? Colors.white,
@@ -21,5 +21,10 @@ class AvatarSection extends StatelessWidget {
         ),
       ],
     );
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
   }
 }

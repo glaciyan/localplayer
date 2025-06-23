@@ -16,24 +16,24 @@ import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
 
-  final int maxOnScreen = 5;
-  final int maxListeners = 1000000;
+  static const int maxOnScreen = 5;
+  static const int maxListeners = 1000000;
 
   @override
   Widget build(final BuildContext context) {
     final IMapController mapController = MapModule.provideController(context, context.read<MapBloc>());
 
     return BlocBuilder<MapBloc, MapState>(
-      builder: (context, state) {
-        List<ProfileWithSpotify> sortedPeople = [];
+      builder: (final BuildContext context, final MapState state) {
+        List<ProfileWithSpotify> sortedPeople = <ProfileWithSpotify>[];
         double currentZoom = 13.0;
 
         if (state is MapReady || state is MapProfileSelected) {
-          final visiblePeople = (state as dynamic).visiblePeople;
+          final List<ProfileWithSpotify> visiblePeople = (state as dynamic).visiblePeople;
           currentZoom = (state as dynamic).zoom;
 
           sortedPeople = List<ProfileWithSpotify>.from(visiblePeople)
-            ..sort((a, b) => _getListeners(b.user).compareTo(_getListeners(a.user)));
+            ..sort((final ProfileWithSpotify a, final ProfileWithSpotify b) => _getListeners(b.user).compareTo(_getListeners(a.user)));
         }
 
         return Scaffold(
@@ -72,8 +72,8 @@ class MapWidget extends StatelessWidget {
                     MarkerLayer(
                       markers: sortedPeople
                           .take(maxOnScreen)
-                          .map((profile) {
-                            final user = profile.user;
+                          .map((final ProfileWithSpotify profile) {
+                            final UserProfile user = profile.user;
                             final int listenerCount = _getListeners(user);
                             final double scale = calculateScale(listenerCount, maxListeners: maxListeners);
 
@@ -105,7 +105,7 @@ class MapWidget extends StatelessWidget {
                       onDoubleTap: () {
                         mapController.deselectProfile(state.selectedUser);
                       },
-                      onVerticalDragDown: (details) {
+                      onVerticalDragDown: (final DragDownDetails details) {
                         if (details.globalPosition.dy < 100) {
                           mapController.deselectProfile(state.selectedUser);
                         }
@@ -113,7 +113,7 @@ class MapWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
-                          children: [
+                          children: <Widget> [
                             ProfileCard(profile: state.selectedUser),
                             Padding(
                               padding: const EdgeInsets.all(20.0),
@@ -157,11 +157,7 @@ class MapWidget extends StatelessWidget {
     );
   }
 
-  int _getListeners(UserProfile user) {
-    return user.listeners ?? 0;
-  }
+  int _getListeners(final UserProfile user) => user.listeners ?? 0;
 
-  LatLng _getLatLng(UserProfile user) {
-    return user.position ?? LatLng(51.509364, -0.128928);
-  }
+  LatLng _getLatLng(final UserProfile user) => user.position;
 }

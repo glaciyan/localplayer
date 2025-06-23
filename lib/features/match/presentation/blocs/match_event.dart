@@ -1,6 +1,5 @@
 // features/match/presentation/blocs/match/match_event.dart\
 import 'package:equatable/equatable.dart';
-import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 
@@ -8,7 +7,7 @@ abstract class MatchEvent extends Equatable {
   const MatchEvent();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => <Object?> [];
 }
 
 class LoadProfiles extends MatchEvent {}
@@ -18,7 +17,7 @@ class LikePressed extends MatchEvent {
   const LikePressed(this.profile);
 
   @override
-  List<Object?> get props => [profile];
+  List<Object?> get props => <Object?> [profile];
 }
 
 class DislikePressed extends MatchEvent {
@@ -26,6 +25,6 @@ class DislikePressed extends MatchEvent {
   const DislikePressed(this.profile);
 
   @override
-  List<Object?> get props => [profile];
+  List<Object?> get props => <Object?> [profile];
 }
 class MatchNextProfile extends MatchEvent {}

@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:localplayer/features/match/data/repositories/fake_match_repository.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 
 import 'domain/repositories/match_repository.dart';
@@ -12,11 +13,11 @@ import 'domain/usecases/dislike_user_usecase.dart';
 
 class MatchModule {
   static MatchBloc provideBloc({
-    required ISpotifyRepository spotifyRepository,
+    required final ISpotifyRepository spotifyRepository,
   }) {
     final MatchRepository repo = FakeMatchRepository();
-    final like = LikeUserUseCase(repo);
-    final dislike = DislikeUserUseCase(repo);
+    final LikeUserUseCase like = LikeUserUseCase(repo);
+    final DislikeUserUseCase dislike = DislikeUserUseCase(repo);
     return MatchBloc(
       likeUseCase: like,
       dislikeUseCase: dislike,
@@ -25,12 +26,10 @@ class MatchModule {
     );
   }
 
-  static IMatchController provideController(BuildContext context, MatchBloc bloc) {
-    return MatchController(
+  static IMatchController provideController(final BuildContext context, final MatchBloc bloc) => MatchController(
       context,
-      (event) => bloc.add(event),
+      bloc.add,
     );
-  }
 }
 
 

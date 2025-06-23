@@ -10,12 +10,12 @@ class MatchController implements IMatchController {
   MatchController(this.context, this.addEvent);
 
   @override
-  void like(ProfileWithSpotify profile) {
+  void like(final ProfileWithSpotify profile) {
     addEvent(LikePressed(profile.user));
   }
 
   @override
-  void dislike(ProfileWithSpotify profile) {
+  void dislike(final ProfileWithSpotify profile) {
     addEvent(DislikePressed(profile.user));
   }
 

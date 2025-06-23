@@ -2,7 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
+import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';  
+import 'package:localplayer/spotify/domain/entities/track_entity.dart';
 import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:flutter/foundation.dart';
 
 
 class EditableProfileCard extends StatefulWidget {
@@ -15,6 +18,12 @@ class EditableProfileCard extends StatefulWidget {
 
   @override
   State<EditableProfileCard> createState() => EditableProfileCardState();
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
+  }
 }
 
 class EditableProfileCardState extends State<EditableProfileCard> {
@@ -39,8 +48,7 @@ class EditableProfileCardState extends State<EditableProfileCard> {
   }
 
   /// Exposes the updated profile to the parent
-  ProfileWithSpotify getUpdatedProfile() {
-    return ProfileWithSpotify(
+  ProfileWithSpotify getUpdatedProfile() => ProfileWithSpotify(
       user: widget.profile.user.copyWith(
         displayName: nameController.text.trim(),
         biography: bioController.text.trim(),
@@ -48,18 +56,18 @@ class EditableProfileCardState extends State<EditableProfileCard> {
       ),
       artist: widget.profile.artist,
     );
-  }
+
 
   @override
-  Widget build(BuildContext context) {
-    final artist = widget.profile.artist;
+  Widget build(final BuildContext context) {
+    final SpotifyArtistData artist = widget.profile.artist;
 
     return Card(
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: Stack(
-        children: [
+        children: <Widget> [
           // Background image
           Positioned.fill(
             child: Image.network(artist.imageUrl, fit: BoxFit.cover),
@@ -68,7 +76,7 @@ class EditableProfileCardState extends State<EditableProfileCard> {
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
-              child: Container(color: Colors.black.withOpacity(0.5)),
+              child: Container(color: Colors.black.withValues(alpha: 0.5)),
             ),
           ),
 
@@ -78,9 +86,9 @@ class EditableProfileCardState extends State<EditableProfileCard> {
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget> [
                   Row(
-                    children: [
+                    children: <Widget> [
                       ProfileAvatar(
                         avatarLink: widget.profile.artist.imageUrl,
                         color: widget.profile.user.color ?? Colors.white,
@@ -89,7 +97,7 @@ class EditableProfileCardState extends State<EditableProfileCard> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget> [
                             _editableField("Name", nameController),
                             _editableField("Spotify ID", spotifyIdController),
                           ],
@@ -106,7 +114,7 @@ class EditableProfileCardState extends State<EditableProfileCard> {
                   Text(artist.genres, style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 12),
 
-                  for (final id in artist.tracks.take(3).map((t) => t.id))
+                  for (final String id in artist.tracks.take(3).map((final TrackEntity track) => track.id))
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: SpotifyPreviewContainer(trackId: id),
@@ -127,7 +135,7 @@ class EditableProfileCardState extends State<EditableProfileCard> {
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Colors.black87, Colors.transparent],
+                  colors: <Color> [Colors.black87, Colors.transparent],
                 ),
               ),
             ),
@@ -137,10 +145,9 @@ class EditableProfileCardState extends State<EditableProfileCard> {
     );
   }
 
-  Widget _editableField(String label, TextEditingController controller, {int maxLines = 1}) {
-    return Column(
+  Widget _editableField(final String label, final TextEditingController controller, {final int maxLines = 1}) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget> [
         Text(label, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 4),
         TextField(
@@ -156,5 +163,14 @@ class EditableProfileCardState extends State<EditableProfileCard> {
         const SizedBox(height: 12),
       ],
     );
+
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', widget.profile));
+    properties.add(DiagnosticsProperty<TextEditingController>('nameController', nameController));
+    properties.add(DiagnosticsProperty<TextEditingController>('bioController', bioController));
+    properties.add(DiagnosticsProperty<TextEditingController>('spotifyIdController', spotifyIdController));
   }
 }
