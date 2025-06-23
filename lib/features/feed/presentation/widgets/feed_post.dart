@@ -42,7 +42,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
     } else if (_sessionInvite) {
       return 200.0; // Taller for session invite posts
     } else {
-      return 110.0; // Standard height for other posts
+      return 115.0; // Standard height for other posts
     }
   }
 
@@ -61,7 +61,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       child: SizedBox(
-        height: _isExpanded ? _expandedHeight : 110.0,
+        height: _isExpanded ? _expandedHeight : 115.0,
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           clipBehavior: Clip.antiAlias,
@@ -194,16 +194,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                           ),
                         ),
                       ] else if (_sessionInvite) ...<Widget> [
-                        // Session invite content
-                        Text(
-                          'Session Invite',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
                         SizedBox(
-                          height: 200,
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
