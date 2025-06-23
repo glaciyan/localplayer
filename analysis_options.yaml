@@ -1,5 +1,3 @@
-include: package:lints/strict.yaml
-
 analyzer:
   strong-mode:
     implicit-casts: false
