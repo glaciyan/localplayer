@@ -8,13 +8,14 @@ import 'package:localplayer/features/match/presentation/screens/match_screen.dar
 import 'package:localplayer/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:localplayer/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:localplayer/features/auth/presentation/screens/login_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/splash',
   routes: <GoRoute> [
     GoRoute(
       path: '/splash',
-      builder: (final BuildContext context, final GoRouterState state) => const SplashScreen(),
+      builder: (final BuildContext context, final GoRouterState state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/map',
