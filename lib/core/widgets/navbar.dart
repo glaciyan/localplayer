@@ -43,8 +43,8 @@ class Navbar extends StatelessWidget {
           label: 'Feed',
         ),
         NavigationDestination(
-          icon: Iconify(Mdi.user, size: icon_size),
-          selectedIcon: Iconify(Mdi.user, size: icon_size),
+          icon: Iconify(Mdi.account_outline, size: icon_size),
+          selectedIcon: Iconify(Mdi.account, size: icon_size),
           label: 'Profile',
         ),
       ],

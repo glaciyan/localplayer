@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: userHandleController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'username'),
                 ),
               ),
               const SizedBox(height: 12),
@@ -51,9 +52,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextField(
                   controller: passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(labelText: 'password'),
                   obscureText: true,
                 ),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(200, 50),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                onPressed: () {
+                  context.go('/map');
+                },
+                child: Text('Login', style: Theme.of(context).textTheme.titleLarge),
               ),
             ],
           ),
