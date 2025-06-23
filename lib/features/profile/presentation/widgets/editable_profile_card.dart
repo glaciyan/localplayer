@@ -62,88 +62,105 @@ class EditableProfileCardState extends State<EditableProfileCard> {
   Widget build(final BuildContext context) {
     final SpotifyArtistData artist = widget.profile.artist;
 
-    return Card(
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: <Widget> [
-          // Background image
-          Positioned.fill(
-            child: Image.network(artist.imageUrl, fit: BoxFit.cover),
-          ),
-          // Blur layer
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
-              child: Container(color: Colors.black.withValues(alpha: 0.5)),
-            ),
-          ),
-
-          // Scrollable content
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget> [
-                  Row(
-                    children: <Widget> [
-                      ProfileAvatar(
-                        avatarLink: widget.profile.artist.imageUrl,
-                        color: widget.profile.user.color ?? Colors.white,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: <Widget>[
+              // background image
+              Positioned.fill(
+                child: Image.network(artist.imageUrl, fit: BoxFit.cover),
+              ),
+              // blur layer
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
+                  child: Container(color: Colors.black.withOpacity(0.5)),
+                ),
+              ),
+              // main content
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget> [
-                            _editableField("Name", nameController),
-                            _editableField("Spotify ID", spotifyIdController),
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                ProfileAvatar(
+                                  avatarLink: widget.profile.artist.imageUrl,
+                                  color: widget.profile.user.color ?? Colors.white,
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      _editableField("Name", nameController),
+                                      _editableField("Spotify ID", spotifyIdController),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            _editableField("Biography", bioController, maxLines: 4),
+
+                            const Divider(height: 20, thickness: 1, color: Colors.white30),
+
+                            Text(artist.name, style: Theme.of(context).textTheme.titleMedium),
+                            Text(artist.genres, style: Theme.of(context).textTheme.bodySmall),
+                            const SizedBox(height: 12),
+
+                            for (final String id in artist.tracks.take(3).map((t) => t.id))
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: SpotifyPreviewContainer(trackId: id),
+                              ),
+
+                            const SizedBox(height: 100),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _editableField("Biography", bioController, maxLines: 4),
-
-                  const Divider(height: 20, thickness: 1, color: Colors.white30),
-
-                  Text(artist.name, style: Theme.of(context).textTheme.titleMedium),
-                  Text(artist.genres, style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(height: 12),
-
-                  for (final String id in artist.tracks.take(3).map((final TrackEntity track) => track.id))
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: SpotifyPreviewContainer(trackId: id),
                     ),
-                ],
-              ),
-            ),
-          ),
-
-          // Gradient at bottom
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 300,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: <Color> [Colors.black87, Colors.transparent],
+                  ],
                 ),
               ),
-            ),
+              // gradient at bottom
+              // Bottom gradient
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: 300,
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: <Color>[Colors.black87, Colors.transparent],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+
 
   Widget _editableField(final String label, final TextEditingController controller, {final int maxLines = 1}) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,

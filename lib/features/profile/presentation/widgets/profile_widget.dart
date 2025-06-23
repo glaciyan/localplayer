@@ -17,41 +17,65 @@ class ProfileWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Column(
-      children: <Widget> [
-        // Scrollable profile content
-        Expanded(
-          child: ProfileCard(profile: profile),
-        ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            // Fullscreen ProfileCard
+            Positioned.fill(
+              child: ProfileCard(profile: profile),
+            ),
 
-        // Sticky buttons at the bottom
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-          child: Row(
-            children: <Widget> [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit),
-                  label: const Text("Edit Profile"),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: onCreateSession,
-                  icon: const Icon(Icons.play_arrow),
-                  label: const Text("Create Session"),
-                ),
-              ),
-            ],
+            // Buttons always fixed at bottom
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 24,
+              child: Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16),
+  child: Row(
+    children: <Widget>[
+      Expanded(
+        child: ElevatedButton.icon(
+          onPressed: onEdit,
+          icon: const Icon(Icons.edit, size: 28),
+          label: const Text(
+            "Edit Profile",
+            style: TextStyle(fontSize: 18),
+          ),
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(60),
           ),
         ),
-      ],
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: ElevatedButton.icon(
+          onPressed: onCreateSession,
+          icon: const Icon(Icons.play_arrow, size: 28),
+          label: const Text(
+            "Create Session",
+            style: TextStyle(fontSize: 18),
+          ),
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(60),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+            ),
+          ],
+        ),
+      ),
     );
+  }
 
   @override
-  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
     properties.add(ObjectFlagProperty<VoidCallback>.has('onEdit', onEdit));
