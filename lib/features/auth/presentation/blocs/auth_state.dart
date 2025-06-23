@@ -1,0 +1,14 @@
+import '../../domain/entities/user_auth.dart';
+
+abstract class AuthState {}
+
+class AuthInitial extends AuthState {}
+
+class AuthLoading extends AuthState {}
+
+class Authenticated extends AuthState {
+  final UserAuth user;
+  Authenticated(this.user);
+}
+
+class Unauthenticated extends AuthState {}
