@@ -24,8 +24,6 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => NavigationBar(
-    overlayColor: MaterialStateProperty.all(Colors.transparent) ,
-      backgroundColor: Theme.of(context).colorScheme.primary?.withValues(alpha:0),
       selectedIndex: selectedIndex,
       onDestinationSelected: onTap,
       destinations: <NavigationDestination> [
