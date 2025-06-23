@@ -6,7 +6,7 @@ class FeedRemoteDataSource {
   
   FeedRemoteDataSource(this.apiClient);
 
-  Future<Map<String, dynamic>> fetchFeedPosts() async {
+  Future<Map<String, dynamic>> fetchNotifications() async {
     final Response<dynamic> response = await apiClient.get('/notification/');
     return response.data as Map<String, dynamic>;
   }

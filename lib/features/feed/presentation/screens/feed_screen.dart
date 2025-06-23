@@ -40,7 +40,7 @@ class FeedContent extends StatelessWidget {
               children: <Widget> [
                 const Icon(Icons.error, size: 64, color: Colors.red),
                 const SizedBox(height: 16),
-                Text('Error: ${state.message}'),
+                Text('Error: ${state.message}', style: Theme.of(context).textTheme.labelMedium),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {

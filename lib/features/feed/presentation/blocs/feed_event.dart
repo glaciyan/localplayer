@@ -8,12 +8,14 @@ class TestEvent extends FeedEvent {}
 
 class AcceptSession extends FeedEvent {
   final String sessionId;
+  final String userId;
 
-  AcceptSession(this.sessionId);
+  AcceptSession(this.sessionId, this.userId);
 }
 
 class RejectSession extends FeedEvent {
   final String sessionId;
+  final String userId;
 
-  RejectSession(this.sessionId);
+  RejectSession(this.sessionId, this.userId);
 }

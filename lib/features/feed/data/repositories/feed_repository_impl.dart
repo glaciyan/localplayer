@@ -10,20 +10,20 @@ class FeedRepository implements IFeedRepository {
   FeedRepository(this._dataSource);
 
   @override
-  Future<List<NotificationModel>> fetchFeedPosts() async {
-    final Map<String, dynamic> rawData = await _dataSource.fetchFeedPosts();
-    return (rawData['posts'] as List<dynamic>)
+  Future<List<NotificationModel>> fetchNotifications() async {
+    final Map<String, dynamic> rawData = await _dataSource.fetchNotifications();
+    return (rawData['notifications'] as List<dynamic>)
         .map((final dynamic json) => NotificationModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
   @override
-  Future<void> acceptSession(final String sessionId) async {
-    await _dataSource.acceptSession(sessionId);
+  Future<void> acceptSession(final String sessionId, final String userId) async {
+    await _dataSource.acceptSession(sessionId, userId);
   }
 
   @override
-  Future<void> rejectSession(final String sessionId) async {
-    await _dataSource.rejectSession(sessionId);
+  Future<void> rejectSession(final String sessionId, final String userId) async {
+    await _dataSource.rejectSession(sessionId, userId);
   }
 }

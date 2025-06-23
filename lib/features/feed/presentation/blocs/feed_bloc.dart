@@ -25,7 +25,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<LoadFeed>((final LoadFeed event, final Emitter<FeedState> emit) async {
       emit(FeedLoading());
       try {
-        final List<NotificationModel> posts = await feedRepository.fetchFeedPosts();
+        final List<NotificationModel> posts = await feedRepository.fetchNotifications();
         emit(FeedLoaded(posts: posts));
       } catch (e) {
         emit(FeedError(e.toString()));
@@ -34,7 +34,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
     on<RefreshFeed>((final RefreshFeed event, final Emitter<FeedState> emit) async {
       try {
-        final List<NotificationModel> posts = await feedRepository.fetchFeedPosts();
+        final List<NotificationModel> posts = await feedRepository.fetchNotifications();
         emit(FeedLoaded(posts: posts));
       } catch (e) {
         emit(FeedError(e.toString()));
