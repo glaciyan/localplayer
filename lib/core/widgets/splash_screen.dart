@@ -23,7 +23,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _controller.forward();
 
     Timer(const Duration(seconds: 3), () {
-      context.go('/map');
+      if (context.mounted) {
+        context.go('/signup');
+      } else {
+        context.go('/signup');
+      }
     });
   }
 
