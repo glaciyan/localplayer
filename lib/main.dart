@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localplayer/features/map/data/repositories/map_repository_impl.dart';
 import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
@@ -23,6 +22,7 @@ import 'package:localplayer/spotify/domain/usecases/get_spotify_artist_data_use_
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/features/feed/feed_module.dart';
+import 'package:localplayer/features/map/domain/repositories/map_repository_impl.dart';
 
 
 void main() async {
