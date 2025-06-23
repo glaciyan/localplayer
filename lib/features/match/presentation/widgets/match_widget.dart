@@ -46,30 +46,16 @@ class _MatchWidgetState extends State<MatchWidget> {
   Widget _buildLoadedState(final BuildContext context, final List<ProfileWithSpotify> profiles) {
     if (profiles.isEmpty) {
       return const Center(child: Text('No more profiles.'));
-    } 
+    }
 
     return SafeArea(
-      child: Stack(
-        children: <Widget> [
-          Positioned.fill(
-            bottom: kBottomNavigationBarHeight + 90,
-            child: _buildCardSwiper(profiles),
-          ),
-          Positioned(
-            bottom: kBottomNavigationBarHeight + 5,
-            left: 0,
-            right: 0,
-            child: _buildSwipeButtons(context, profiles),
-          ),
-        ],
-      ),
+      child: _buildCardSwiper(profiles),
     );
   }
 
-
-  Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) =>CardSwiper(
+  Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) => CardSwiper(
       controller: _swiperController,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: EdgeInsets.zero,
       numberOfCardsDisplayed: 2,
       backCardOffset: const Offset(0, 20),
       maxAngle: 30,
@@ -83,9 +69,19 @@ class _MatchWidgetState extends State<MatchWidget> {
         final ProfileWithSpotify profile = profiles[index];
         return BlocProvider<SpotifyProfileCubit>.value(
           value: context.read<SpotifyProfileCubit>(),
-          child: KeyedSubtree(
-            key: ValueKey<String>(profile.user.spotifyId),
-            child: ProfileCard(profile: profile),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: ProfileCard(profile: profile),
+              ),
+              // Swipe buttons inside the card, near the bottom
+              Positioned(
+                bottom: 30,
+                left: 0,
+                right: 0,
+                child: _buildSwipeButtons(context, profiles),
+              ),
+            ],
           ),
         );
       },
@@ -106,6 +102,7 @@ class _MatchWidgetState extends State<MatchWidget> {
         return true;
       },
     );
+
 
   Widget _buildSwipeButtons(final BuildContext context, final List<ProfileWithSpotify> profiles) {
     void handleSwipe(final CardSwiperDirection direction) {
