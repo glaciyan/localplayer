@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,6 +14,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   late final Animation<double> _fade;
   final TextEditingController userHandleController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+    @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<TextEditingController>('userHandleController', userHandleController, ifPresent: 'has userHandleController'));
+    properties.add(ObjectFlagProperty<TextEditingController>('passwordController', passwordController, ifPresent: 'has passwordController'));
+    properties.add(FlagProperty('_isLoading', value: _isLoading, ifTrue: 'loading'));
+  }
 
   bool _isLoading = false;
 

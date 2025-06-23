@@ -1,25 +1,27 @@
 import 'package:localplayer/core/network/api_client.dart';
 import 'package:dio/dio.dart';
-import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
 
 class FeedRemoteDataSource {
   final ApiClient apiClient;
   
   FeedRemoteDataSource(this.apiClient);
 
-  Future<List<NotificationModel>> fetchFeedPosts() async {
-    final Response<dynamic> response = await apiClient.get('/feed/posts');
-    
-    return ((response.data as Map<String, dynamic>)['posts'] as List<dynamic>)
-        .map((final dynamic json) => NotificationModel.fromJson(json as Map<String, dynamic>))
-        .toList();
+  Future<Map<String, dynamic>> fetchFeedPosts() async {
+    final Response<dynamic> response = await apiClient.get('/notification/');
+    return response.data as Map<String, dynamic>;
   }
 
-  Future<List<NotificationModel>> fetchMorePosts() async {
-    final Response<dynamic> response = await apiClient.get('/feed/posts/more');
-    
-    return ((response.data as Map<String, dynamic>)['posts'] as List<dynamic>)
-        .map((final dynamic json) => NotificationModel.fromJson(json as Map<String, dynamic>))
-        .toList();
+  Future<void> acceptSession(final String sessionId, final String userId) async {
+    await apiClient.post(
+      '/session/requests/respond', 
+      data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': true},
+    );
+  }
+
+  Future<void> rejectSession(final String sessionId, final String userId) async {
+      await apiClient.post(
+        '/session/requests/respond', 
+        data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': false},
+      );
   }
 }

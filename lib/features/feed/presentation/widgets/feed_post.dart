@@ -81,7 +81,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         ? const Color.fromARGB(255, 20, 174, 69).withValues(alpha: 0.2)
                         : widget.post.type == NotificationType.sessionRejected
                         ? const Color.fromARGB(255, 174, 20, 53).withValues(alpha: 0.2)
-                        : Colors.black.withValues(alpha: 0.2),
+                        : Colors.black.withValues(alpha: 0.5),
                     ),
                       Container(
                         color: Colors.black.withValues(alpha: 0.2),
