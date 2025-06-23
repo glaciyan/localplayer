@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/profile/presentation/widgets/avatar_section.dart';
 import 'package:localplayer/features/profile/presentation/widgets/spotify_tracks_section.dart';
@@ -10,6 +11,15 @@ class EditableProfileContent extends StatelessWidget {
   final TextEditingController bioController;
   final TextEditingController spotifyIdController;
 
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
+    properties.add(DiagnosticsProperty<TextEditingController>('nameController', nameController));
+    properties.add(DiagnosticsProperty<TextEditingController>('bioController', bioController));
+    properties.add(DiagnosticsProperty<TextEditingController>('spotifyIdController', spotifyIdController));
+  }
+
   const EditableProfileContent({
     super.key,
     required this.profile,
@@ -19,14 +29,13 @@ class EditableProfileContent extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
+  Widget build(final BuildContext context) => Column(
+      children: <Widget> [
         Expanded(
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget> [
                 AvatarSection(profile: profile),
                 const SizedBox(height: 16),
                 TextFieldsSection(
@@ -43,5 +52,4 @@ class EditableProfileContent extends StatelessWidget {
         ),
       ],
     );
-  }
 }

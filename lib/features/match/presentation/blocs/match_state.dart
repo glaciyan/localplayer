@@ -8,7 +8,7 @@ abstract class MatchState extends Equatable {
   const MatchState();
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => <Object?> [];
 }
 
 class MatchInitial extends MatchState {}
@@ -25,15 +25,13 @@ class MatchLoaded extends MatchState {
 
   bool get hasMore => currentIndex < profiles.length - 1;
 
-  MatchLoaded copyWith({int? currentIndex}) {
-    return MatchLoaded(
+  MatchLoaded copyWith({final int? currentIndex}) => MatchLoaded(
       profiles,
       currentIndex: currentIndex ?? this.currentIndex,
     );
-  }
 
   @override
-  List<Object?> get props => [profiles, currentIndex];
+  List<Object?> get props => <Object?> [profiles, currentIndex];
 }
 
 
@@ -44,5 +42,5 @@ class MatchError extends MatchState {
   const MatchError(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => <Object?> [message];
 }

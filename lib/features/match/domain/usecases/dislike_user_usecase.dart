@@ -6,5 +6,5 @@ class DislikeUserUseCase {
 
   DislikeUserUseCase(this.repository);
 
-  Future<void> call(UserProfile user) => repository.dislike(user);
+  Future<void> call(final UserProfile user) => repository.dislike(user);
 }

@@ -9,8 +9,8 @@ class TrackRepositoryImpl implements ITrackRepository {
   TrackRepositoryImpl(this.apiService);
 
   @override
-  Future<TrackEntity> getTrackById(String trackId) async {
-    final json = await apiService.fetchTrack(trackId);
+  Future<TrackEntity> getTrackById(final String trackId) async {
+    final Map<String, dynamic> json = await apiService.fetchTrack(trackId);
     return TrackModel.fromJson(json);
   }
 }

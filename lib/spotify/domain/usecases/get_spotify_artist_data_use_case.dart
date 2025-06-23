@@ -6,7 +6,5 @@ class GetSpotifyArtistDataUseCase {
 
   GetSpotifyArtistDataUseCase(this.repository);
 
-  Future<SpotifyArtistData> call(String artistId) {
-    return repository.fetchArtistData(artistId);
-  }
+  Future<SpotifyArtistData> call(final String artistId) => repository.fetchArtistData(artistId);
 }

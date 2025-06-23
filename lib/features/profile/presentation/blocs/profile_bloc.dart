@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
 import 'package:localplayer/spotify/data/services/spotify_api_service.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/spotify/domain/entities/track_entity.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
@@ -15,13 +17,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<UpdateProfile>(_onUpdateProfile);
   }
 
-  Future<void> _onLoadProfile(LoadProfile event, Emitter<ProfileState> emit) async {
+  Future<void> _onLoadProfile(final LoadProfile event, final Emitter<ProfileState> emit) async {
   try {
-    final user = await userRepository.getCurrentUserProfile();
-    final artist = await spotifyService.getArtist(user.spotifyId);
-    final tracks = await spotifyService.getArtistTopTracks(user.spotifyId);
+    final UserProfile user = await userRepository.getCurrentUserProfile();
+    final Map<String, dynamic> artist = await spotifyService.getArtist(user.spotifyId);
+    final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(user.spotifyId);
 
-    final artistData = SpotifyArtistData(
+    final SpotifyArtistData artistData = SpotifyArtistData(
       name: artist['name'] ?? '',
       genres: (artist['genres'] as List?)?.join(', ') ?? '',
       imageUrl: artist['images']?[0]['url'] ?? '',
@@ -38,12 +40,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 }
 
-  Future<void> _onUpdateProfile(UpdateProfile event, Emitter<ProfileState> emit) async {
+  Future<void> _onUpdateProfile(final UpdateProfile event, final Emitter<ProfileState> emit) async {
     try {
       await userRepository.updateUserProfile(event.updatedProfile.user);
 
-      final artistJson = await spotifyService.getArtist(event.updatedProfile.user.spotifyId);
-      final tracks = await spotifyService.getArtistTopTracks(event.updatedProfile.user.spotifyId);
+      final Map<String, dynamic> artistJson = await spotifyService.getArtist(event.updatedProfile.user.spotifyId);
+      final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(event.updatedProfile.user.spotifyId);
 
       final artistData = SpotifyArtistData(
         name: artistJson['name'] ?? '',

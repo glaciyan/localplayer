@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:localplayer/spotify/data/models/track_model.dart';
 import 'package:localplayer/spotify/domain/entities/track_entity.dart';
 
@@ -12,19 +13,19 @@ class SpotifyApiService {
 
   Future<String> _getAccessToken() async {
     if (_accessToken != null) return _accessToken!;
-    final credentials = base64Encode(utf8.encode('$clientId:$clientSecret'));
-    final response = await http.post(
+    final String credentials = base64Encode(utf8.encode('$clientId:$clientSecret'));
+    final Response response = await http.post(
       Uri.parse('https://accounts.spotify.com/api/token'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Basic $credentials',
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: {
+      body: <String, String> {
         'grant_type': 'client_credentials',
       },
     );
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
       _accessToken = data['access_token'];
       return _accessToken!;
     } else {
@@ -32,11 +33,11 @@ class SpotifyApiService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchTrack(String trackId) async {
-    final token = await _getAccessToken();
-    final response = await http.get(
+  Future<Map<String, dynamic>> fetchTrack(final String trackId) async {
+    final String token = await _getAccessToken();
+    final Response response = await http.get(
       Uri.parse('https://api.spotify.com/v1/tracks/$trackId'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Bearer $token',
       },
     );
@@ -46,27 +47,29 @@ class SpotifyApiService {
       throw Exception('Track fetch error: ${response.body}');
     }
   }
-    Future<List<TrackEntity>> getArtistTopTracks(String artistId) async {
-      final token = await _getAccessToken();
-      final response = await http.get(
+    Future<List<TrackEntity>> getArtistTopTracks(final String artistId) async {
+      final String token = await _getAccessToken();
+      final Response response = await http.get(
         Uri.parse('https://api.spotify.com/v1/artists/$artistId/top-tracks?market=US'),
-        headers: {'Authorization': 'Bearer $token'},
+        headers: <String, String> {
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
+        final Map<String, dynamic> json = jsonDecode(response.body) as Map<String, dynamic>;
         final List<dynamic> tracksJson = json['tracks'];
-        return tracksJson.map((trackJson) => TrackModel.fromJson(trackJson)).toList();
+        return tracksJson.map((final dynamic trackJson) => TrackModel.fromJson(trackJson)).toList();
       } else {
         throw Exception('Failed to load top tracks: ${response.body}');
       }
     }
 
-    Future<Map<String, dynamic>> getArtist(String artistId) async {
-    final token = await _getAccessToken();
-    final response = await http.get(
+    Future<Map<String, dynamic>> getArtist(final String artistId) async {
+    final String token = await _getAccessToken();
+    final Response response = await http.get(
       Uri.parse('https://api.spotify.com/v1/artists/$artistId'),
-      headers: {
+      headers: <String, String> {
         'Authorization': 'Bearer $token',
       },
     );

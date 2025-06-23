@@ -7,10 +7,8 @@ class MatchScreen extends StatelessWidget {
   const MatchScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return WithNavBar(
+  Widget build(final BuildContext context) => WithNavBar(
       selectedIndex: 1,
       child: MatchWidget(),
     );
-  }
 }

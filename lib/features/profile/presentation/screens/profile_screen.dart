@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_block.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart';
 import 'package:localplayer/features/profile/presentation/widgets/profile_widget.dart';
 
@@ -11,11 +10,10 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return WithNavBar(
+  Widget build(final BuildContext context) => WithNavBar(
       selectedIndex: 3,
       child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
+        builder: (final BuildContext context, final ProfileState state) {
           if (state is ProfileLoading) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
@@ -42,5 +40,4 @@ class ProfileScreen extends StatelessWidget {
         },
       ),
     );
-  }
 }

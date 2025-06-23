@@ -6,5 +6,5 @@ class LikeUserUseCase {
 
   LikeUserUseCase(this.repository);
 
-  Future<void> call(UserProfile user) => repository.like(user);
+  Future<void> call(final UserProfile user) => repository.like(user);
 }

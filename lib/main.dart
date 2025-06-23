@@ -5,8 +5,7 @@ import 'package:localplayer/features/map/data/repositories/map_repository_impl.d
 import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_block.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:localplayer/features/profile/user_module.dart';
 import 'package:localplayer/spotify/data/services/config_service.dart';
 import 'package:localplayer/spotify/data/services/spotify_api_service.dart';
@@ -14,16 +13,14 @@ import 'package:localplayer/spotify/data/spotify_module.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/go_router/router.dart';
-import 'package:localplayer/features/chat/presentation/blocs/chat_block.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/match/match_module.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localplayer/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
-import 'package:localplayer/features/map/map_module.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/features/feed/feed_module.dart';
 
@@ -33,8 +30,8 @@ void main() async {
 
   final ConfigService config = ConfigService();
   await config.load();
-  final dio = Dio();
-  final userRepo = UserModule.provideRepository(dio);
+  final Dio dio = Dio();
+  final IUserRepository userRepo = UserModule.provideRepository(dio);
   runApp(MyApp(config: config, userRepo: userRepo,));
 }
 
@@ -48,17 +45,16 @@ class MyApp extends StatelessWidget {
     super.key,
   });
 
-  // keine ahnung was das soll aber wegen linter rules
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<ConfigService>('config', config));
+    properties.add(DiagnosticsProperty<IUserRepository>('userRepo', userRepo));
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
+  Widget build(final BuildContext context) => MultiRepositoryProvider(
+      providers: <RepositoryProvider<dynamic>>[
         RepositoryProvider<IUserRepository>.value(value: userRepo),
         RepositoryProvider<SpotifyApiService>(
           create: (_) => SpotifyModule.provideService(config),
@@ -73,31 +69,31 @@ class MyApp extends StatelessWidget {
           create: (_) => SpotifyModule.provideUseCase(config),
         ),
         RepositoryProvider<IMapRepository>(
-          create: (context) => MapRepository(context.read<ISpotifyRepository>()),
+          create: (final BuildContext context) => MapRepository(context.read<ISpotifyRepository>()),
         ),
       ],
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => MatchModule.provideBloc(
+        providers: <BlocProvider<dynamic>>[
+          BlocProvider<MatchBloc>(
+            create: (final BuildContext context) => MatchModule.provideBloc(
               spotifyRepository: context.read<ISpotifyRepository>(),
             )..add(LoadProfiles()),
           ),
-          BlocProvider(
-            create: (context) => UserModule.provideBloc(
+          BlocProvider<ProfileBloc>(
+            create: (final BuildContext context) => UserModule.provideBloc(
               userRepo,
               config,
             ),
           ),
           BlocProvider<FeedBloc>(create: (_) => FeedModule.provideBloc()),
-          BlocProvider(
-            create: (context) => MapBloc(
+          BlocProvider<MapBloc>(
+            create: (final BuildContext context) => MapBloc(
               mapRepository: context.read<IMapRepository>(),
               spotifyRepository: context.read<ISpotifyRepository>(),
             )..add(LoadMapProfiles()),
           ),
-          BlocProvider(
-            create: (context) => SpotifyProfileCubit(
+          BlocProvider<SpotifyProfileCubit>(
+            create: (final BuildContext context) => SpotifyProfileCubit(
               context.read<ISpotifyRepository>(),
             ),
           ),
@@ -138,5 +134,4 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -107,19 +107,19 @@ class FakeUserRepository implements IUserRepository {
 
   @override
   Future<UserProfile> getCurrentUserProfile() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     return mock;
   }
 
   @override
-  Future<void> updateUserProfile(UserProfile profile) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+  Future<void> updateUserProfile(final UserProfile profile) async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     mock = profile;
   }
 
   @override
   Future<List<UserProfile>> getDiscoverableUsers() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     return fakeProfiles;
   }
 }

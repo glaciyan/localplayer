@@ -4,7 +4,7 @@ import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/features/match/domain/repositories/match_repository.dart';
 
 class FakeMatchRepository implements MatchRepository {
-  final List<UserProfile> _fakeProfiles = const [
+  static const List<UserProfile> _fakeProfiles = <UserProfile> [
     UserProfile(
       handle: '@cgmar',
       displayName: 'Tanaka',
@@ -55,24 +55,24 @@ class FakeMatchRepository implements MatchRepository {
     ),
   ];
 
-  final List<UserProfile> _liked = [];
-  final List<UserProfile> _disliked = [];
+  final List<UserProfile> _liked = <UserProfile>[];
+  final List<UserProfile> _disliked = <UserProfile>[];
 
   @override
   Future<List<UserProfile>> fetchProfiles() async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     return _fakeProfiles;
   }
 
   @override
-  Future<void> like(UserProfile user) async {
+  Future<void> like(final UserProfile user) async {
     _liked.add(user);
-    print('Liked: ${user.displayName}');
+    //print('Liked: ${user.displayName}');
   }
 
   @override
-  Future<void> dislike(UserProfile user) async {
+  Future<void> dislike(final UserProfile user) async {
     _disliked.add(user);
-    print('Disliked: ${user.displayName}');
+    //print('Disliked: ${user.displayName}');
   }
 }

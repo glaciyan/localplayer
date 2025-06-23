@@ -7,7 +7,7 @@ import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
 import 'package:localplayer/features/match/match_module.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_block.dart';
+import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_state.dart';
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
@@ -28,33 +28,29 @@ class _MatchWidgetState extends State<MatchWidget> {
   void initState() {
     super.initState();
     _swiperController = CardSwiperController();
-    final bloc = context.read<MatchBloc>();
+    final MatchBloc bloc = context.read<MatchBloc>();
     _matchController = MatchModule.provideController(context, bloc);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<MatchBloc, MatchState>(
-      builder: (context, state) {
-        return switch (state) {
-          MatchLoading => const Center(child: CircularProgressIndicator()),
-          MatchInitial => const Center(child: Text('Swipe to find matches!')),
-          MatchError(:final message) => Center(child: Text('Error: $message')),
-          MatchLoaded(:final profiles) => _buildLoadedState(context, profiles),
+  Widget build(final BuildContext context) => BlocBuilder<MatchBloc, MatchState>(
+      builder: (final BuildContext context, final MatchState state) => switch (state) {
+          final MatchLoading _ => const Center(child: CircularProgressIndicator()),
+          final MatchInitial _ => const Center(child: Text('Swipe to find matches!')),
+          MatchError(:final String message) => Center(child: Text('Error: $message')),
+          MatchLoaded(:final List<ProfileWithSpotify> profiles) => _buildLoadedState(context, profiles),
           _ => const Center(child: Text('No profiles found.')),
-        };
-      },
-    );
-  }
+        },
+      );
 
-  Widget _buildLoadedState(BuildContext context, List<ProfileWithSpotify> profiles) {
+  Widget _buildLoadedState(final BuildContext context, final List<ProfileWithSpotify> profiles) {
     if (profiles.isEmpty) {
       return const Center(child: Text('No more profiles.'));
-    }
+    } 
 
     return SafeArea(
       child: Stack(
-        children: [
+        children: <Widget> [
           Positioned.fill(
             bottom: kBottomNavigationBarHeight + 90,
             child: _buildCardSwiper(profiles),
@@ -71,8 +67,7 @@ class _MatchWidgetState extends State<MatchWidget> {
   }
 
 
-  Widget _buildCardSwiper(List<ProfileWithSpotify> profiles) {
-    return CardSwiper(
+  Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) =>CardSwiper(
       controller: _swiperController,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       numberOfCardsDisplayed: 2,
@@ -84,20 +79,20 @@ class _MatchWidgetState extends State<MatchWidget> {
         vertical: false,
       ),
       cardsCount: profiles.length,
-      cardBuilder: (context, index, percentX, percentY) {
-        final profile = profiles[index];
-        return BlocProvider.value(
+      cardBuilder: (final BuildContext context, final int index, final int percentX, final int percentY) {
+        final ProfileWithSpotify profile = profiles[index];
+        return BlocProvider<SpotifyProfileCubit>.value(
           value: context.read<SpotifyProfileCubit>(),
           child: KeyedSubtree(
-            key: ValueKey(profile.user.spotifyId),
+            key: ValueKey<String>(profile.user.spotifyId),
             child: ProfileCard(profile: profile),
           ),
         );
       },
-      onSwipe: (previousIndex, currentIndex, direction) {
+      onSwipe: (final int? previousIndex, final int? currentIndex, final CardSwiperDirection direction) {
         if (currentIndex == null || currentIndex >= profiles.length) return true;
         setState(() => _currentIndex = currentIndex);
-        final profile = profiles[currentIndex];
+        final ProfileWithSpotify profile = profiles[currentIndex];
         switch (direction) {
           case CardSwiperDirection.right:
             _matchController.like(profile);
@@ -111,12 +106,11 @@ class _MatchWidgetState extends State<MatchWidget> {
         return true;
       },
     );
-  }
 
-  Widget _buildSwipeButtons(BuildContext context, List<ProfileWithSpotify> profiles) {
-    void handleSwipe(CardSwiperDirection direction) {
+  Widget _buildSwipeButtons(final BuildContext context, final List<ProfileWithSpotify> profiles) {
+    void handleSwipe(final CardSwiperDirection direction) {
       if (_currentIndex >= profiles.length) return;
-      final profile = profiles[_currentIndex];
+      final ProfileWithSpotify profile = profiles[_currentIndex];
 
       switch (direction) {
         case CardSwiperDirection.right:
@@ -134,7 +128,7 @@ class _MatchWidgetState extends State<MatchWidget> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: <Widget> [
         _buildSwipeButton(
           icon: IconParkSolid.dislike_two,
           color: Theme.of(context).highlightColor,
@@ -151,31 +145,28 @@ class _MatchWidgetState extends State<MatchWidget> {
   }
 
   Widget _buildSwipeButton({
-          required String icon,
-          required Color color,
-          required VoidCallback onPressed,
-        }) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: GestureDetector(
-              onTap: onPressed,
-              child: Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: color, width: 2),
-                ),
-                child: Center(
-                  child: Iconify(
-                    icon,
-                    size: 36,
-                  ),
+          required final String icon,
+          required final Color color,
+          required final VoidCallback onPressed,
+        }) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+                border: Border.all(color: color, width: 2),
+              ),
+              child: Center(
+                child: Iconify(
+                  icon,
+                  size: 36,
                 ),
               ),
             ),
-          );
-        }
-
-}
+          ),
+        );
+  }
