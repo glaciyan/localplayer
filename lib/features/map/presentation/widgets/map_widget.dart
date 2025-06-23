@@ -113,16 +113,33 @@ class MapWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
-                          children: <Widget> [
+                          children: <Widget>[
                             ProfileCard(profile: state.selectedUser),
+
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: GestureDetector(
+                                onTap: () => mapController.deselectProfile(state.selectedUser),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.6),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: const EdgeInsets.all(8),
+                                  child: const Icon(Icons.close, color: Colors.white),
+                                ),
+                              ),
+                            ),
+
                             Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget> [
+                                children: <Widget>[
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget> [
+                                    children: <Widget>[
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(200, 60),

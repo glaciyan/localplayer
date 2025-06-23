@@ -31,7 +31,18 @@ class MapController implements IMapController {
   @override
   void deselectProfile(final ProfileWithSpotify profile) {
     addEvent(map_event.DeselectPlayer(profile.user));
+
+    if (_currentBounds != null) {
+      updateCameraPosition(
+        _currentBounds!.center.latitude,
+        _currentBounds!.center.longitude,
+        _visiblePeople,
+        _currentBounds!,
+        _currentZoom,
+      );
+    }
   }
+
 
   @override
   void updateCameraPosition(
