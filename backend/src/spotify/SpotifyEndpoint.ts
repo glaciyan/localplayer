@@ -38,7 +38,7 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
                 trackId: t.String(),
             }),
             detail: {
-                description: "Fetch a song preview mp3 from a spotify song url",
+                description: "Fetch a song preview mp3 from a spotify track ID.",
             },
         }
     );
