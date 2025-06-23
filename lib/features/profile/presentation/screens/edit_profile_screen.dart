@@ -7,6 +7,7 @@ import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dar
 import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart';
 import 'package:localplayer/features/profile/presentation/widgets/editable_profile_card.dart';
+import 'package:localplayer/features/profile/presentation/widgets/editable_profile_widget.dart';
 
 
 class EditProfileScreen extends StatelessWidget {
@@ -23,36 +24,16 @@ class EditProfileScreen extends StatelessWidget {
           if (state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
-            return Column(
-              children: [
-                // Editable content
-                Expanded(
-                  child: EditableProfileCard(
-                    key: _cardKey,
-                    profile: state.profile,
-                  ),
-                ),
-
-                // Sticky save button
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final updated = _cardKey.currentState?.getUpdatedProfile();
-                          if (updated != null) {
-                            context.read<ProfileBloc>().add(UpdateProfile(updated));
-                            context.pop(); // go back to profile screen
-                          }
-                        },
-                        child: const Text('Save Profile'),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            return EditableProfileWidget(
+              profile: state.profile,
+              cardKey: _cardKey,
+              onSave: () {
+                final updated = _cardKey.currentState?.getUpdatedProfile();
+                if (updated != null) {
+                  context.read<ProfileBloc>().add(UpdateProfile(updated));
+                  context.pop();
+                }
+              },
             );
           } else {
             return const Center(child: Text('Failed to load profile.'));
