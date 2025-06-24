@@ -147,6 +147,8 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
                 radiusKm
             );
 
+            log.info(`Got ${profiles.length} profiles from nearby search`);
+
             return {
                 profiles: profiles.map((p) => {
                     const session = p.sessionsMade[0];
