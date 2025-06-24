@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
@@ -11,7 +12,6 @@ import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
 import 'package:localplayer/features/map/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 
 class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
