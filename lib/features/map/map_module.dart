@@ -1,6 +1,7 @@
 // lib/core/map_module.dart
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/network/api_client.dart';
+import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';

@@ -2,7 +2,9 @@ import 'package:localplayer/core/entities/profile_with_spotify.dart';
 
 sealed class ProfileEvent {}
 
-class LoadProfile extends ProfileEvent {}
+class LoadProfile extends ProfileEvent {
+  get updatedProfile => null;
+}
 
 class ProfileUpdated extends ProfileEvent {
   final String displayName;

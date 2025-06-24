@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:localplayer/core/services/spotify/data/models/track_model.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 
 class SpotifyApiService {
