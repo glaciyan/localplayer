@@ -1,10 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import { prisma } from "../database.ts";
-import { mklog } from "../logger.ts";
 import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
 import { SessionIncludes } from "../session/LPSessionService.ts";
-
-const log = mklog("presence-repo");
 
 export type CDecimal = Decimal;
 
@@ -186,8 +183,6 @@ export class PresenceRepository {
                 profile.fakePresence.latitude,
                 profile.fakePresence.longitude
             );
-
-            log.info(distance.toString());
 
             return distance.lessThan(radiusKm);
         });
