@@ -1,0 +1,263 @@
+[
+    {
+        "name": "valor123",
+        "password": "secpass1234",
+        "displayName": "Valor",
+        "bio": "Hi my name is Valor you probably know me from my work on Free.",
+        "latitude": 47.671602,
+        "longitude": 9.181796,
+        "spotifyLink": "https://open.spotify.com/artist/2hdUuoqJUD7RXiGBNhEeUL?si=5TVIVEWIRsGcS0gqMaCLbQ"
+    },
+    {
+        "name": "alpinist87",
+        "password": "MtnClimb!23",
+        "displayName": "Alpinist",
+        "bio": "Passionate about high-altitude adventures and mountain photography.",
+        "latitude": 46.852309,
+        "longitude": -121.760327,
+        "spotifyLink": "https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4"
+    },
+    {
+        "name": "citycoder",
+        "password": "CodeCity456",
+        "displayName": "CityCoder",
+        "bio": "Urban developer by day, open-source contributor by night.",
+        "latitude": 40.712776,
+        "longitude": -74.005974,
+        "spotifyLink": "https://open.spotify.com/artist/1uNFoZAHBGtllmzznpCI3s"
+    },
+    {
+        "name": "travelogue",
+        "password": "WanderLust!789",
+        "displayName": "Travelogue",
+        "bio": "Exploring the world one city at a time.",
+        "latitude": 48.856613,
+        "longitude": 2.352222,
+        "spotifyLink": "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02"
+    },
+    {
+        "name": "jazznut",
+        "password": "BlueNote#2025",
+        "displayName": "JazzNut",
+        "bio": "Jazz historian and vinyl collector.",
+        "latitude": 34.052235,
+        "longitude": -118.243683,
+        "spotifyLink": "https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2"
+    },
+    {
+        "name": "techsavvy",
+        "password": "AI&ML2025",
+        "displayName": "TechSavvy",
+        "bio": "Machine learning engineer and data enthusiast.",
+        "latitude": 37.774929,
+        "longitude": -122.419418,
+        "spotifyLink": "https://open.spotify.com/artist/1Xyo4u8uXC1ZmMpatF05PJ"
+    },
+    {
+        "name": "artsy_daisy",
+        "password": "Palette!42",
+        "displayName": "ArtsyDaisy",
+        "bio": "Illustrator and mixed-media artist.",
+        "latitude": 51.507351,
+        "longitude": -0.127758,
+        "spotifyLink": "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02"
+    },
+    {
+        "name": "historybuff",
+        "password": "Past&Presents",
+        "displayName": "HistoryBuff",
+        "bio": "Researcher of medieval European history.",
+        "latitude": 41.902782,
+        "longitude": 12.496366,
+        "spotifyLink": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX"
+    },
+    {
+        "name": "biophile",
+        "password": "BioLife!314",
+        "displayName": "BioPhile",
+        "bio": "Studying biodiversity and conservation.",
+        "latitude": -1.286389,
+        "longitude": 36.817223,
+        "spotifyLink": "https://open.spotify.com/artist/6eUKZXaKkcviH0Ku9w2n3V"
+    },
+    {
+        "name": "foodie_fiesta",
+        "password": "Salsa&Dine",
+        "displayName": "FoodieFiesta",
+        "bio": "Culinary explorer and recipe developer.",
+        "latitude": 19.432608,
+        "longitude": -99.133209,
+        "spotifyLink": "https://open.spotify.com/artist/7dGJo4pcD2V6oG8kP0tJRR"
+    },
+    {
+        "name": "poetica",
+        "password": "Verse!2025",
+        "displayName": "Poetica",
+        "bio": "Contemporary poet and creative writing coach.",
+        "latitude": 35.689487,
+        "longitude": 139.691711,
+        "spotifyLink": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY"
+    },
+    {
+        "name": "rockfan91",
+        "password": "GuitarHero#91",
+        "displayName": "RockFan",
+        "bio": "Guitarist and classic rock aficionado.",
+        "latitude": 34.052235,
+        "longitude": -118.243683,
+        "spotifyLink": "https://open.spotify.com/artist/36QJpDe2go2KgaRleHCDTp"
+    },
+    {
+        "name": "mindful_muse",
+        "password": "ZenMind2025",
+        "displayName": "MindfulMuse",
+        "bio": "Yoga instructor and mindfulness advocate.",
+        "latitude": 28.538336,
+        "longitude": -81.379234,
+        "spotifyLink": "https://open.spotify.com/artist/4NHQUGzhtTLFvgF5SZesLK"
+    },
+    {
+        "name": "codewizard",
+        "password": "Stack#!2025",
+        "displayName": "CodeWizard",
+        "bio": "Full-stack developer and tech blogger.",
+        "latitude": 52.520008,
+        "longitude": 13.404954,
+        "spotifyLink": "https://open.spotify.com/artist/66CXWjxzNUsdJxJ2JdwvnR"
+    },
+    {
+        "name": "green_thumb",
+        "password": "Garden@2025",
+        "displayName": "GreenThumb",
+        "bio": "Urban gardener and plant enthusiast.",
+        "latitude": 43.653225,
+        "longitude": -79.383186,
+        "spotifyLink": "https://open.spotify.com/artist/0TnOYISbd1XYRBk9myaseg"
+    },
+    {
+        "name": "astrogeek",
+        "password": "StarGaze!77",
+        "displayName": "AstroGeek",
+        "bio": "Amateur astronomer and telescope maker.",
+        "latitude": 29.760427,
+        "longitude": -95.369803,
+        "spotifyLink": "https://open.spotify.com/artist/4gzpq5DPGxSnKTe4SA8HAU"
+    },
+    {
+        "name": "wanderjane",
+        "password": "Trail@2025",
+        "displayName": "WanderJane",
+        "bio": "Solo hiker exploring national parks.",
+        "latitude": 44.977753,
+        "longitude": -93.265015,
+        "spotifyLink": "https://open.spotify.com/artist/3TVXtAsR1Inumwj472S9r4"
+    },
+    {
+        "name": "cybersec_pro",
+        "password": "HackProof#55",
+        "displayName": "CyberSecPro",
+        "bio": "Security analyst specializing in threat detection.",
+        "latitude": 37.338207,
+        "longitude": -121.886330,
+        "spotifyLink": "https://open.spotify.com/artist/1uNFoZAHBGtllmzznpCI3s"
+    },
+    {
+        "name": "filmbuff",
+        "password": "CineMagic!85",
+        "displayName": "FilmBuff",
+        "bio": "Independent film critic and festival juror.",
+        "latitude": 34.052235,
+        "longitude": -118.243683,
+        "spotifyLink": "https://open.spotify.com/artist/1dfeR4HaWDbWqFHLkxsg1d"
+    },
+    {
+        "name": "ql_solutions",
+        "password": "Quantum#2025",
+        "displayName": "QL_Solutions",
+        "bio": "Researcher in quantum computing algorithms.",
+        "latitude": 42.360082,
+        "longitude": -71.058880,
+        "spotifyLink": "https://open.spotify.com/artist/6eUKZXaKkcviH0Ku9w2n3V"
+    },
+    {
+        "name": "aquarian",
+        "password": "OceanBlue@12",
+        "displayName": "Aquarian",
+        "bio": "Marine biologist and deep-sea diver.",
+        "latitude": -33.868820,
+        "longitude": 151.209290,
+        "spotifyLink": "https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2"
+    },
+    {
+        "name": "dj_beatdrop",
+        "password": "MixMaster!09",
+        "displayName": "DJBeatDrop",
+        "bio": "Electronic music producer and live DJ.",
+        "latitude": 51.165691,
+        "longitude": 10.451526,
+        "spotifyLink": "https://open.spotify.com/artist/246dkjvS1zLTtiykXe5h60"
+    },
+    {
+        "name": "mountainbiker",
+        "password": "TrailRide#33",
+        "displayName": "MountainBiker",
+        "bio": "Cyclist tackling rugged trails worldwide.",
+        "latitude": 45.421530,
+        "longitude": -75.697193,
+        "spotifyLink": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX"
+    },
+    {
+        "name": "bibliofile",
+        "password": "Read!2025",
+        "displayName": "Bibliofile",
+        "bio": "Book curator and literature blogger.",
+        "latitude": 55.755825,
+        "longitude": 37.617298,
+        "spotifyLink": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY"
+    },
+    {
+        "name": "chef_gourmet",
+        "password": "Saucier#2025",
+        "displayName": "ChefGourmet",
+        "bio": "Professional chef specializing in French cuisine.",
+        "latitude": 48.856613,
+        "longitude": 2.352222,
+        "spotifyLink": "https://open.spotify.com/artist/7dGJo4pcD2V6oG8kP0tJRR"
+    },
+    {
+        "name": "techjournalist",
+        "password": "NewsByte2025",
+        "displayName": "TechJournalist",
+        "bio": "Reporting on the latest in technology and startups.",
+        "latitude": 37.774929,
+        "longitude": -122.419418,
+        "spotifyLink": "https://open.spotify.com/artist/1Xyo4u8uXC1ZmMpatF05PJ"
+    },
+    {
+        "name": "dance_fever",
+        "password": "Ballet!777",
+        "displayName": "DanceFever",
+        "bio": "Contemporary dancer and choreographer.",
+        "latitude": 40.416775,
+        "longitude": -3.703790,
+        "spotifyLink": "https://open.spotify.com/artist/6eUKZXaKkcviH0Ku9w2n3V"
+    },
+    {
+        "name": "eco_warrior",
+        "password": "Planet#2025",
+        "displayName": "EcoWarrior",
+        "bio": "Environmental activist and sustainable living advocate.",
+        "latitude": 37.441883,
+        "longitude": -122.143019,
+        "spotifyLink": "https://open.spotify.com/artist/36QJpDe2go2KgaRleHCDTp"
+    },
+    {
+        "name": "urbanplanner",
+        "password": "CityGrid!45",
+        "displayName": "UrbanPlanner",
+        "bio": "Designing smart, livable cities for the future.",
+        "latitude": 35.689487,
+        "longitude": 139.691711,
+        "spotifyLink": "https://open.spotify.com/artist/4NHQUGzhtTLFvgF5SZesLK"
+    }
+]
