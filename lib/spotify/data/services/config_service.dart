@@ -4,7 +4,7 @@ import 'package:ini/ini.dart';
 class ConfigService {
   late final String clientId;
   late final String clientSecret;
-  String get apiBaseUrl => 'http://localhost:3030';
+  late final String apiBaseUrl;
   String get authToken => 'mock-token';
 
   Future<void> load() async {
@@ -13,5 +13,6 @@ class ConfigService {
 
     clientId = config.get('spotify', 'client_id')!;
     clientSecret = config.get('spotify', 'client_secret')!;
+    apiBaseUrl = config.get('api_base_url', 'http://localplayer.fly.dev')!;
   }
 }

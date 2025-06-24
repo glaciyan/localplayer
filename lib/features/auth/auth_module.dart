@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:localplayer/core/network/api_client.dart';
 import 'package:localplayer/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:localplayer/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:localplayer/spotify/data/services/config_service.dart';
 
 class AuthModule {
   static AuthBloc provideBloc({
@@ -19,5 +20,5 @@ class AuthModule {
     final AuthBloc bloc,
   ) => AuthController(context, bloc.add);
 
-  static IAuthRepository provideRepository() => AuthRepository(AuthRemoteDataSource(ApiClient()));
+  static IAuthRepository provideRepository(final ConfigService config) => AuthRepository(AuthRemoteDataSource(ApiClient(baseUrl: config.apiBaseUrl)));
 }
