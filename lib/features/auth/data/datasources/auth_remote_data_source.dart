@@ -18,9 +18,11 @@ class AuthRemoteDataSource {
 
   Future<dynamic> signUp(final String name, final String password, final String notSecret) async {
     await apiClient.post(
-      '/user/signup', 
+      '/user/signup',
       data: <String, String> {'name': name, 'password': password},
       options: Options(headers: <String, String> {'not_secret': notSecret}),
     );
   }
+
+  Future<dynamic> findMe(final String bearer) async => await apiClient.get("/profile/me", options: Options(headers: <String, String>{"Authorization": "Bearer $bearer"}));
 }

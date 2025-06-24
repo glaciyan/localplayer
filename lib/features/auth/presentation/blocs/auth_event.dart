@@ -16,6 +16,10 @@ class SignUpRequested extends AuthEvent {
 
 class SignOutRequested extends AuthEvent {}
 
+class FindMeRequested extends AuthEvent {}
+
+class FoundYouEvent extends AuthEvent {}
+
 class AuthLoadingEvent extends AuthEvent {}
 
 class AuthRegisteredEvent extends AuthEvent {}
