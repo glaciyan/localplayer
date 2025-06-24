@@ -32,9 +32,6 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // TODO go to /signup if we do not have an id token
-    // TODO if we have an id token try called /me and see if it is still valid
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final IAuthController authController = AuthModule.provideController(
         context,
