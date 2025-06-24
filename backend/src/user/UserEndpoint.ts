@@ -22,7 +22,13 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 body.name,
                 body.password
             );
-            return status(success ? 200 : 500);
+
+            if (!success) {
+                return status(433);
+            }
+
+            log.info(`Registered new user ${body.name}`)
+            return status(200);
         },
         {
             body: "userAuth",
