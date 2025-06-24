@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/spotify/domain/entities/track_entity.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
+import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 
 class SpotifyTracksSection extends StatelessWidget {
   final ProfileWithSpotify profile;

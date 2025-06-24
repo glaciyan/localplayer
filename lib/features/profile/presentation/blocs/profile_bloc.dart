@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_api_service.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
-import 'package:localplayer/spotify/data/services/spotify_api_service.dart';
-import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
-import 'package:localplayer/spotify/domain/entities/track_entity.dart';
+
+
 import 'profile_event.dart';
 import 'profile_state.dart';
 

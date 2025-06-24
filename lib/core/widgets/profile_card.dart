@@ -1,10 +1,8 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
-import 'package:localplayer/spotify/domain/entities/track_entity.dart';
+import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:flutter/foundation.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -24,7 +22,6 @@ class ProfileCard extends StatelessWidget {
     clipBehavior: Clip.antiAlias,
     child: Stack(
       children: <Widget>[
-        // Background image
         Positioned.fill(
           child: Image.network(profile.artist.imageUrl, fit: BoxFit.cover),
         ),
@@ -35,7 +32,6 @@ class ProfileCard extends StatelessWidget {
           ),
         ),
 
-        // Scrollable foreground content
         SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 32),
@@ -43,7 +39,6 @@ class ProfileCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // USER INFO
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -74,15 +69,14 @@ class ProfileCard extends StatelessWidget {
 
                 const Divider(height: 20, thickness: 1, color: Colors.white30),
 
-                // SPOTIFY ARTIST INFO
                 Text(profile.artist.name, style: Theme.of(context).textTheme.titleMedium),
                 Text(profile.artist.genres, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 12),
 
-                for (final String id in profile.artist.tracks.take(3).map((final TrackEntity track) => track.id))
+                for (final track in profile.artist.tracks.take(3))
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
-                    child: SpotifyPreviewContainer(trackId: id),
+                    child: SpotifyPreviewContainer(track: track),
                   ),
 
                 const SizedBox(height: 120),
@@ -91,8 +85,6 @@ class ProfileCard extends StatelessWidget {
           ),
         ),
 
-        // Gradient
-        // Bottom gradient
         Positioned(
           left: 0,
           right: 0,

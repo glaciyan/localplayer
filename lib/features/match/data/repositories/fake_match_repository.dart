@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/features/match/domain/repositories/match_repository.dart';
 
 class FakeMatchRepository implements MatchRepository {

@@ -1,16 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/icon_park_solid.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/services/spotify/presentation/blocs/spotify_profile_cubit.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_state.dart';
-import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
 
 class MatchWidget extends StatefulWidget {
   const MatchWidget({super.key});
@@ -47,7 +48,9 @@ class _MatchWidgetState extends State<MatchWidget> {
     if (profiles.isEmpty) {
       return const Center(child: Text('No more profiles.'));
     }
-
+    if (kDebugMode) {
+      print("Loaded profiles: ${profiles.length}");
+    }
     return SafeArea(
       child: _buildCardSwiper(profiles),
     );
@@ -74,7 +77,6 @@ class _MatchWidgetState extends State<MatchWidget> {
               Positioned.fill(
                 child: ProfileCard(profile: profile),
               ),
-              // Swipe buttons inside the card, near the bottom
               Positioned(
                 bottom: 30,
                 left: 0,

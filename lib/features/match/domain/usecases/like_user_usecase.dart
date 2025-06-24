@@ -1,4 +1,5 @@
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
+
 import '../repositories/match_repository.dart';
 
 class LikeUserUseCase {

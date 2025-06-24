@@ -1,34 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
-import 'package:localplayer/features/map/data/map_repository_interface.dart';
-import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
-import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
-import 'package:localplayer/features/profile/user_module.dart';
-import 'package:localplayer/spotify/data/services/config_service.dart';
-import 'package:localplayer/spotify/data/services/spotify_api_service.dart';
-import 'package:localplayer/spotify/data/spotify_module.dart';
-import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
-import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:localplayer/core/go_router/router.dart';
+import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_api_service.dart';
+import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
+import 'package:localplayer/core/services/spotify/domain/repositories/track_repository.dart';
+import 'package:localplayer/core/services/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
+import 'package:localplayer/core/services/spotify/presentation/blocs/spotify_profile_cubit.dart';
+import 'package:localplayer/core/services/spotify/spotify_module.dart';
+import 'package:localplayer/features/auth/auth_module.dart';
+import 'package:localplayer/features/auth/data/IAuthRepository.dart';
+import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
+import 'package:localplayer/features/feed/feed_module.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
+import 'package:localplayer/features/map/data/map_repository_interface.dart';
+import 'package:localplayer/features/map/map_module.dart';
+import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
+import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
-import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:localplayer/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
-import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
-import 'package:flutter/foundation.dart';
-import 'package:localplayer/features/feed/feed_module.dart';
-import 'package:localplayer/features/auth/data/IAuthRepository.dart';
-import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
-import 'package:localplayer/features/auth/auth_module.dart';
-import 'package:localplayer/features/map/map_module.dart';
-
+import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
+import 'package:localplayer/features/profile/user_module.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +59,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => MultiRepositoryProvider(
       providers: <RepositoryProvider<dynamic>>[
+        RepositoryProvider<ConfigService>.value(value: config),
         RepositoryProvider<IUserRepository>.value(value: userRepo),
         RepositoryProvider<SpotifyApiService>(
           create: (_) => SpotifyModule.provideService(config),
