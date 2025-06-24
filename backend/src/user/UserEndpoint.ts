@@ -3,7 +3,6 @@ import userController from "./user.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { sessionController } from "../authentication/session/session.ts";
-import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
