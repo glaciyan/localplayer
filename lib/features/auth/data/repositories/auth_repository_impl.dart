@@ -1,6 +1,6 @@
+import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 import 'package:localplayer/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:localplayer/features/auth/data/IAuthRepository.dart';
-import 'package:localplayer/spotify/data/services/config_service.dart';
 
 class AuthRepository implements IAuthRepository {
   final AuthRemoteDataSource _dataSource;
