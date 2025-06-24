@@ -9,7 +9,9 @@ const log = mklog("user-api");
 
 const NOT_SO_SECRET_SECRET = process.env["NOT_SECRET"];
 if (!NOT_SO_SECRET_SECRET) {
-    log.error("NO SECRET SET!!!!!!!!!!!! SET THE 'NOT_SECRET' ENVIRONMENT VARIABLE!");
+    log.error(
+        "NO SECRET SET!!!!!!!!!!!! SET THE 'NOT_SECRET' ENVIRONMENT VARIABLE!"
+    );
     throw "no secret set";
 }
 
@@ -19,7 +21,9 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         "/signup",
         async ({ body, headers }) => {
             if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
-                log.warn("Someone tried to access an open endoint without auth.");
+                log.warn(
+                    "Someone tried to access an open endoint without auth."
+                );
                 return status(422, "No Secret 'not_secret' set in header");
             }
 
@@ -44,24 +48,12 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     )
     .post(
         "/login",
-        async ({ headers, body, cookie: { id } }) => {
+        async ({ headers, body }) => {
             if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
-                log.warn("Someone tried to access an open endoint without auth.");
+                log.warn(
+                    "Someone tried to access an open endoint without auth."
+                );
                 return status(403, "No Secret 'not_secret' set in header");
-            }
-            // make sure user is not logged on
-            if (id.value) {
-                const session = await sessionController.getSession(id.value);
-                // user could have a session id cookie but we have restarted our server
-                if (session) {
-                    log.http(
-                        `Session ${id.value} (user: ${session.user.username}) tried logging in but was already logged on`
-                    );
-                    return status(
-                        403,
-                        "You are already loggin in, please log out first"
-                    );
-                }
             }
 
             const goodLogin = await userController.authenticateUser(
@@ -76,20 +68,14 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             const { sessionToken, expiresOn } =
                 await sessionController.createSession(goodLogin.id);
 
-            // set cookie
-            id.set({
-                value: sessionToken,
-                // secure: true,
-                httpOnly: true,
-                sameSite: true,
-                expires: expiresOn,
-            });
-
             log.http(
                 `User ${goodLogin.username} logged in, returning session id ${sessionToken}`
             );
 
-            return status(200);
+            return {
+                token: sessionToken,
+                expires: expiresOn,
+            };
         },
         {
             body: "userAuth",
@@ -101,7 +87,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     )
     .post(
         "/logout",
-        async ({ cookie: { id }, user, sessionId }) => {
+        async ({ user, sessionId }) => {
             log.http(`User ${user.username} is logging off`);
 
             const success = await sessionController.deleteSessionSecure(
@@ -112,11 +98,9 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 return status(500);
             }
 
-            id.remove();
             return status(200);
         },
         {
-            cookie: "session",
             requireSession: true,
         }
     );

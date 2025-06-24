@@ -72,7 +72,6 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             return PresenceDTOMapWithPrivate(presence);
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Get your current location.",
@@ -100,7 +99,6 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             return PresenceDTOMapWithPrivate(presence);
         },
         {
-            cookie: "session",
             requireProfile: true,
             body: "presenceLocation",
             detail: {
@@ -127,7 +125,6 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             return status(200);
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Delete your current location.",
@@ -167,7 +164,6 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             };
         },
         {
-            cookie: "session",
             requireProfile: true,
             query: "areaQuery",
             detail: {

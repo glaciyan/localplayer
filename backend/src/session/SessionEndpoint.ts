@@ -55,7 +55,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return SessionDTOMap(session);
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description:
@@ -81,7 +80,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return SessionDTOMap(session);
         },
         {
-            cookie: "session",
             requireProfile: true,
             body: "sessionParams",
             detail: {
@@ -100,7 +98,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return SessionDTOMap(session);
         },
         {
-            cookie: "session",
             requireProfile: true,
             params: t.Object({
                 id: t.Number(),
@@ -117,7 +114,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return request;
         },
         {
-            cookie: "session",
             requireProfile: true,
             params: t.Object({
                 id: t.Number(),
@@ -144,7 +140,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             }));
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Get all incoming requests to join your sessions.",
@@ -166,7 +161,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             }));
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Get all join requests that you have sent.",
@@ -197,7 +191,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return request;
         },
         {
-            cookie: "session",
             requireProfile: true,
             body: t.Object({
                 participantId: t.Number(),
@@ -226,7 +219,6 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             return await lpsessionController.closeSession(session.id);
         },
         {
-            cookie: "session",
             requireProfile: true,
             params: t.Object({
                 id: t.Number(),

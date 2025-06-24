@@ -25,10 +25,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<TextEditingController>('userHandleController', userHandleController, ifPresent: 'has userHandleController'));
     properties.add(ObjectFlagProperty<TextEditingController>('passwordController', passwordController, ifPresent: 'has passwordController'));
-    properties.add(FlagProperty('_isLoading', value: _isLoading, ifTrue: 'loading'));
   }
-
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -84,40 +81,83 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ),
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      width: 200,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
-
-                          authController.signUp(userHandleController.text, passwordController.text);
-
-                          // Simulate API call
-                          await Future<void>.delayed(const Duration(seconds: 2));
+                    BlocListener<AuthBloc, AuthState>(
+                      listener: (final BuildContext context, final AuthState state) {
+                        if (state is Authenticated) {
                           context.go('/map');
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        },
-                        child: _isLoading 
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        } else if (state is Registered) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Account has been created, please log in.')));
+                        } else if (state is Unauthenticated) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Authentication Failed')),
+                        );
+                        }
+                      },
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (final BuildContext context, final AuthState state) {
+                          final bool loading = state is AuthLoading;
+
+                          return Column(children: <Widget>[
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: loading
+                                    ? null
+                                    : () {
+                                        authController.signIn(
+                                          userHandleController.text,
+                                          passwordController.text,
+                                        );
+                                      },
+                                child: loading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Text('Login', style: Theme.of(context).textTheme.titleLarge),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                              ),
+                            ),
+                            Padding(padding: EdgeInsetsGeometry.all(8)),
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: loading
+                                    ? null
+                                    : () {
+                                        authController.signUp(
+                                          userHandleController.text,
+                                          passwordController.text,
+                                        );
+                                      },
+                                child: loading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Text('Register', style: Theme.of(context).textTheme.titleLarge),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
                               ),
                             )
-                          : (context.read<AuthBloc>().state is AuthSignIn)
-                            ? Text('Login', style: Theme.of(context).textTheme.titleLarge)
-                            : Text('Register', style: Theme.of(context).textTheme.titleLarge),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.secondary,
-                          foregroundColor: Theme.of(context).colorScheme.onSecondary,
-                        ),
+                          ]);
+                        },
                       ),
                     ),
                   ],

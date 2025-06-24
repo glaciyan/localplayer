@@ -1,4 +1,4 @@
-import { Cookie, Elysia, t } from "elysia";
+import { Elysia, t } from "elysia";
 import { mklog } from "../logger.ts";
 import { UNAUTHORIZED } from "../errors.ts";
 import { sessionController } from "./session/session.ts";
@@ -6,13 +6,16 @@ import profileController from "../profile/profile.ts";
 
 const log = mklog("auth");
 
-const resolveSession = async (id: Cookie<string | undefined> | undefined, request: Request) => {
-    if (!id?.value) {
+const authHeader = "authorization";
+
+const resolveSession = async (id: string | undefined, request: Request) => {
+    if (!id || !id.startsWith("Bearer ")) {
         log.http("No session was given");
         return false;
     }
 
-    const sessionId = id.value;
+    const sessionId = id.substring(7);
+    log.debug(sessionId);
 
     const session = await sessionController.getSession(sessionId);
 
@@ -31,9 +34,6 @@ export const AuthService = new Elysia() //
         optionalSession: t.Cookie({
             id: t.Optional(t.String()),
         }),
-        session: t.Cookie({
-            id: t.String(),
-        }),
         userAuth: t.Object({
             name: t.String({
                 minLength: 3,
@@ -45,8 +45,8 @@ export const AuthService = new Elysia() //
     })
     .macro({
         requireSession: {
-            async resolve({ status, cookie: { id }, request }) {
-                const session = await resolveSession(id, request);
+            async resolve({ status, headers, request }) {
+                const session = await resolveSession(headers[authHeader], request);
                 if (session === false) {
                     return status(401, UNAUTHORIZED);
                 }
@@ -55,8 +55,8 @@ export const AuthService = new Elysia() //
             },
         },
         requireProfile: {
-            async resolve({ status, cookie: { id }, headers, request }) {
-                const session = await resolveSession(id, request);
+            async resolve({ status, headers, request }) {
+                const session = await resolveSession(headers[authHeader], request);
 
                 if (session === false) {
                     return status(401, UNAUTHORIZED);

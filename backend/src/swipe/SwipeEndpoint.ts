@@ -15,7 +15,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
         "/:rating/:swipeeId",
         async ({ params: { swipeeId, rating }, profile }) => {
             if (profile.id === swipeeId) {
-                return status(422, "You cannot rate yourself.")
+                return status(422, "You cannot rate yourself.");
             }
             const result = await swipeController.createSwipe(
                 profile.id,
@@ -43,15 +43,15 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
             return result;
         },
         {
-            cookie: "session",
             requireProfile: true,
             params: t.Object({
                 swipeeId: t.Number(),
                 rating: t.Enum(RatingOptions),
             }),
             detail: {
-                description: "Rate another user using swipe, set rating to either `good` or `bad`."
-            }
+                description:
+                    "Rate another user using swipe, set rating to either `good` or `bad`.",
+            },
         }
     )
     .get(
@@ -63,10 +63,9 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
             return candidates.map((c) => ProfileDTOMap(c));
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
-                description: "Get a list of profiles for the swiping cards."
-            }
+                description: "Get a list of profiles for the swiping cards.",
+            },
         }
     );

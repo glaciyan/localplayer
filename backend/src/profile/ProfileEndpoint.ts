@@ -37,7 +37,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             return profiles;
         },
         {
-            cookie: "session",
             requireSession: true,
             detail: {
                 description:
@@ -54,7 +53,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             return profile;
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Get your current profile.",
@@ -83,7 +81,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             return ProfileDTOMap(profile);
         },
         {
-            cookie: "session",
             requireSession: true,
             detail: {
                 description: "Get info about a public profile.",
@@ -111,7 +108,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
             return updatedProfile;
         },
         {
-            cookie: "session",
             requireProfile: true,
             body: t.Object({
                 displayName: t.Optional(t.String()),
