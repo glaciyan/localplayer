@@ -13,7 +13,7 @@ class ConfigService {
 
     clientId = config.get('spotify', 'client_id')!;
     clientSecret = config.get('spotify', 'client_secret')!;
-    apiBaseUrl = config.get('api_base_url', 'http://localplayer.fly.dev')!;
-    notSecret = config.get('not_secret', '')!;
+    apiBaseUrl = config.get('backend', 'api_base_url')!;
+    notSecret = config.get('backend', 'not_secret')!;
   }
 }
