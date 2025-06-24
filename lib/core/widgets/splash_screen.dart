@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,13 +26,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // TODO go to /signup if we do not have an id token
     // TODO if we have an id token try called /me and see if it is still valid
 
-    Timer(const Duration(seconds: 3), () {
-      if (context.mounted) {
-        context.go('/signup');
+    SharedPreferences.getInstance().then((final SharedPreferences value) {
+      final Object? token = value.get("token");
+      if (token == null) {
+        context.go('/sigup');
       } else {
-        context.go('/signup');
+        context.go('/map');
       }
-    });
+    },);
   }
 
   @override
