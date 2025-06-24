@@ -24,10 +24,10 @@ import 'package:localplayer/spotify/domain/usecases/get_spotify_artist_data_use_
 import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/features/feed/feed_module.dart';
-import 'package:localplayer/features/map/data/repositories/map_repository_impl.dart';
 import 'package:localplayer/features/auth/data/IAuthRepository.dart';
 import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:localplayer/features/auth/auth_module.dart';
+import 'package:localplayer/features/map/map_module.dart';
 
 
 void main() async {
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           create: (_) => SpotifyModule.provideUseCase(config),
         ),
         RepositoryProvider<IMapRepository>(
-          create: (final BuildContext context) => MapRepository(context.read<ISpotifyRepository>()),
+          create: (final BuildContext context) => MapModule.provideRepository(context.read<ISpotifyRepository>()),
         ),
         RepositoryProvider<IAuthRepository>(
           create: (_) => AuthModule.provideRepository(),

@@ -45,3 +45,15 @@ double calculateScale(final int listeners, {final int maxListeners = 10000000}) 
   normalized = normalized.clamp(0.0, 1.0);
   return minScale + (maxScale - minScale) * normalized;
 }
+
+double calculateRadiusFromBounds(final LatLngBounds bounds) {
+  // Calculate the diagonal distance of the visible bounds
+  final double latDiff = (bounds.north - bounds.south).abs();
+  final double lngDiff = (bounds.east - bounds.west).abs();
+  
+  // Convert to approximate kilometers (rough conversion)
+  final double radiusKm = (latDiff + lngDiff) * 111.0; // 1 degree ≈ 111 km
+  
+  // Clamp to reasonable bounds (1km to 500km)
+  return radiusKm.clamp(1.0, 500.0);
+}

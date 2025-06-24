@@ -1,30 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
 
 class MapRepository implements IMapRepository {
   final ISpotifyRepository spotifyRepository;
-  const MapRepository(this.spotifyRepository);
+  final MapRemoteDataSource mapRemoteDataSource;
+  const MapRepository(this.spotifyRepository, this.mapRemoteDataSource);
 
   @override
-  Future<List<ProfileWithSpotify>> fetchProfiles() async {
-    final List<UserProfile> rawProfiles = _fakeProfiles;
+  Future<List<ProfileWithSpotify>> fetchProfiles(final double latitude, final double longitude, final double radiusKm) async {
+    final Map<String, dynamic> rawData = await mapRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);
+    
+    final List<UserProfile> profilesInRadius = rawData.values
+        .map((final dynamic entry) => UserProfile.fromJson(entry as Map<String, dynamic>))
+        .toList();
 
     final List<ProfileWithSpotify> enriched = await Future.wait(
-      rawProfiles.map((final UserProfile user) async {
+      profilesInRadius.map((final UserProfile user) async {
         final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
         return ProfileWithSpotify(user: user, artist: artist);
       }),
     );
-
     return enriched;
   }
-
   
+  /*
   static const List<UserProfile> _fakeProfiles = <UserProfile> [
     UserProfile(
       handle: '@cgmar',
@@ -75,4 +78,5 @@ class MapRepository implements IMapRepository {
       listeners: 950000,
     ),
   ];
+  */
 }

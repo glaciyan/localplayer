@@ -6,6 +6,9 @@ import 'package:localplayer/features/map/domain/interfaces/map_controller_interf
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
+import 'package:localplayer/features/map/data/repositories/map_repository_impl.dart';
+import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
+import 'package:localplayer/core/network/api_client.dart';
 
 class MapModule {
   static MapBloc provideBloc({
@@ -20,4 +23,9 @@ class MapModule {
     final BuildContext context,
     final MapBloc bloc,
   ) => MapController(context, bloc.add);
+
+  static IMapRepository provideRepository(final ISpotifyRepository spotifyRepository) => MapRepository(
+    spotifyRepository,
+    MapRemoteDataSource(ApiClient())
+  );
 }
