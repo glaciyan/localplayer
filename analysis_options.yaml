@@ -11,7 +11,6 @@ analyzer:
     unused_field: warning
     unused_import: warning
     prefer_expression_function_bodies: warning
-    require_trailing_commas: warning
     cascade_invocations: warning
     discarded_futures: warning
     lines_longer_than_80_chars: warning
@@ -53,7 +52,6 @@ linter:
     - avoid_returning_null
     - avoid_slow_async_io
     - prefer_expression_function_bodies
-    - require_trailing_commas
     - unnecessary_lambdas
     - use_super_parameters
     - annotate_overrides
