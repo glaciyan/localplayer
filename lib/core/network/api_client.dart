@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 class ApiClient {
   final Dio _dio;
 
-  ApiClient({final String? baseUrl})
+  ApiClient({required final String baseUrl})
       : _dio = Dio(BaseOptions(
-          baseUrl: baseUrl ?? 'https://localplayer.fly.dev', // Set your default base URL
-          connectTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 10),
+          baseUrl: baseUrl, // Set your default base URL
+          connectTimeout: const Duration(seconds: 7),
+          receiveTimeout: const Duration(seconds: 7),
         ));
 
   Future<Response<dynamic>> get(

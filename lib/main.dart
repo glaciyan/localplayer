@@ -74,13 +74,13 @@ class MyApp extends StatelessWidget {
           create: (_) => SpotifyModule.provideUseCase(config),
         ),
         RepositoryProvider<IMapRepository>(
-          create: (final BuildContext context) => MapModule.provideRepository(context.read<ISpotifyRepository>()),
+          create: (final BuildContext context) => MapModule.provideRepository(context.read<ISpotifyRepository>(), config),
         ),
         RepositoryProvider<IAuthRepository>(
-          create: (_) => AuthModule.provideRepository(),
+          create: (_) => AuthModule.provideRepository(config),
         ),
         RepositoryProvider<IFeedRepository>(
-          create: (_) => FeedModule.provideRepository(),
+          create: (_) => FeedModule.provideRepository(config),
         ),
       ],
       child: MultiBlocProvider(
