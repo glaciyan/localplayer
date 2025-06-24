@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+//import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/features/match/domain/entities/user_profile.dart';
@@ -54,7 +54,7 @@ class FakeUserRepository implements IUserRepository {
     listeners: 1200000,
   );
 
-  final List<UserProfile> fakeProfiles = const [
+  final List<UserProfile> fakeProfiles = const <UserProfile> [
     UserProfile(
       handle: '@cgmar',
       displayName: 'Tanaka',
