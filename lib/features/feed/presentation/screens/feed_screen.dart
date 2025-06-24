@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
-import 'package:localplayer/features/feed/data/IFeedRepository.dart';
+import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_state.dart';

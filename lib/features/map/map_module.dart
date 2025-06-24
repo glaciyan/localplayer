@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:localplayer/features/map/domain/controllers/map_controller.dart';
-import 'package:localplayer/features/map/domain/controllers/map_controller_interface.dart';
+import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
-import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
+import 'package:localplayer/features/map/data/map_repository_interface.dart';
 
 class MapModule {
   static MapBloc provideBloc({

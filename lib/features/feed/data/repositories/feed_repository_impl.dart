@@ -1,5 +1,5 @@
 // lib/features/map/data/repositories/map_repository.dart
-import 'package:localplayer/features/feed/data/IFeedRepository.dart';
+import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
 import 'package:localplayer/features/feed/data/datasources/feed_remote_data_source.dart';
 

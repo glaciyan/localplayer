@@ -2,7 +2,7 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:localplayer/features/map/domain/controllers/map_controller_interface.dart';
+import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
 

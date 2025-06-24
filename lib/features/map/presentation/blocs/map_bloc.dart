@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart' as flutter_map;
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
+import 'package:localplayer/features/map/data/map_repository_interface.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
 import 'map_event.dart';
