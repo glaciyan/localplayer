@@ -1,7 +1,9 @@
 // features/match/match_module.dart
 import 'package:flutter/widgets.dart';
-import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
-import 'package:localplayer/features/match/data/repositories/fake_match_repository.dart';
+import 'package:localplayer/core/network/api_client.dart';
+import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
+import 'package:localplayer/core/services/spotify/spotify_module.dart';
+import 'package:localplayer/features/match/data/repositories/match_repository_impl.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
 import 'package:localplayer/features/match/domain/repositories/match_repository.dart';
@@ -10,24 +12,27 @@ import 'package:localplayer/features/match/domain/usecases/like_user_usecase.dar
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 
 class MatchModule {
-  static MatchBloc provideBloc({
-    required final ISpotifyRepository spotifyRepository,
-  }) {
-    final MatchRepository repo = FakeMatchRepository();
-    final LikeUserUseCase like = LikeUserUseCase(repo);
-    final DislikeUserUseCase dislike = DislikeUserUseCase(repo);
+  static MatchBloc provideBloc(final ConfigService config) {
+    final MatchRepository repo = MatchRepositoryImpl(
+      apiClient: ApiClient(baseUrl: config.apiBaseUrl),
+      spotifyRepository: SpotifyModule.provideRepository(config),
+    );
+
+    final like = LikeUserUseCase(repo);
+    final dislike = DislikeUserUseCase(repo);
+
     return MatchBloc(
       likeUseCase: like,
       dislikeUseCase: dislike,
       repository: repo,
-      spotifyRepository: spotifyRepository,
+      spotifyRepository: SpotifyModule.provideRepository(config),
     );
   }
 
-  static IMatchController provideController(final BuildContext context, final MatchBloc bloc) => MatchController(
-      context,
-      bloc.add,
-    );
+  static IMatchController provideController(
+    final BuildContext context,
+    final MatchBloc bloc,
+  ) =>
+      MatchController(context, bloc.add);
 }
-
 

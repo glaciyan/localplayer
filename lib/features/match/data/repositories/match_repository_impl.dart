@@ -1,24 +1,46 @@
 import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/network/api_client.dart';
+import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/match/domain/repositories/match_repository.dart';
 
+
 class MatchRepositoryImpl implements MatchRepository {
+  final ApiClient apiClient;
+  final ISpotifyRepository spotifyRepository;
+
+  MatchRepositoryImpl({
+    required this.apiClient,
+    required this.spotifyRepository,
+  });
+
   @override
   Future<List<UserProfile>> fetchProfiles() async {
-    final String jsonString = await rootBundle.loadString('assets/profiles.json');
-    final List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList.map((final dynamic e) => UserProfile.fromJson(e)).toList();
+    try {
+      final response = await apiClient.get('/swipe/candidates');
+      final List<dynamic> data = response.data;
+
+      return data.map((json) => UserProfile.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch profiles: $e');
+    }
   }
 
   @override
-  Future<void> like(final UserProfile user) async {
-    //print('Liked: ${user.displayName}');
+  Future<void> like(UserProfile user) async {
+    try {
+      await apiClient.post('/swipe/good/${user.handle}');
+    } catch (e) {
+      throw Exception('Failed to like user: $e');
+    }
   }
 
   @override
-  Future<void> dislike(final UserProfile user) async {
-    //print('Disliked: ${user.displayName}');
+  Future<void> dislike(UserProfile user) async {
+    try {
+      await apiClient.post('/swipe/bad/${user.handle}');
+    } catch (e) {
+      throw Exception('Failed to dislike user: $e');
+    }
   }
 }

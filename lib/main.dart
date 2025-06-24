@@ -86,9 +86,12 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
           BlocProvider<MatchBloc>(
-            create: (final BuildContext context) => MatchModule.provideBloc(
-              spotifyRepository: context.read<ISpotifyRepository>(),
-            )..add(LoadProfiles()),
+            create: (BuildContext context) {
+              final config = context.read<ConfigService>();
+              final bloc = MatchModule.provideBloc(config);
+              bloc.add(LoadProfiles());
+              return bloc;
+            },
           ),
           BlocProvider<ProfileBloc>(
             create: (final BuildContext context) => UserModule.provideBloc(
