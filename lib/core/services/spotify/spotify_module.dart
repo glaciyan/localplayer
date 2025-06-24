@@ -7,7 +7,7 @@ import 'package:localplayer/core/services/spotify/domain/repositories/spotify_re
 import 'package:localplayer/core/services/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/services/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
 import 'package:localplayer/core/services/spotify/presentation/blocs/spotify_preview_cubit.dart';
-
+import 'package:localplayer/core/network/api_client.dart';
 
 class SpotifyModule {
   static SpotifyApiService provideService(final ConfigService config) =>
@@ -26,7 +26,7 @@ class SpotifyModule {
       GetSpotifyArtistDataUseCase(provideRepository(config));
 
   static SpotifyPreviewCubit providePreviewCubit(final ConfigService config) =>
-    SpotifyPreviewCubit(Dio(BaseOptions(baseUrl: config.apiBaseUrl)));
+    SpotifyPreviewCubit(ApiClient(baseUrl: config.apiBaseUrl));
 
 
 }
