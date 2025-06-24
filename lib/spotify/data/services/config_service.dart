@@ -5,7 +5,7 @@ class ConfigService {
   late final String clientId;
   late final String clientSecret;
   late final String apiBaseUrl;
-  String get authToken => 'mock-token';
+  late final String notSecret;
 
   Future<void> load() async {
     final String iniString = await rootBundle.loadString('assets/config.ini');
@@ -14,5 +14,6 @@ class ConfigService {
     clientId = config.get('spotify', 'client_id')!;
     clientSecret = config.get('spotify', 'client_secret')!;
     apiBaseUrl = config.get('api_base_url', 'http://localplayer.fly.dev')!;
+    notSecret = config.get('not_secret', '')!;
   }
 }

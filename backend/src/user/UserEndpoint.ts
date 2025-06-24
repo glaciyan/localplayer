@@ -7,7 +7,11 @@ import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
-const NOT_SO_SECRET_SECRET = "1dfeR4HaWDbWqFHLkxsg1d";
+const NOT_SO_SECRET_SECRET = process.env["NOT_SECRET"];
+if (!NOT_SO_SECRET_SECRET) {
+    log.error("NO SECRET SET!!!!!!!!!!!! SET THE 'NOT_SECRET' ENVIRONMENT VARIABLE!");
+    throw "no secret set";
+}
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
@@ -27,7 +31,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 return status(433);
             }
 
-            log.info(`Registered new user ${body.name}`)
+            log.info(`Registered new user ${body.name}`);
             return status(200);
         },
         {

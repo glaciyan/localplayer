@@ -20,5 +20,5 @@ class AuthModule {
     final AuthBloc bloc,
   ) => AuthController(context, bloc.add);
 
-  static IAuthRepository provideRepository(final ConfigService config) => AuthRepository(AuthRemoteDataSource(ApiClient(baseUrl: config.apiBaseUrl)));
+  static IAuthRepository provideRepository(final ConfigService config) => AuthRepository(AuthRemoteDataSource(ApiClient(baseUrl: config.apiBaseUrl)), config);
 }
