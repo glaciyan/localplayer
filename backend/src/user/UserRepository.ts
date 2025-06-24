@@ -15,7 +15,7 @@ export class UserRepository implements IUserHandler {
                 handle: username,
                 profileOwnerIndex: 0,
                 owner: {
-                    create : { username, passwordHash }
+                    create: { username, passwordHash }
                 }
             },
         });

@@ -7,35 +7,47 @@ import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
-const NOT_SO_SECRET_SECRET = "tF_LgyuKrvOMIwVBg8WMSw";
+const NOT_SO_SECRET_SECRET = process.env["NOT_SECRET"];
+if (!NOT_SO_SECRET_SECRET) {
+    log.error("NO SECRET SET!!!!!!!!!!!! SET THE 'NOT_SECRET' ENVIRONMENT VARIABLE!");
+    throw "no secret set";
+}
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
     .post(
         "/signup",
         async ({ body, headers }) => {
-            if (headers.secret !== NOT_SO_SECRET_SECRET) {
-                return status(403);
+            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
+                log.warn("Someone tried to access an open endoint without auth.");
+                return status(422, "No Secret 'not_secret' set in header");
             }
 
             const success = await userController.register(
                 body.name,
                 body.password
             );
-            return status(success ? 200 : 500);
+
+            if (!success) {
+                return status(433);
+            }
+
+            log.info(`Registered new user ${body.name}`);
+            return status(200);
         },
         {
             body: "userAuth",
             headers: t.Object({
-                secret: t.String(),
+                not_secret: t.String(),
             }),
         }
     )
     .post(
         "/login",
         async ({ headers, body, cookie: { id } }) => {
-            if (headers.secret !== NOT_SO_SECRET_SECRET) {
-                return status(403, UNAUTHORIZED);
+            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
+                log.warn("Someone tried to access an open endoint without auth.");
+                return status(403, "No Secret 'not_secret' set in header");
             }
             // make sure user is not logged on
             if (id.value) {
@@ -58,7 +70,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             if (goodLogin === null) {
-                return status(403, UNAUTHORIZED);
+                return status(403, "Wrong username or password");
             }
 
             const { sessionToken, expiresOn } =
@@ -83,7 +95,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             body: "userAuth",
             cookie: "optionalSession",
             headers: t.Object({
-                secret: t.String(),
+                not_secret: t.String(),
             }),
         }
     )
