@@ -1,5 +1,5 @@
 import 'package:flutter_map/flutter_map.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 
 abstract class MapEvent {}
 

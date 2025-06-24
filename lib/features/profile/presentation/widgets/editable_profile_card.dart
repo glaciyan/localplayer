@@ -2,9 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
-import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
-import 'package:localplayer/spotify/domain/entities/track_entity.dart';
-import 'package:localplayer/spotify/presentation/widgets/spotify_preview_container.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -120,10 +119,10 @@ class EditableProfileCardState extends State<EditableProfileCard> {
                             Text(artist.genres, style: Theme.of(context).textTheme.bodySmall),
                             const SizedBox(height: 12),
 
-                            for (final String id in artist.tracks.take(3).map((final TrackEntity t) => t.id))
+                            for (final track in artist.tracks.take(3))
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 16),
-                                child: SpotifyPreviewContainer(trackId: id),
+                                child: SpotifyPreviewContainer(track: track),
                               ),
 
                             const SizedBox(height: 100),

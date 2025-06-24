@@ -1,8 +1,9 @@
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
-import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
-import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+
 import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
 
 class MapRepository implements IMapRepository {

@@ -1,5 +1,5 @@
-import 'package:localplayer/features/match/domain/entities/user_profile.dart';
-import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 
 
 class ProfileWithSpotify {
