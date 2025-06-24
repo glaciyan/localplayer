@@ -1,6 +1,4 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart'; 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,10 +25,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<TextEditingController>('userHandleController', userHandleController, ifPresent: 'has userHandleController'));
     properties.add(ObjectFlagProperty<TextEditingController>('passwordController', passwordController, ifPresent: 'has passwordController'));
-    properties.add(FlagProperty('_isLoading', value: _isLoading, ifTrue: 'loading'));
   }
-
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -86,51 +81,83 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ),
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      width: 200,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _isLoading ? null : () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
+                    BlocListener<AuthBloc, AuthState>(
+                      listener: (final BuildContext context, final AuthState state) {
+                        if (state is Authenticated) {
+                          context.go('/map');
+                        } else if (state is Registered) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Account has been created, please log in.')));
+                        } else if (state is Unauthenticated) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Authentication Failed')),
+                        );
+                        }
+                      },
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (final BuildContext context, final AuthState state) {
+                          final bool loading = state is AuthLoading;
 
-                          await authController.signUp(userHandleController.text, passwordController.text);
-
-                          // try {
-                          //   // context.go('/map');
-                          // } on DioException catch(e) {
-                          //   Fluttertoast.showToast(
-                          //     msg: "Failed to create account" + (e.message ?? ""),
-                          //     toastLength: Toast.LENGTH_LONG,
-                          //     gravity: ToastGravity.BOTTOM,
-                          //     timeInSecForIosWeb: 3,
-                          //     backgroundColor: Colors.black54,
-                          //     textColor: Colors.white,
-                          //     fontSize: 16.0
-                          //   );
-                          // } finally {
-                          //   setState(() {
-                          //     _isLoading = false;
-                          //   });
-                          // }
-                        },
-                        child: _isLoading 
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          return Column(children: <Widget>[
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: loading
+                                    ? null
+                                    : () {
+                                        authController.signIn(
+                                          userHandleController.text,
+                                          passwordController.text,
+                                        );
+                                      },
+                                child: loading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Text('Login', style: Theme.of(context).textTheme.titleLarge),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
+                              ),
+                            ),
+                            Padding(padding: EdgeInsetsGeometry.all(8)),
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: loading
+                                    ? null
+                                    : () {
+                                        authController.signUp(
+                                          userHandleController.text,
+                                          passwordController.text,
+                                        );
+                                      },
+                                child: loading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Text('Register', style: Theme.of(context).textTheme.titleLarge),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                                ),
                               ),
                             )
-                          : (context.read<AuthBloc>().state is AuthSignIn)
-                            ? Text('Login', style: Theme.of(context).textTheme.titleLarge)
-                            : Text('Register', style: Theme.of(context).textTheme.titleLarge),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.secondary,
-                          foregroundColor: Theme.of(context).colorScheme.onSecondary,
-                        ),
+                          ]);
+                        },
                       ),
                     ),
                   ],
