@@ -9,10 +9,15 @@ class AuthRepository implements IAuthRepository {
   AuthRepository(this._dataSource, this.config);
 
   @override
-  Future<Map<String, dynamic>> signIn(final String name, final String password) async =>
-      await _dataSource.signIn(name, password, config.notSecret);
+  Future<Map<String, dynamic>> signIn(
+    final String name,
+    final String password,
+  ) async => await _dataSource.signIn(name, password, config.notSecret);
 
   @override
   Future<dynamic> signUp(final String name, final String password) async =>
       await _dataSource.signUp(name, password, config.notSecret);
+
+  @override
+  Future<dynamic> findMe(final String bearer) async => await _dataSource.findMe(bearer);
 }

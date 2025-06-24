@@ -18,6 +18,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSuccessEvent>(_onAuthSuccess);
     on<AuthFailureEvent>(_onAuthFailure);
     on<AuthRegisteredEvent>(_onRegisterSuccess);
+    on<FindMeRequested>(_onFindMeRequested);
+    on<FoundYouEvent>(_onFoundYou);
   }
 
   Future<void> _onSignInRequested(final SignInRequested event, final Emitter<AuthState> emit) async {
@@ -43,6 +45,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  Future<void> _onFindMeRequested(final FindMeRequested event, final Emitter<AuthState> emit) async {
+    add(AuthLoadingEvent());
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final Object? token = prefs.get("token");
+      if (token == null && !(token is String)) {
+        add(AuthFailureEvent("invalid token"));
+      } else {
+        await authRepository.findMe(token as String);
+        add(FoundYouEvent());
+      }
+    } catch (e) {
+      add(AuthFailureEvent(e.toString()));
+    }
+  }
+
   void _onAuthLoading(final AuthLoadingEvent event, final Emitter<AuthState> emit) {
     emit(AuthLoading());
   }
@@ -57,5 +75,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onAuthFailure(final AuthFailureEvent event, final Emitter<AuthState> emit) {
     emit(Unauthenticated());
+  }
+
+  void _onFoundYou(final FoundYouEvent event, final Emitter<AuthState> emit) {
+    emit(FoundYou());
   }
 }

@@ -3,7 +3,6 @@ import userController from "./user.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { sessionController } from "../authentication/session/session.ts";
-import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
@@ -40,7 +39,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             return status(200);
         },
         {
-            body: "userAuth",
+            body: "userRegister",
             headers: t.Object({
                 not_secret: t.String(),
             }),
@@ -57,11 +56,12 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             }
 
             const goodLogin = await userController.authenticateUser(
-                body.name,
+                body.name.trim(),
                 body.password
             );
 
             if (goodLogin === null) {
+                log.error("Wrong username or password " + body.name.trim())
                 return status(403, "Wrong username or password");
             }
 
@@ -78,7 +78,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             };
         },
         {
-            body: "userAuth",
+            body: "userLogin",
             cookie: "optionalSession",
             headers: t.Object({
                 not_secret: t.String(),

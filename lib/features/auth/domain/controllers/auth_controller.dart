@@ -17,4 +17,9 @@ class AuthController implements IAuthController {
   Future<dynamic> signUp(final String name, final String password) async {
     addEvent(SignUpRequested(name, password));
   }
+
+  @override
+  Future<dynamic> findMe() async {
+    addEvent(FindMeRequested());
+  }
 }

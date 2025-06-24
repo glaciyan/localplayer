@@ -9,6 +9,7 @@ const log = mklog("auth");
 const authHeader = "authorization";
 
 const resolveSession = async (id: string | undefined, request: Request) => {
+    log.http(`${request.method} ${request.url}`);
     if (!id || !id.startsWith("Bearer ")) {
         log.http("No session was given");
         return false;
@@ -24,7 +25,7 @@ const resolveSession = async (id: string | undefined, request: Request) => {
         return false;
     }
 
-    log.http(`${session.user.id}:${session.user.username} ${request.method} ${request.url}`)
+    // log.http(`${session.user.id}:${session.user.username} ${request.method} ${request.url}`)
 
     return { user: session.user, sessionId: sessionId };
 };
@@ -34,11 +35,18 @@ export const AuthService = new Elysia() //
         optionalSession: t.Cookie({
             id: t.Optional(t.String()),
         }),
-        userAuth: t.Object({
+        userRegister: t.Object({
             name: t.String({
                 minLength: 3,
                 maxLength: 14,
                 pattern: "^[a-zA-Z0123456789_]*$",
+            }),
+            password: t.String({ minLength: 8, maxLength: 200 }),
+        }),
+        userLogin: t.Object({
+            name: t.String({
+                minLength: 3,
+                maxLength: 14,
             }),
             password: t.String({ minLength: 8, maxLength: 200 }),
         }),
