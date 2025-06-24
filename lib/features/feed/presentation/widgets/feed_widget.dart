@@ -45,7 +45,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                           padding: const EdgeInsets.all(16),
                     child: Column(
                       children: <Widget> [
-                              for (final NotificationModel post in state.posts) SizedBox(width: double.infinity, child: FeedPost(post: post))
+                              for (final NotificationModel post in state.notifications) SizedBox(width: double.infinity, child: FeedPost(post: post))
                       ],
                     ),
                   ),

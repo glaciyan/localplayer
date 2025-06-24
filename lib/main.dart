@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localplayer/features/feed/data/IFeedRepository.dart';
 import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
@@ -23,6 +24,9 @@ import 'package:localplayer/spotify/presentation/blocs/spotify_profiel_cubit.dar
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/features/feed/feed_module.dart';
 import 'package:localplayer/features/map/domain/repositories/map_repository_impl.dart';
+import 'package:localplayer/features/auth/data/IAuthRepository.dart';
+import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:localplayer/features/auth/auth_module.dart';
 
 
 void main() async {
@@ -71,6 +75,12 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<IMapRepository>(
           create: (final BuildContext context) => MapRepository(context.read<ISpotifyRepository>()),
         ),
+        RepositoryProvider<IAuthRepository>(
+          create: (_) => AuthModule.provideRepository(),
+        ),
+        RepositoryProvider<IFeedRepository>(
+          create: (_) => FeedModule.provideRepository(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
@@ -85,7 +95,16 @@ class MyApp extends StatelessWidget {
               config,
             ),
           ),
-          BlocProvider<FeedBloc>(create: (_) => FeedModule.provideBloc()),
+          BlocProvider<FeedBloc>(
+            create: (final BuildContext context) => FeedModule.provideBloc( 
+              feedRepository: context.read<IFeedRepository>(),
+            ),
+          ),
+          BlocProvider<AuthBloc>(
+            create: (final BuildContext context) => AuthModule.provideBloc(
+              authRepository: context.read<IAuthRepository>(),
+            ),
+          ),
           BlocProvider<MapBloc>(
             create: (final BuildContext context) => MapBloc(
               mapRepository: context.read<IMapRepository>(),

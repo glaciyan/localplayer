@@ -27,11 +27,11 @@ class ApiClient {
     final Map<String, dynamic>? queryParameters,
     final Options? options,
   }) async => await _dio.post(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-    );
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
   
   Future<Response<dynamic>> patch(
     final String path, {

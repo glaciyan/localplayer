@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart'; 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localplayer/features/auth/auth_module.dart';
+import 'package:localplayer/features/auth/domain/interfaces/auth_controller_interface.dart';
+import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:localplayer/features/auth/presentation/blocs/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,7 +47,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) {
+    final IAuthController authController = AuthModule.provideController(context, context.read<AuthBloc>());
+    return Scaffold(
       body: FadeTransition(
         opacity: _fade,
         child: SafeArea(
@@ -63,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       child: TextField(
                         controller: userHandleController,
                         decoration: const InputDecoration(labelText: 'username'),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -72,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         controller: passwordController,
                         decoration: const InputDecoration(labelText: 'password'),
                         obscureText: true,
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -83,6 +92,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           setState(() {
                             _isLoading = true;
                           });
+
+                          authController.signUp(userHandleController.text, passwordController.text);
+
                           // Simulate API call
                           await Future<void>.delayed(const Duration(seconds: 2));
                           context.go('/map');
@@ -99,7 +111,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : Text('Login / Signup', style: Theme.of(context).textTheme.titleLarge),
+                          : (context.read<AuthBloc>().state is AuthSignIn)
+                            ? Text('Login', style: Theme.of(context).textTheme.titleLarge)
+                            : Text('Register', style: Theme.of(context).textTheme.titleLarge),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.secondary,
                           foregroundColor: Theme.of(context).colorScheme.onSecondary,
@@ -114,4 +128,5 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         ),
       ),
     );
+  }
 }

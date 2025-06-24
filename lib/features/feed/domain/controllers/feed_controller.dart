@@ -9,9 +9,6 @@ class FeedController implements IFeedController {
   FeedController(this.context, this.addEvent);
 
   @override
-  void testEvent() => addEvent(TestEvent());
-
-  @override
   void loadFeed() => addEvent(LoadFeed());
 
   @override

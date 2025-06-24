@@ -33,7 +33,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     try {
       _allProfiles = await mapRepository.fetchProfiles();
 
-      add(InitializeMap()); // Continue with map setup
+      add(InitializeMap());
     } catch (e) {
       emit(MapError("Failed to load map profiles: $e"));
     }
