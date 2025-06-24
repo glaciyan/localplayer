@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart'; 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,14 +95,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             _isLoading = true;
                           });
 
-                          authController.signUp(userHandleController.text, passwordController.text);
+                          await authController.signUp(userHandleController.text, passwordController.text);
 
-                          // Simulate API call
-                          await Future<void>.delayed(const Duration(seconds: 2));
-                          context.go('/map');
-                          setState(() {
-                            _isLoading = false;
-                          });
+                          // try {
+                          //   // context.go('/map');
+                          // } on DioException catch(e) {
+                          //   Fluttertoast.showToast(
+                          //     msg: "Failed to create account" + (e.message ?? ""),
+                          //     toastLength: Toast.LENGTH_LONG,
+                          //     gravity: ToastGravity.BOTTOM,
+                          //     timeInSecForIosWeb: 3,
+                          //     backgroundColor: Colors.black54,
+                          //     textColor: Colors.white,
+                          //     fontSize: 16.0
+                          //   );
+                          // } finally {
+                          //   setState(() {
+                          //     _isLoading = false;
+                          //   });
+                          // }
                         },
                         child: _isLoading 
                           ? const SizedBox(
