@@ -17,8 +17,7 @@ class ProfileWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(final BuildContext context) => Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -33,49 +32,47 @@ class ProfileWidget extends StatelessWidget {
               right: 0,
               bottom: 24,
               child: Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16),
-  child: Row(
-    children: <Widget>[
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: onEdit,
-          icon: const Icon(Icons.edit, size: 28),
-          label: const Text(
-            "Edit Profile",
-            style: TextStyle(fontSize: 18),
-          ),
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size.fromHeight(60),
-          ),
-        ),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: onCreateSession,
-          icon: const Icon(Icons.play_arrow, size: 28),
-          label: const Text(
-            "Create Session",
-            style: TextStyle(fontSize: 18),
-          ),
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size.fromHeight(60),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: onEdit,
+                        icon: const Icon(Icons.edit, size: 28),
+                        label: const Text(
+                          "Edit Profile",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(60),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: onCreateSession,
+                        icon: const Icon(Icons.play_arrow, size: 28),
+                        label: const Text(
+                          "Create Session",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(60),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
-  }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
     properties.add(ObjectFlagProperty<VoidCallback>.has('onEdit', onEdit));

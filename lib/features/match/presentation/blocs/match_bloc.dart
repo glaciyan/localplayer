@@ -36,9 +36,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         );
 
         emit(MatchLoaded(enrichedProfiles));
-      } catch (e, stack) {
-        print('Failed to load profiles: $e');
-        print(stack);
+      } catch (e) {
         emit(MatchError('Failed to load profiles.'));
       }
     });
@@ -59,7 +57,7 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
         try {
           await spotifyRepository.fetchArtistData(preloadId);
         } catch (_) {
-          print('Preloading next Spotify profile failed.');
+          //print('Preloading next Spotify profile failed.');
         }
       }
     });

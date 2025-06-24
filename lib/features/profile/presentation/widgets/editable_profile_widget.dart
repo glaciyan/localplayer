@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/features/profile/presentation/widgets/editable_profile_card.dart';
+import 'package:flutter/foundation.dart';
 
 class EditableProfileWidget extends StatelessWidget {
   final ProfileWithSpotify profile;
@@ -15,8 +16,15 @@ class EditableProfileWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<ProfileWithSpotify>('profile', profile, ifPresent: 'has profile'));
+    properties.add(ObjectFlagProperty<GlobalKey<EditableProfileCardState>>('cardKey', cardKey, ifPresent: 'has cardKey'));
+    properties.add(ObjectFlagProperty<VoidCallback>('onSave', onSave, ifPresent: 'has onSave'));
+  }
+
+  @override
+  Widget build(final BuildContext context) => Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -33,7 +41,7 @@ class EditableProfileWidget extends StatelessWidget {
               top: 12,
               right: 12,
               child: Row(
-                children: [
+                children: <Widget> [
                   IconButton(
                     icon: const Icon(Icons.logout),
                     color: Colors.white,
@@ -72,5 +80,4 @@ class EditableProfileWidget extends StatelessWidget {
         ),
       ),
     );
-  }
 }

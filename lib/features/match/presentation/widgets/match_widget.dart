@@ -70,7 +70,7 @@ class _MatchWidgetState extends State<MatchWidget> {
         return BlocProvider<SpotifyProfileCubit>.value(
           value: context.read<SpotifyProfileCubit>(),
           child: Stack(
-            children: [
+            children: <Widget> [
               Positioned.fill(
                 child: ProfileCard(profile: profile),
               ),

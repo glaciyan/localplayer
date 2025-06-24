@@ -4,7 +4,6 @@ import 'package:localplayer/features/match/data/repositories/fake_match_reposito
 import 'package:localplayer/features/match/domain/controllers/match_controller.dart';
 import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 
 import 'domain/repositories/match_repository.dart';

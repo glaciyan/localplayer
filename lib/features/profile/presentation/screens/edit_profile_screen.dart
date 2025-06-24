@@ -16,11 +16,10 @@ class EditProfileScreen extends StatelessWidget {
   final GlobalKey<EditableProfileCardState> _cardKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
-    return WithNavBar(
+  Widget build(final BuildContext context) => WithNavBar(
       selectedIndex: 3,
       child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
+        builder: (final BuildContext context, final ProfileState state) {
           if (state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
@@ -28,7 +27,7 @@ class EditProfileScreen extends StatelessWidget {
               profile: state.profile,
               cardKey: _cardKey,
               onSave: () {
-                final updated = _cardKey.currentState?.getUpdatedProfile();
+                final ProfileWithSpotify? updated = _cardKey.currentState?.getUpdatedProfile();
                 if (updated != null) {
                   context.read<ProfileBloc>().add(UpdateProfile(updated));
                   context.pop();
@@ -41,5 +40,4 @@ class EditProfileScreen extends StatelessWidget {
         },
       ),
     );
-  }
 }

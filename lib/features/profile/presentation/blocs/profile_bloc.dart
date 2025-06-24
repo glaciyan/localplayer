@@ -24,10 +24,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(user.spotifyId);
 
     final SpotifyArtistData artistData = SpotifyArtistData(
-      name: artist['name'] ?? '',
-      genres: (artist['genres'] as List?)?.join(', ') ?? '',
-      imageUrl: artist['images']?[0]['url'] ?? '',
-      biography: 'Spotify artist with genre: ${(artist['genres'] as List?)?.join(', ') ?? 'Unknown'}',
+      name: artist['name']?.toString() ?? '',
+      genres: (artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? '',
+      imageUrl: ((artist['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
+      biography: 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
       tracks: tracks,
     );
 
@@ -47,11 +47,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final Map<String, dynamic> artistJson = await spotifyService.getArtist(event.updatedProfile.user.spotifyId);
       final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(event.updatedProfile.user.spotifyId);
 
-      final artistData = SpotifyArtistData(
-        name: artistJson['name'] ?? '',
-        genres: (artistJson['genres'] as List?)?.join(', ') ?? '',
-        imageUrl: artistJson['images']?[0]['url'] ?? '',
-        biography: 'Spotify artist with genre: ${(artistJson['genres'] as List?)?.join(', ') ?? 'Unknown'}',
+      final SpotifyArtistData artistData = SpotifyArtistData(
+        name: artistJson['name']?.toString() ?? '',
+        genres: (artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? '',
+        imageUrl: ((artistJson['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
+        biography: 'Spotify artist with genre: ${(artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
         tracks: tracks,
       );
 
