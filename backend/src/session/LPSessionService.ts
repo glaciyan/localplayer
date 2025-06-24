@@ -22,12 +22,12 @@ export const SessionIncludes = {
         },
     },
     creator: {
-        include: PublicProfileIncludes
+        include: PublicProfileIncludes,
     },
     participants: {
         include: {
             participant: {
-                include: PublicProfileIncludes
+                include: PublicProfileIncludes,
             },
         },
     },
@@ -61,7 +61,7 @@ export class LPSessionService {
         const runningSession = await this.findRunningSession(profileId);
 
         if (runningSession) {
-            log.warn(`${profileId} already has a running session`)
+            log.warn(`${profileId} already has a running session`);
             return null;
         }
 
@@ -111,7 +111,9 @@ export class LPSessionService {
         }
 
         if (session.status === "CONCLUDED") {
-            log.error(`${profile.handle}:${profile.id} has tried to join a concluded session.`);
+            log.error(
+                `${profile.handle}:${profile.id} has tried to join a concluded session.`
+            );
             throw new CustomValidationError("This session has already ended.");
         }
 
@@ -191,16 +193,29 @@ export class LPSessionService {
             },
         });
 
-        await notificationController.createNotification({
-            from: profile.id,
-            to: participantId,
-            title: `${
-                profile.displayName || profile.handle
-            } has accepted your request.`,
-            message: null,
-            notifType: "SESSION_REQUEST_ACCEPTED",
-            lpSessionId: sessionId,
-        });
+        if (accept) {
+            await notificationController.createNotification({
+                from: profile.id,
+                to: participantId,
+                title: `${
+                    profile.displayName || profile.handle
+                } has accepted your request.`,
+                message: null,
+                notifType: "SESSION_REQUEST_ACCEPTED",
+                lpSessionId: sessionId,
+            });
+        } else {
+            await notificationController.createNotification({
+                from: profile.id,
+                to: participantId,
+                title: `${
+                    profile.displayName || profile.handle
+                } has rejected your request.`,
+                message: null,
+                notifType: "SESSION_REQUEST_REJECTED",
+                lpSessionId: sessionId,
+            });
+        }
 
         return participation;
     }

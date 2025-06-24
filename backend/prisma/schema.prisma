@@ -177,6 +177,8 @@ model Notification {
 
 enum NotificationType {
   LIKED
+  DISLIKED
   SESSION_REQUESTED
   SESSION_REQUEST_ACCEPTED
+  SESSION_REQUEST_REJECTED
 }

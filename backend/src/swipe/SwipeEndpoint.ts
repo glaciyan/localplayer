@@ -30,15 +30,27 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
                 });
             }
 
-            await notificationController.createNotification({
-                from: profile.id,
-                to: swipeeId,
-                title: `${
-                    profile.displayName || profile.handle
-                } liked your profile.`,
-                notifType: "LIKED",
-                message: null,
-            });
+            if (rating === "good") {
+                await notificationController.createNotification({
+                    from: profile.id,
+                    to: swipeeId,
+                    title: `${
+                        profile.displayName || profile.handle
+                    } liked your profile.`,
+                    notifType: "LIKED",
+                    message: null,
+                });
+            } else if (rating === "bad") {
+                await notificationController.createNotification({
+                    from: profile.id,
+                    to: swipeeId,
+                    title: `${
+                        profile.displayName || profile.handle
+                    } disliked your profile!`,
+                    notifType: "DISLIKED",
+                    message: null,
+                });
+            }
 
             return result;
         },
