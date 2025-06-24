@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'feed_event.dart';
 import 'feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
-import 'package:localplayer/features/feed/data/repositories/feed_repository_impl.dart';
+import 'package:localplayer/features/feed/data/IFeedRepository.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
-  final FeedRepository feedRepository;
+  final IFeedRepository feedRepository;
 
   final List<NotificationModel> posts = <NotificationModel> [
     NotificationModel(id: 1, artistId: 1, backgroundLink: "https://i1.sndcdn.com/artworks-y3inzkQdBqBFfOow-yfKP9g-t1080x1080.jpg", createdAt: DateTime(2000), title: "Test Title", read: false, type: NotificationType.like, recipientId: 1),
@@ -17,48 +17,43 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     NotificationModel(id: 6, artistId: 1, backgroundLink: "https://picsum.photos/200/300", createdAt: DateTime(2005), title: "Test Title 6", read: false, type: NotificationType.sessionRejected, recipientId: 1),
   ];
 
-  FeedBloc(this.feedRepository) : super(FeedInitial()) {
-    on<TestEvent>((final TestEvent event, final Emitter<FeedState> emit) {
-      emit(FeedLoaded(posts: posts));
-    });
+  FeedBloc({
+    required this.feedRepository,
+  }) : super(FeedInitial()) {
+    on<LoadFeed>(_onLoadFeed);
+    on<RefreshFeed>(_onRefreshFeed);
+    on<AcceptSession>(_onAcceptSession);
+    on<RejectSession>(_onRejectSession);
+  }
 
-    on<LoadFeed>((final LoadFeed event, final Emitter<FeedState> emit) async {
-      emit(FeedLoading());
+  void _onLoadFeed(final LoadFeed event, final Emitter<FeedState> emit) async {
+    emit(FeedLoading());
+  }
+
+  void _onRefreshFeed(final RefreshFeed event, final Emitter<FeedState> emit) async {
       try {
-        final List<NotificationModel> posts = await feedRepository.fetchNotifications();
-        emit(FeedLoaded(posts: posts));
+        final List<NotificationModel> notifications = await feedRepository.fetchNotifications();
+        emit(FeedLoaded(notifications: notifications));
       } catch (e) {
         emit(FeedError(e.toString()));
       }
-    });
+  }
 
-    on<RefreshFeed>((final RefreshFeed event, final Emitter<FeedState> emit) async {
-      try {
-        final List<NotificationModel> posts = await feedRepository.fetchNotifications();
-        emit(FeedLoaded(posts: posts));
-      } catch (e) {
-        emit(FeedError(e.toString()));
-      }
-    });
-
-    on<AcceptSession>((final AcceptSession event, final Emitter<FeedState> emit) async {
+  void _onAcceptSession(final AcceptSession event, final Emitter<FeedState> emit) async {
       emit(FeedLoading());
       try {
         await feedRepository.acceptSession(event.sessionId, event.userId);
-        emit(FeedLoaded(posts: posts));
       } catch (e) {
         emit(FeedError(e.toString()));
       }
-    });
+  }
 
-    on<RejectSession>((final RejectSession event, final Emitter<FeedState> emit) async {
+  void _onRejectSession(final RejectSession event, final Emitter<FeedState> emit) async {
       emit(FeedLoading());
       try {
         await feedRepository.rejectSession(event.sessionId, event.userId);
-        emit(FeedLoaded(posts: posts));
       } catch (e) {
         emit(FeedError(e.toString()));
       }
-    });
   }
 }

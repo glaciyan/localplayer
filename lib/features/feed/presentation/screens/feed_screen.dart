@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
-import 'package:localplayer/features/feed/feed_module.dart';
+import 'package:localplayer/features/feed/data/IFeedRepository.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_state.dart';
@@ -12,7 +12,9 @@ class FeedScreen extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) => BlocProvider<FeedBloc>(
-    create: (_) => FeedModule.provideBloc()..add(LoadFeed()),
+    create: (_) => FeedBloc(
+      feedRepository: context.read<IFeedRepository>(),
+    )..add(LoadFeed()),
     child: const WithNavBar(
       selectedIndex: 2,
       child: FeedContent(),
@@ -44,7 +46,7 @@ class FeedContent extends StatelessWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    context.read<FeedBloc>().add(TestEvent());
+                    context.read<FeedBloc>().add(RefreshFeed());
                   },
                   child: const Text('Retry'),
                 ),

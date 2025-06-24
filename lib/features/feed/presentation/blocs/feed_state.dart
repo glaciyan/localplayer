@@ -7,11 +7,11 @@ class FeedInitial extends FeedState {}
 class FeedLoading extends FeedState {}
 
 class FeedLoaded extends FeedState {
-  final List<NotificationModel> posts;
+  final List<NotificationModel> notifications;
   final bool hasMore;
   
   FeedLoaded({
-    required this.posts,
+    required this.notifications,
     this.hasMore = true,
   });
 }
