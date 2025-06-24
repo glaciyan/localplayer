@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
     SharedPreferences.getInstance().then((final SharedPreferences value) {
       final Object? token = value.get("token");
       if (token == null) {
-        context.go('/sigup');
+        context.go('/signup');
       } else {}
     });
   }
