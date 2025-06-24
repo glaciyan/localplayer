@@ -73,7 +73,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             return {
-                value: sessionToken,
+                token: sessionToken,
                 expires: expiresOn,
             };
         },
