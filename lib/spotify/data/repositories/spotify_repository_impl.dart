@@ -16,10 +16,10 @@ class SpotifyRepositoryImpl implements ISpotifyRepository {
     final List<TrackEntity> topTracks = allTracks.take(3).toList();
 
     return SpotifyArtistData(
-      name: artist['name'] ?? '',
-      genres: (artist['genres'] as List<dynamic>?)?.join(', ') ?? '',
-      imageUrl: artist['images']?[0]['url'] ?? '',
-      biography: 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.join(', ') ?? 'Unknown'}',
+      name: artist['name']?.toString() ?? '',
+      genres: (artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? '',
+      imageUrl: ((artist['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
+      biography: 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
       tracks: topTracks,
     );
   }
