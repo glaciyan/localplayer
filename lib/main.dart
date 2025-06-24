@@ -14,6 +14,7 @@ import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart'
 import 'package:localplayer/spotify/domain/repositories/track_repository.dart';
 import 'package:localplayer/core/go_router/router.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
+import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
@@ -98,7 +99,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<FeedBloc>(
             create: (final BuildContext context) => FeedModule.provideBloc( 
               feedRepository: context.read<IFeedRepository>(),
-            ),
+            )..add(RefreshFeed()), 
           ),
           BlocProvider<AuthBloc>(
             create: (final BuildContext context) => AuthModule.provideBloc(

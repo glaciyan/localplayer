@@ -84,7 +84,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         : Colors.black.withValues(alpha: 0.5),
                     ),
                       Container(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: Colors.black.withValues(alpha: 0.5),
                       ),
 
                     ],
