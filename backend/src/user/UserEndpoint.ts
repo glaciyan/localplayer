@@ -7,14 +7,14 @@ import { UNAUTHORIZED } from "../errors.ts";
 
 const log = mklog("user-api");
 
-const NOT_SO_SECRET_SECRET = "tF_LgyuKrvOMIwVBg8WMSw";
+const NOT_SO_SECRET_SECRET = "1dfeR4HaWDbWqFHLkxsg1d";
 
 export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
     .post(
         "/signup",
         async ({ body, headers }) => {
-            if (headers.secret !== NOT_SO_SECRET_SECRET) {
+            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
                 return status(403);
             }
 
@@ -33,14 +33,14 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         {
             body: "userAuth",
             headers: t.Object({
-                secret: t.String(),
+                not_secret: t.String(),
             }),
         }
     )
     .post(
         "/login",
         async ({ headers, body, cookie: { id } }) => {
-            if (headers.secret !== NOT_SO_SECRET_SECRET) {
+            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
                 return status(403, UNAUTHORIZED);
             }
             // make sure user is not logged on
@@ -89,7 +89,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             body: "userAuth",
             cookie: "optionalSession",
             headers: t.Object({
-                secret: t.String(),
+                not_secret: t.String(),
             }),
         }
     )

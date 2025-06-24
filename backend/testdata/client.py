@@ -7,7 +7,7 @@ class APIClient:
     def __init__(self, base_url = host, headers=None, timeout=30):
         self.base_url = base_url.rstrip('/')
         self.headers = headers or {}
-        self.headers["secret"] = "tF_LgyuKrvOMIwVBg8WMSw"
+        self.headers["not_secret"] = "1dfeR4HaWDbWqFHLkxsg1d"
         self.timeout = timeout
 
     def _request(self, method, endpoint, **kwargs):

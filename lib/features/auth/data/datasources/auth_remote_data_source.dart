@@ -10,7 +10,7 @@ class AuthRemoteDataSource {
     await apiClient.post(
       '/user/login', 
       data: <String, String> {'name': name, 'password': password},
-      options: Options(headers: <String, String> {'Secret': 'tF_LgyuKrvOMIwVBg8WMSw'}),
+      options: Options(headers: <String, String> {'not_secret': '1dfeR4HaWDbWqFHLkxsg1d'}),
     );
   }
 
@@ -18,7 +18,7 @@ class AuthRemoteDataSource {
     await apiClient.post(
       '/user/signup', 
       data: <String, String> {'name': name, 'password': password},
-      options: Options(headers: <String, String> {'Secret': 'tF_LgyuKrvOMIwVBg8WMSw'}),
+      options: Options(headers: <String, String> {'not_secret': '1dfeR4HaWDbWqFHLkxsg1d'}),
     );
   }
 }
