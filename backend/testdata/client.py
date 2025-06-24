@@ -1,13 +1,14 @@
+import os
 import requests
 
 # host = "https://localplayer.fly.dev"
-host = "http://localhost:3030"
+host = os.getenv("API_BASE_URL", "http://localhost:3030")
 
 class APIClient:
     def __init__(self, base_url = host, headers=None, timeout=30):
         self.base_url = base_url.rstrip('/')
         self.headers = headers or {}
-        self.headers["not_secret"] = "1dfeR4HaWDbWqFHLkxsg1d"
+        self.headers["not_secret"] = os.getenv("NOT_SECRET", "asdf")
         self.timeout = timeout
 
     def _request(self, method, endpoint, **kwargs):

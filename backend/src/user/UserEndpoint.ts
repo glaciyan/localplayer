@@ -19,7 +19,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         "/signup",
         async ({ body, headers }) => {
             if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
-                return status(403);
+                log.warn("Someone tried to access an open endoint without auth.");
+                return status(422, "No Secret 'not_secret' set in header");
             }
 
             const success = await userController.register(
@@ -45,7 +46,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
         "/login",
         async ({ headers, body, cookie: { id } }) => {
             if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
-                return status(403, UNAUTHORIZED);
+                log.warn("Someone tried to access an open endoint without auth.");
+                return status(403, "No Secret 'not_secret' set in header");
             }
             // make sure user is not logged on
             if (id.value) {
@@ -68,7 +70,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             if (goodLogin === null) {
-                return status(403, UNAUTHORIZED);
+                return status(403, "Wrong username or password");
             }
 
             const { sessionToken, expiresOn } =

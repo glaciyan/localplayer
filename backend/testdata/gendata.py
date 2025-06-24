@@ -21,7 +21,7 @@ BASE_URL = os.getenv("API_BASE_URL", "http://localhost:3030")
 
 def login_and_get_cookie(name: str, password: str) -> (str, requests.Session):
     sess = requests.Session()
-    sess.headers.update({"not_secret": "1dfeR4HaWDbWqFHLkxsg1d"})
+    sess.headers.update({"not_secret": os.getenv("NOT_SECRET", "asdf")})
     login_url = f"{BASE_URL}/user/login"
     resp = sess.post(login_url, json={"name": name, "password": password}, timeout=30)
     resp.raise_for_status()
