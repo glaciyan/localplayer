@@ -41,7 +41,6 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
             }
         },
         {
-            cookie: "session",
             requireProfile: true,
             query: t.Object({
                 trackId: t.String(),

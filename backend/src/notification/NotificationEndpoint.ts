@@ -28,7 +28,6 @@ export const NotificationEndpoint = new Elysia({ prefix: "notification" }) //
             return notifications.map((n) => NotificationDTOMap(n));
         },
         {
-            cookie: "session",
             requireProfile: true,
             detail: {
                 description: "Get all your notifications.",
