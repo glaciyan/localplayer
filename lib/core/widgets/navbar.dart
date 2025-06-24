@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 class Navbar extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  static const double icon_size = 30;
+  static const double icon_size = 25;
 
   const Navbar({
     super.key,
@@ -35,7 +35,7 @@ class Navbar extends StatelessWidget {
         NavigationDestination(
           icon: Iconify(Mdi.cards_outline, size: icon_size),
           selectedIcon: Iconify(Mdi.cards, size: icon_size),
-          label: 'Match',
+          label: 'Rate',
         ),
         NavigationDestination(
           icon: Iconify(Mdi.lightning_bolt_outline, size: icon_size),

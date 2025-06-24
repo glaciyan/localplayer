@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'feed_event.dart';
 import 'feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
-import 'package:localplayer/features/feed/data/IFeedRepository.dart';
+import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final IFeedRepository feedRepository;

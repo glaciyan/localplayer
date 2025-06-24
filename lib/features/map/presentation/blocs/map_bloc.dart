@@ -2,11 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart' as flutter_map;
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/map/domain/repositories/i_map_repository.dart';
+import 'package:localplayer/features/map/data/map_repository_interface.dart';
 import 'package:localplayer/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/spotify/domain/entities/spotify_artist_data.dart';
 import 'map_event.dart';
 import 'map_state.dart';
+import 'dart:async';
+import 'package:localplayer/features/map/utils/marker_utils.dart';
 
 
 class MapBloc extends Bloc<MapEvent, MapState> {
@@ -14,6 +16,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final ISpotifyRepository spotifyRepository;
 
   List<ProfileWithSpotify> _allProfiles = <ProfileWithSpotify> [];
+  Timer? _debounceTimer;
 
   MapBloc({
     required this.mapRepository,
@@ -31,7 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(MapLoading());
 
     try {
-      _allProfiles = await mapRepository.fetchProfiles();
+      _allProfiles = await mapRepository.fetchProfiles(0, 0, 0);
 
       add(InitializeMap());
     } catch (e) {
@@ -60,16 +63,38 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     ));
   }
 
-  void _onUpdateCameraPosition(final UpdateCameraPosition event, final Emitter<MapState> emit) {
-    final List<ProfileWithSpotify> visible = _allProfiles.where((final ProfileWithSpotify profile) => event.visibleBounds.contains(profile.user.position)).toList();
+  void _onUpdateCameraPosition(final UpdateCameraPosition event, final Emitter<MapState> emit) async {
+    // Cancel previous timer
+    _debounceTimer?.cancel();
+    
+    // Debounce for 300ms to avoid too many API calls during zoom/pan
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () async {
+      final double radius = calculateRadiusFromBounds(event.visibleBounds);
+      
+      try {
+        // Fetch profiles within the calculated radius
+        final List<ProfileWithSpotify> profilesInRadius = await mapRepository.fetchProfiles(
+          event.latitude,
+          event.longitude,
+          radius,
+        );
+        
+        // Filter to visible bounds for display
+        final List<ProfileWithSpotify> visible = profilesInRadius
+            .where((final ProfileWithSpotify profile) => event.visibleBounds.contains(profile.user.position))
+            .toList();
 
-    emit(MapReady(
-      latitude: event.latitude,
-      longitude: event.longitude,
-      visiblePeople: visible,
-      visibleBounds: event.visibleBounds,
-      zoom: event.zoom,
-    ));
+        emit(MapReady(
+          latitude: event.latitude,
+          longitude: event.longitude,
+          visiblePeople: visible,
+          visibleBounds: event.visibleBounds,
+          zoom: event.zoom,
+        ));
+      } catch (e) {
+        emit(MapError("Failed to fetch profiles: $e"));
+      }
+    });
   }
 
   Future<void> _onSelectPlayer(final SelectPlayer event, final Emitter<MapState> emit) async {
@@ -136,5 +161,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     } catch (e) {
       emit(MapError("Failed to reload Spotify data: $e"));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _debounceTimer?.cancel();
+    return super.close();
   }
 }
