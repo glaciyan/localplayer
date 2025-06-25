@@ -53,8 +53,11 @@ Despite his energy and talent, Malik faces challenges like:
 | 👤 **Profile Screen** | Displays the full user profile, including avatar, biography, location, and top Spotify tracks. |
 
 ## 📸 Screenshots
-<img src="assets/screenshots/map_screen.png" alt="Map Screen" width="200"/>
-
+<img src="assets/screenshots/map_screen.png" alt="Map Screen" width="250"/>
+<img src="assets/screenshots/swipe_screen.png" alt="Map Screen" width="250"/>
+<img src="assets/screenshots/feed_accepted_screen.png" alt="Map Screen" width="250"/>
+<img src="assets/screenshots/feed_extended_screen.png" alt="Map Screen" width="250"/>
+<img src="assets/screenshots/edit_profile_screen.png" alt="Map Screen" width="250"/>
 
 ## 🚀 Features
 
