@@ -8,12 +8,14 @@ class ProfileWidget extends StatelessWidget {
   final ProfileWithSpotify profile;
   final VoidCallback onEdit;
   final VoidCallback onCreateSession;
+  final bool hasSession;
 
   const ProfileWidget({
     super.key,
     required this.profile,
     required this.onEdit,
     required this.onCreateSession,
+    required this.hasSession,
   });
 
   @override
@@ -53,9 +55,9 @@ class ProfileWidget extends StatelessWidget {
                       child: ElevatedButton.icon(
                         onPressed: onCreateSession,
                         icon: const Icon(Icons.play_arrow, size: 28),
-                        label: const Text(
-                          "Create Session",
-                          style: TextStyle(fontSize: 18),
+                        label: Text(
+                          hasSession ? 'Close Session' : 'Create Session',
+                          style: const TextStyle(fontSize: 18),
                         ),
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(60),
@@ -77,5 +79,6 @@ class ProfileWidget extends StatelessWidget {
     properties.add(DiagnosticsProperty<ProfileWithSpotify>('profile', profile));
     properties.add(ObjectFlagProperty<VoidCallback>.has('onEdit', onEdit));
     properties.add(ObjectFlagProperty<VoidCallback>.has('onCreateSession', onCreateSession));
+    properties.add(DiagnosticsProperty<bool>('hasSession', hasSession));
   }
 }
