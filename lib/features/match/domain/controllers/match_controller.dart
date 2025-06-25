@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
-import 'package:localplayer/features/match/domain/controllers/match_controller_interface.dart';
+import 'package:localplayer/features/match/domain/interfaces/match_controller_interface.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 
 class MatchController implements IMatchController {

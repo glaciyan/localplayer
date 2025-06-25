@@ -30,29 +30,44 @@ class _FeedWidgetState extends State<FeedWidget> {
     return BlocBuilder<FeedBloc, FeedState>(  
       builder: (final BuildContext context, final FeedState state) {
         if (state is FeedLoaded) {
-          return Scaffold(
-            body: SafeArea(
-              child: RefreshIndicator(
-                color: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                onRefresh: () async {
-                  _feedController.refreshFeed();
-                },
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: _scrollController,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: <Widget> [
-                              for (final NotificationModel post in state.notifications) SizedBox(width: double.infinity, child: FeedPost(post: post))
-                      ],
-                    ),
+          return RefreshIndicator(
+            color: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            onRefresh: () async {
+              _feedController.refreshFeed();
+            },
+            child: CustomScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              slivers: <Widget> [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: state.notifications.isEmpty 
+                      ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget> [
+                          Center(child: Text("No notifications", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black))),
+                          const SizedBox(height: 16),
+                          Center(child: Text("Pull down to refresh", style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black))),
+                        ],
+                      ) 
+                      : Column(
+                          children: <Widget> [
+                            for (final NotificationModel post in state.notifications) 
+                              SizedBox(width: double.infinity, child: FeedPost(post: post))
+                          ],
+                        ),
                   ),
                 ),
-              ),
+              ],
             ),
           );
+        } else if (state is FeedLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is FeedError) {
+          return Center(child: Text(state.message, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red)));
         }
         
         return Scaffold(

@@ -6,9 +6,9 @@ class FeedRemoteDataSource {
   
   FeedRemoteDataSource(this.apiClient);
 
-  Future<Map<String, dynamic>> fetchNotifications() async {
+  Future<List<dynamic>> fetchNotifications() async {
     final Response<dynamic> response = await apiClient.get('/notification/');
-    return response.data as Map<String, dynamic>;
+    return response.data as List<dynamic>;
   }
 
   Future<void> acceptSession(final String sessionId, final String userId) async {
@@ -19,9 +19,9 @@ class FeedRemoteDataSource {
   }
 
   Future<void> rejectSession(final String sessionId, final String userId) async {
-      await apiClient.post(
-        '/session/requests/respond', 
-        data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': false},
-      );
+    await apiClient.post(
+      '/session/requests/respond', 
+      data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': false},
+    );
   }
 }
