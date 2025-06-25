@@ -63,10 +63,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final profile_event.SignOut event,
     final Emitter<ProfileState> emit,
   ) async {
-    print("signing out");
     await profileRepository.signOut();
-    print('signed out');
     emit(ProfileSignedOut());
-    print('signed out emitted');
   }
 }
