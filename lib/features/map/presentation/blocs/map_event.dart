@@ -26,8 +26,18 @@ class SelectPlayer extends MapEvent {
 
 class DeselectPlayer extends MapEvent {
   final UserProfile selectedUser;
+  final double latitude;
+  final double longitude;
+  final LatLngBounds visibleBounds;
+  final double zoom;
 
-  DeselectPlayer(this.selectedUser);
+  DeselectPlayer(
+    this.selectedUser,
+    this.latitude,
+    this.longitude,
+    this.visibleBounds,
+    this.zoom,
+  );
 }
 class RequestJoinSession extends MapEvent {
   final UserProfile selectedUser;

@@ -32,17 +32,23 @@ class MapController implements IMapController {
 
   @override
   void deselectProfile(final ProfileWithSpotify profile) {
-    addEvent(map_event.DeselectPlayer(profile.user));
+    final LatLng pos = profile.user.position;
+    final LatLngBounds fallbackBounds = LatLngBounds(
+      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
+      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
+    );
 
-    if (_currentBounds != null) {
-      updateCameraPosition(
-        _currentBounds!.center.latitude,
-        _currentBounds!.center.longitude,
-        _visiblePeople,
-        _currentBounds!,
+    final LatLngBounds bounds = _currentBounds ?? fallbackBounds;
+
+    addEvent(
+      map_event.DeselectPlayer(
+        profile.user,
+        bounds.center.latitude,
+        bounds.center.longitude,
+        bounds,
         _currentZoom,
-      );
-    }
+      ),
+    );
   }
 
   @override

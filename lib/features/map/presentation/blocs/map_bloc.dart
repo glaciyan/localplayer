@@ -157,26 +157,22 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   void _onDeselectPlayer(final DeselectPlayer event, final Emitter<MapState> emit) {
-    final LatLng pos = event.selectedUser.position;
-    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
-      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
-      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
-    );
-
     final List<ProfileWithSpotify> visible = _allProfiles
         .where(
           (final ProfileWithSpotify profile) =>
-              bounds.contains(profile.user.position),
+              event.visibleBounds.contains(profile.user.position),
         )
         .toList();
 
-    emit(MapReady(
-      latitude: pos.latitude,
-      longitude: pos.longitude,
-      visiblePeople: visible,
-      visibleBounds: bounds,
-      zoom: 12,
-    ));
+    emit(
+      MapReady(
+        latitude: event.latitude,
+        longitude: event.longitude,
+        visiblePeople: visible,
+        visibleBounds: event.visibleBounds,
+        zoom: event.zoom,
+      ),
+    );
   }
 
   Future<void> _onRequestJoinSession(
