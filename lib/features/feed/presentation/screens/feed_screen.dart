@@ -4,7 +4,6 @@ import 'package:localplayer/core/widgets/with_nav_bar.dart';
 import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
-import 'package:localplayer/features/feed/presentation/blocs/feed_state.dart';
 import 'package:localplayer/features/feed/presentation/widgets/feed_widget.dart';
 
 class FeedScreen extends StatelessWidget {
@@ -14,55 +13,17 @@ class FeedScreen extends StatelessWidget {
   Widget build(final BuildContext context) => BlocProvider<FeedBloc>(
     create: (_) => FeedBloc(
       feedRepository: context.read<IFeedRepository>(),
-    )..add(LoadFeed()),
-    child: const WithNavBar(
+    )..add(RefreshFeed()),
+    child: WithNavBar(
       selectedIndex: 2,
-      child: FeedContent(),
+      child: SafeArea(
+        child: Column(
+          children: <Widget> [
+            Text("Feed", style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black)),
+            Expanded(child: FeedWidget()),
+          ],
+        ),
+      ),
     ),
-  );
-}
-
-class FeedContent extends StatelessWidget {
-  const FeedContent({super.key});
-
-  @override
-  Widget build(final BuildContext context) => BlocBuilder<FeedBloc, FeedState>(
-    builder: (final BuildContext context, final FeedState state) {
-      if (state is FeedLoading) {
-        return const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        );
-      }
-      
-      if (state is FeedError) {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget> [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Error: ${state.message}', style: Theme.of(context).textTheme.labelMedium),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<FeedBloc>().add(RefreshFeed());
-                  },
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-      
-      if (state is FeedLoaded) {
-        return const FeedWidget();
-      }
-      
-      return const Scaffold(
-        body: Center(child: Text('No posts available')),
-      );
-    },
   );
 }

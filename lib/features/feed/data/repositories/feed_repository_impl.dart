@@ -11,8 +11,8 @@ class FeedRepository implements IFeedRepository {
 
   @override
   Future<List<NotificationModel>> fetchNotifications() async {
-    final Map<String, dynamic> rawData = await _dataSource.fetchNotifications();
-    return (rawData['notifications'] as List<dynamic>)
+    final List<dynamic> rawData = await _dataSource.fetchNotifications();
+    return (rawData)
         .map((final dynamic json) => NotificationModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
