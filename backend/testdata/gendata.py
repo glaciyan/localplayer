@@ -7,6 +7,7 @@ batch_update_with_client.py
    a. Uses a requests.Session to POST /user/login and grab the bearer token
    b. Injects that token into APIClient.headers as Authorization: Bearer <token>
    c. Uses APIClient to PATCH /profile/me and POST /presence/current
+   d. If `session` field is "open" or "close", POST /session with session data
 3. Writes out user_tokens.json with all {name, token}
 """
 
@@ -26,8 +27,7 @@ def login_and_get_token(name: str, password: str) -> (str, requests.Session):
     sess = requests.Session()
     sess.headers.update(NOT_SECRET_HEADER)
     login_url = f"{BASE_URL}/user/login"
-    resp = sess.post(login_url, json={
-                     "name": name, "password": password}, timeout=30)
+    resp = sess.post(login_url, json={"name": name, "password": password}, timeout=30)
     resp.raise_for_status()
 
     data = resp.json()
@@ -80,10 +80,25 @@ def main():
         }
         pres_resp = client.post("/presence/current", json=pres_payload)
         if pres_resp.get("error"):
-            print(
-                f"   ❌ [{name}] presence update failed: {pres_resp['error']}")
+            print(f"   ❌ [{name}] presence update failed: {pres_resp['error']}")
         else:
             print(f"   ✔️ [{name}] presence set")
+
+        # ——— HANDLE SESSION ———
+        session_state = user.get("session")
+        if session_state in ("open", "close"):
+            open_flag = True if session_state == "open" else False
+            session_payload = {
+                "latitude":  str(user.get("latitude", "0")),
+                "longitude": str(user.get("longitude", "0")),
+                "name":      f"{user.get('displayName', name)}'s Session",
+                "open":      open_flag
+            }
+            sess_resp = client.post("/session", json=session_payload)
+            if sess_resp.get("error"):
+                print(f"   ❌ [{name}] session {session_state} failed: {sess_resp['error']}")
+            else:
+                print(f"   ✔️ [{name}] session set to {session_state}")
 
         token_list.append({"name": name, "token": bearer_token})
 
