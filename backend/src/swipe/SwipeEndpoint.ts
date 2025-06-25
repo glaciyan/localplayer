@@ -76,7 +76,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
                 profile.id
             );
             log.info(`Found ${candidates.length} candiates`);
-            return candidates.map((c) => ProfileDTOMap(c));
+            return await Promise.all(candidates.map((c) => ProfileDTOMap(c)));
         },
         {
             requireProfile: true,

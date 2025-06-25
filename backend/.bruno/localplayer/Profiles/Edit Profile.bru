@@ -7,12 +7,17 @@ meta {
 patch {
   url: {{host}}/profile/me
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearer}}
 }
 
 body:json {
   {
     "displayName": "Kevin",
-    "biography": "Hi I am Kevin!"
+    "biography": "Hi I am Kevin!",
+    "spotifyLink": "https://open.spotify.com/artist/2hdUuoqJUD7RXiGBNhEeUL?si=79d645d6794647b7"
   }
 }

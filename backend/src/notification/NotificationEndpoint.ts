@@ -4,16 +4,16 @@ import { notificationController } from "./notification.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { SessionDTOMapWithoutParticipants } from "../session/SessionEndpoint.ts";
 
-export const NotificationDTOMap = (notif: any) => ({
+export const NotificationDTOMap = async (notif: any) => ({
     id: notif.id,
     type: notif.type,
     createdAt: notif.createdAt,
     title: notif.title,
     message: notif.message,
     read: notif.read,
-    sender: ProfileDTOMap(notif.sender),
+    sender: await ProfileDTOMap(notif.sender),
     session: notif.session
-        ? SessionDTOMapWithoutParticipants(notif.session)
+        ? await SessionDTOMapWithoutParticipants(notif.session)
         : null,
 });
 
@@ -25,7 +25,9 @@ export const NotificationEndpoint = new Elysia({ prefix: "notification" }) //
             const notifications = await notificationController.getNotifications(
                 profile.id
             );
-            return notifications.map((n) => NotificationDTOMap(n));
+            return await Promise.all(
+                notifications.map((n) => NotificationDTOMap(n))
+            );
         },
         {
             requireProfile: true,

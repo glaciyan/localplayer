@@ -7,5 +7,9 @@ meta {
 get {
   url: {{host}}/notification
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearer}}
 }

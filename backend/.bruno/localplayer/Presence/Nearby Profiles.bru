@@ -7,11 +7,15 @@ meta {
 get {
   url: {{host}}/presence/nearby?latitude=1&longitude=1&radiusKm=10
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:query {
   latitude: 1
   longitude: 1
   radiusKm: 10
+}
+
+auth:bearer {
+  token: {{bearer}}
 }

@@ -7,17 +7,25 @@ import { mklog } from "../logger.ts";
 
 const log = mklog("lpsession");
 
-export const SessionDTOMap = (session: any) => ({
-    ...SessionDTOMapWithoutParticipants(session),
-    participations: session.participants.map((p: any) => ({
-        status: p.status,
-        participant: ProfileDTOMap(p.participant),
-    })),
-});
+export const SessionDTOMap = async (session: any) => {
+    const base = await SessionDTOMapWithoutParticipants(session);
 
-export const SessionDTOMapWithoutParticipants = (session: any) => ({
+    const participations = await Promise.all(
+        session.participants.map(async (p: any) => ({
+            status: p.status,
+            participant: await ProfileDTOMap(p.participant),
+        }))
+    );
+
+    return {
+        ...base,
+        participations,
+    };
+};
+
+export const SessionDTOMapWithoutParticipants = async (session: any) => ({
     ...SessionDTOMapWithoutParticipantsAndCreator(session),
-    creator: ProfileDTOMap(session.creator),
+    creator: await ProfileDTOMap(session.creator),
 });
 
 export const SessionDTOMapWithoutParticipantsAndCreator = (session: any) => ({
@@ -52,7 +60,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 return status(404, "null");
             }
 
-            return SessionDTOMap(session);
+            return await SessionDTOMap(session);
         },
         {
             requireProfile: true,
@@ -77,7 +85,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 return status(403, "You already have an open session");
             }
 
-            return SessionDTOMap(session);
+            return await SessionDTOMap(session);
         },
         {
             requireProfile: true,
@@ -95,7 +103,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 return status(404);
             }
 
-            return SessionDTOMap(session);
+            return await SessionDTOMap(session);
         },
         {
             requireProfile: true,
@@ -131,13 +139,17 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 profile.id
             );
 
-            return requests.map((r) => ({
-                createdAt: r.createdAt,
-                status: r.status,
-                participantId: r.participantId,
-                sessionId: r.sessionId,
-                participant: ProfileDTOMap(r.participant),
-            }));
+            const dtos = await Promise.all(
+                requests.map(async (r) => ({
+                    createdAt: r.createdAt,
+                    status: r.status,
+                    participantId: r.participantId,
+                    sessionId: r.sessionId,
+                    participant: await ProfileDTOMap(r.participant),
+                }))
+            );
+
+            return dtos;
         },
         {
             requireProfile: true,
