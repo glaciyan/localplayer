@@ -138,8 +138,9 @@ class MapWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Stack(
                           children: <Widget>[
-                            ProfileCard(profile: state.selectedUser),
-
+                            Positioned.fill(
+                              child: ProfileCard(profile: state.selectedUser),
+                            ),
                             Positioned(
                               top: 12,
                               right: 12,

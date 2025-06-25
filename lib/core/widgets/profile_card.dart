@@ -67,7 +67,7 @@ class ProfileCard extends StatelessWidget {
 
                 if (profile.user.biography.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.only(left: 4, bottom: 16),
                     child: Text(
                       profile.user.biography,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -75,9 +75,23 @@ class ProfileCard extends StatelessWidget {
                   ),
 
                 const Divider(height: 20, thickness: 1, color: Colors.white30),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    profile.artist.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0),
+                  child: Text(
+                    '${profile.artist.genres}\n'
+                    '${profile.artist.listeners} monthly listeners',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.white),
+                  ),
+                ),
 
-                Text(profile.artist.name, style: Theme.of(context).textTheme.titleMedium),
-                Text(profile.artist.genres, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 12),
 
                 for (final TrackEntity track in profile.artist.tracks.take(3))

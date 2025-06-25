@@ -79,19 +79,28 @@ class _MatchWidgetState extends State<MatchWidget> {
         final ProfileWithSpotify profile = profiles[index];
         return BlocProvider<SpotifyProfileCubit>.value(
           value: context.read<SpotifyProfileCubit>(),
-          child: Stack(
-            children: <Widget> [
-              Positioned.fill(
-                child: ProfileCard(profile: profile),
-              ),
-              Positioned(
-                bottom: 30,
-                left: 0,
-                right: 0,
-                child: _buildSwipeButtons(context, profiles),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: ProfileCard(profile: profile),
+                ),
+                Positioned(
+                  bottom: 60,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: Center(
+                      child: _buildSwipeButtons(context, profiles),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+
         );
       },
       onSwipe: (final int? previousIndex, final int? currentIndex, final CardSwiperDirection direction) {
