@@ -11,17 +11,19 @@ class FeedRemoteDataSource {
     return response.data as List<dynamic>;
   }
 
-  Future<void> acceptSession(final int sessionId, final int userId) async {
-    await apiClient.post(
+  Future<Response<dynamic>> acceptSession(final int userId, final int sessionId) async {    
+    final Response<dynamic> response = await apiClient.post(
       '/session/requests/respond',
       data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': true},
     );
+    return response;
   }
 
-  Future<void> rejectSession(final int sessionId, final int userId) async {
-    await apiClient.post(
+  Future<Response<dynamic>> rejectSession(final int userId, final int sessionId) async {
+    final Response<dynamic> response = await apiClient.post(
       '/session/requests/respond', 
       data: <String, dynamic> {'participantId': userId, 'sessionId': sessionId, 'accept': false},
     );
+    return response;
   }
 }

@@ -155,16 +155,10 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget> [
                               Text(
-                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.visible,
                                 widget.post.title,
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                overflow: TextOverflow.ellipsis,
-                                widget.post.type.toString(),
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
                                 ),
                               ),
@@ -239,16 +233,16 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _isLoading
+                            onPressed: _isLoading || widget.post.session == null
                                 ? null
                                 : () async {
                                     setState(() {
                                       _isLoading = true;
                                     });
-
+                                    
                                     widget.feedController.acceptSession(
-                                      widget.post.session.id,
                                       widget.post.sender.id,
+                                      widget.post.session!.id,
                                     );
 
                                     setState(() {
