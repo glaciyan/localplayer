@@ -2,41 +2,28 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/features/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
 
-// class UserRepositoryImpl implements IUserRepository {
-//   final Dio dio;
+class UserRepositoryImpl implements IUserRepository {
+  final ProfileRemoteDataSource dataSource;
 
-//   UserRepositoryImpl(this.dio);
+  UserRepositoryImpl(this.dataSource);
 
-//   @override
-//   Future<UserProfile> getCurrentUserProfile() async {
-//     final response = await dio.get('/profile/me');
+  @override
+  Future<UserProfile> getCurrentUserProfile() async =>
+      await dataSource.fetchCurrentUserProfile();
 
-//     if (response.statusCode == 200) {
-//       return UserProfile.fromJson(response.data);
-//     } else {
-//       throw Exception('Failed to load user profile');
-//     }
-//   }
+  @override
+  Future<void> updateUserProfile(UserProfile profile) async =>
+      dataSource.updateUserProfile(profile);
 
-//   @override
-//   Future<void> updateUserProfile(UserProfile profile) async {
-//     final body = {
-//       "description": profile.biography,
-//       "avatarLink": profile.avatarLink,
-//       "backgroundLink": profile.backgroundLink,
-//       "location": profile.location,
-//     };
-
-//     final response = await dio.patch('/profile/me', data: body);
-
-//     if (response.statusCode != 200) {
-//       throw Exception('Failed to update profile');
-//     }
-//   }
-
-// }
+  @override
+  Future<List<UserProfile>> getDiscoverableUsers() async {
+    // Not implemented on backend yet
+    return <UserProfile>[];
+  }
+}
 
 class FakeUserRepository implements IUserRepository {
   UserProfile mock = const UserProfile(

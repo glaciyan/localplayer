@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,8 +38,7 @@ void main() async {
 
   final ConfigService config = ConfigService();
   await config.load();
-  final Dio dio = Dio();
-  final IUserRepository userRepo = UserModule.provideRepository(dio);
+  final IUserRepository userRepo = UserModule.provideRepository(config);
   runApp(MyApp(config: config, userRepo: userRepo,));
 }
 
