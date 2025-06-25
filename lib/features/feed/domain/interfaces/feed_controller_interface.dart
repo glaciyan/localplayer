@@ -1,6 +1,6 @@
 abstract class IFeedController {
   void loadFeed();
   void refreshFeed();
-  void acceptSession(final String sessionId, final String userId);
-  void rejectSession(final String sessionId, final String userId);
+  void acceptSession(final int sessionId, final int userId);
+  void rejectSession(final int sessionId, final int userId);
 }

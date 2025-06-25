@@ -18,12 +18,12 @@ class FeedRepository implements IFeedRepository {
   }
 
   @override
-  Future<void> acceptSession(final String sessionId, final String userId) async {
+  Future<void> acceptSession(final int sessionId, final int userId) async {
     await _dataSource.acceptSession(sessionId, userId);
   }
 
   @override
-  Future<void> rejectSession(final String sessionId, final String userId) async {
+  Future<void> rejectSession(final int sessionId, final int userId) async {
     await _dataSource.rejectSession(sessionId, userId);
   }
 }

@@ -75,11 +75,13 @@ class _FeedWidgetState extends State<FeedWidget> {
                             )
                             : Column(
                               children: <Widget>[
-                                for (final NotificationModel post
-                                    in state.notifications)
+                                for (final NotificationModel post in state.notifications)
                                   SizedBox(
                                     width: double.infinity,
-                                    child: FeedPost(post: post),
+                                    child: FeedPost(
+                                      post: post,
+                                      feedController: _feedController,
+                                    ),
                                   ),
                               ],
                             ),

@@ -9,15 +9,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:localplayer/core/services/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
 
+import 'package:localplayer/features/feed/domain/interfaces/feed_controller_interface.dart';
+
 class FeedPost extends StatefulWidget {
   final NotificationModel post;
+  final IFeedController feedController;
 
-  const FeedPost({super.key, required this.post});
+  const FeedPost({
+    super.key,
+    required this.post,
+    required this.feedController,
+  });
 
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<NotificationModel>('post', post));
+    properties.add(DiagnosticsProperty<IFeedController>('feedController', feedController));
   }
 
   @override
@@ -56,6 +64,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<NotificationModel>('post', widget.post));
+    properties.add(DiagnosticsProperty<IFeedController>('feedController', widget.feedController));
   }
 
   // Helper method to determine if this post should show a map
@@ -230,9 +239,34 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-                            },
-                            child: Text('Accept Session Request'),
+                            onPressed: _isLoading
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+
+                                    widget.feedController.acceptSession(
+                                      widget.post.session.id,
+                                      widget.post.sender.id,
+                                    );
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+                                  },
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Text('Accept Session Request'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                               foregroundColor: Colors.white,

@@ -6,7 +6,8 @@
         "bio": "Hi my name is Valor you probably know me from my work on Free.",
         "latitude": 52.4652,
         "longitude": 13.3453,
-        "spotifyLink": "https://open.spotify.com/artist/3jLitrUQ5KAF0n9oxUCyqd"
+        "spotifyLink": "https://open.spotify.com/artist/3jLitrUQ5KAF0n9oxUCyqd",
+        "session": "closed"
     },
     {
         "name": "alpinist87",
@@ -15,7 +16,8 @@
         "bio": "Passionate about high-altitude adventures and mountain photography.",
         "latitude": 52.4331,
         "longitude": 13.4937,
-        "spotifyLink": "https://open.spotify.com/artist/2VsjQwt2iO5pSWQZ37GKgs"
+        "spotifyLink": "https://open.spotify.com/artist/2VsjQwt2iO5pSWQZ37GKgs",
+        "session" : "open"
     },
     {
         "name": "citycoder",
@@ -24,7 +26,8 @@
         "bio": "Urban developer by day, open-source contributor by night.",
         "latitude": 52.5798,
         "longitude": 13.3285,
-        "spotifyLink": "https://open.spotify.com/artist/7aVAHmMUBvA8a8yKFv8NkC"
+        "spotifyLink": "https://open.spotify.com/artist/7aVAHmMUBvA8a8yKFv8NkC",
+        "session": "closed"
     },
     {
         "name": "travelogue",
@@ -33,7 +36,8 @@
         "bio": "Exploring the world one city at a time.",
         "latitude": 52.5972,
         "longitude": 13.4731,
-        "spotifyLink": "https://open.spotify.com/artist/2dEnUzijJixOkLii3kmu6A"
+        "spotifyLink": "https://open.spotify.com/artist/2dEnUzijJixOkLii3kmu6A",
+        "session": "open"
     },
     {
         "name": "jazznut",
@@ -42,7 +46,8 @@
         "bio": "Jazz historian and vinyl collector.",
         "latitude": 52.4494,
         "longitude": 13.339,
-        "spotifyLink": "https://open.spotify.com/artist/6vWDO969PvNqNYHIOW5v0m"
+        "spotifyLink": "https://open.spotify.com/artist/6vWDO969PvNqNYHIOW5v0m",
+        "session": "open"
     },
     {
         "name": "techsavvy",
@@ -51,7 +56,8 @@
         "bio": "Machine learning engineer and data enthusiast.",
         "latitude": 52.4589,
         "longitude": 13.4968,
-        "spotifyLink": "https://open.spotify.com/artist/47T694aNABbLrqSh4Di7Xj"
+        "spotifyLink": "https://open.spotify.com/artist/47T694aNABbLrqSh4Di7Xj",
+        "session": "open"
     },
     {
         "name": "artsy_daisy",
@@ -60,7 +66,8 @@
         "bio": "Illustrator and mixed-media artist.",
         "latitude": 52.5845,
         "longitude": 13.3221,
-        "spotifyLink": "https://open.spotify.com/artist/65AvmlDjfI1rl0ECsVcX0g"
+        "spotifyLink": "https://open.spotify.com/artist/65AvmlDjfI1rl0ECsVcX0g",
+        "session": "open"
     },
     {
         "name": "historybuff",
@@ -69,7 +76,8 @@
         "bio": "Researcher of medieval European history.",
         "latitude": 52.4263,
         "longitude": 13.4512,
-        "spotifyLink": "https://open.spotify.com/artist/1QgQF1oyo7at7bSwEeO7YX"
+        "spotifyLink": "https://open.spotify.com/artist/1QgQF1oyo7at7bSwEeO7YX",
+        "session": "open"
     },
     {
         "name": "biophile",
@@ -78,7 +86,8 @@
         "bio": "Studying biodiversity and conservation.",
         "latitude": 52.5691,
         "longitude": 13.3117,
-        "spotifyLink": "https://open.spotify.com/artist/6vcowFkyN7H2X5yTu0nk0G"
+        "spotifyLink": "https://open.spotify.com/artist/6vcowFkyN7H2X5yTu0nk0G",
+        "session": "open"
     },
     {
         "name": "foodie_fiesta",
@@ -87,7 +96,8 @@
         "bio": "Culinary explorer and recipe developer.",
         "latitude": 52.5818,
         "longitude": 13.4774,
-        "spotifyLink": "https://open.spotify.com/artist/0BmnB01PeIJC2Dqgnr5A1L"
+        "spotifyLink": "https://open.spotify.com/artist/0BmnB01PeIJC2Dqgnr5A1L",
+        "session": "open"
     },
     {
         "name": "poetica",
@@ -96,7 +106,8 @@
         "bio": "Contemporary poet and creative writing coach.",
         "latitude": 34.0081,
         "longitude": -118.2919,
-        "spotifyLink": "https://open.spotify.com/artist/56RD5PjknZlVSB4HS6YEF1"
+        "spotifyLink": "https://open.spotify.com/artist/56RD5PjknZlVSB4HS6YEF1",
+        "session": "open"
     },
     {
         "name": "rockfan91",
@@ -105,7 +116,8 @@
         "bio": "Guitarist and classic rock aficionado.",
         "latitude": 34.1245,
         "longitude": -118.357,
-        "spotifyLink": "https://open.spotify.com/artist/3mf3mPFBWMd7EUf2YZtVUM"
+        "spotifyLink": "https://open.spotify.com/artist/3mf3mPFBWMd7EUf2YZtVUM",
+        "session": "open"
     },
     {
         "name": "mindful_muse",
@@ -114,7 +126,8 @@
         "bio": "Yoga instructor and mindfulness advocate.",
         "latitude": 33.9947,
         "longitude": -118.3151,
-        "spotifyLink": "https://open.spotify.com/artist/4QmVPz6QXdcAlqYkiO5L4B"
+        "spotifyLink": "https://open.spotify.com/artist/4QmVPz6QXdcAlqYkiO5L4B",
+        "session": "open"
     },
     {
         "name": "codewizard",
@@ -123,7 +136,8 @@
         "bio": "Full-stack developer and tech blogger.",
         "latitude": 34.1483,
         "longitude": -118.3795,
-        "spotifyLink": "https://open.spotify.com/artist/5zlvaJmz0WIPlv2oMITqci"
+        "spotifyLink": "https://open.spotify.com/artist/5zlvaJmz0WIPlv2oMITqci",
+        "session": "open"
     },
     {
         "name": "green_thumb",
@@ -132,7 +146,8 @@
         "bio": "Urban gardener and plant enthusiast.",
         "latitude": 34.133,
         "longitude": -118.3047,
-        "spotifyLink": "https://open.spotify.com/artist/4x1nvY2FN8jxqAFA0DA02H"
+        "spotifyLink": "https://open.spotify.com/artist/4x1nvY2FN8jxqAFA0DA02H",
+        "session": "open"
     },
     {
         "name": "astrogeek",
@@ -141,7 +156,8 @@
         "bio": "Amateur astronomer and telescope maker.",
         "latitude": 33.9829,
         "longitude": -118.3539,
-        "spotifyLink": "https://open.spotify.com/artist/0wPOVO0uMbHZy2ycXkOmY7"
+        "spotifyLink": "https://open.spotify.com/artist/0wPOVO0uMbHZy2ycXkOmY7",
+        "session": "open"
     },
     {
         "name": "wanderjane",
@@ -150,7 +166,8 @@
         "bio": "Solo hiker exploring national parks.",
         "latitude": 34.1221,
         "longitude": -118.3285,
-        "spotifyLink": "https://open.spotify.com/artist/3vvLuXEEf7sl3izJcw0GIn"
+        "spotifyLink": "https://open.spotify.com/artist/3vvLuXEEf7sl3izJcw0GIn",
+        "session": "open"
     },
     {
         "name": "cybersec_pro",
@@ -159,7 +176,8 @@
         "bio": "Security analyst specializing in threat detection.",
         "latitude": 33.9694,
         "longitude": -118.3392,
-        "spotifyLink": "https://open.spotify.com/artist/4N2I7VsF86h59tbsvVoB1h"
+        "spotifyLink": "https://open.spotify.com/artist/4N2I7VsF86h59tbsvVoB1h",
+        "session": "open"
     },
     {
         "name": "filmbuff",
@@ -168,7 +186,8 @@
         "bio": "Independent film critic and festival juror.",
         "latitude": 34.1098,
         "longitude": -118.3604,
-        "spotifyLink": "https://open.spotify.com/artist/6JwRFnmMxmWcYribpIJbcS"
+        "spotifyLink": "https://open.spotify.com/artist/6JwRFnmMxmWcYribpIJbcS",
+        "session": "open"
     },
     {
         "name": "ql_solutions",
@@ -177,7 +196,8 @@
         "bio": "Researcher in quantum computing algorithms.",
         "latitude": 35.7323,
         "longitude": 139.7656,
-        "spotifyLink": "https://open.spotify.com/artist/5OqtUcLnQsI4uPnyWACQBg"
+        "spotifyLink": "https://open.spotify.com/artist/5OqtUcLnQsI4uPnyWACQBg",
+        "session": "open"
     },
     {
         "name": "aquarian",
@@ -186,7 +206,8 @@
         "bio": "Marine biologist and deep-sea diver.",
         "latitude": 35.7552,
         "longitude": 139.6274,
-        "spotifyLink": "https://open.spotify.com/artist/0ndWKGm6Kl92RMNKdEsco1"
+        "spotifyLink": "https://open.spotify.com/artist/0ndWKGm6Kl92RMNKdEsco1",
+        "session": "open"
     },
     {
         "name": "dj_beatdrop",
@@ -195,7 +216,8 @@
         "bio": "Electronic music producer and live DJ.",
         "latitude": 35.7481,
         "longitude": 139.7958,
-        "spotifyLink": "https://open.spotify.com/artist/7GSU66LeZvWLljbGMx3SUN"
+        "spotifyLink": "https://open.spotify.com/artist/7GSU66LeZvWLljbGMx3SUN",
+        "session": "open"
     },
     {
         "name": "mountainbiker",
@@ -204,7 +226,8 @@
         "bio": "Cyclist tackling rugged trails worldwide.",
         "latitude": 35.781,
         "longitude": 139.6532,
-        "spotifyLink": "https://open.spotify.com/artist/2dJ40xdfV5qRLc17me3eBu"
+        "spotifyLink": "https://open.spotify.com/artist/2dJ40xdfV5qRLc17me3eBu",
+        "session": "open"
     },
     {
         "name": "bibliofile",
@@ -213,7 +236,8 @@
         "bio": "Book curator and literature blogger.",
         "latitude": 35.6189,
         "longitude": 139.6455,
-        "spotifyLink": "https://open.spotify.com/artist/6XVqcVgKqaAYFfm5ZhZ7I5"
+        "spotifyLink": "https://open.spotify.com/artist/6XVqcVgKqaAYFfm5ZhZ7I5",
+        "session": "open"
     },
     {
         "name": "chef_gourmet",
@@ -222,7 +246,8 @@
         "bio": "Professional chef specializing in French cuisine.",
         "latitude": 35.629,
         "longitude": 139.7662,
-        "spotifyLink": "https://open.spotify.com/artist/2vNXdMXuqUxlZR69leCxQY"
+        "spotifyLink": "https://open.spotify.com/artist/2vNXdMXuqUxlZR69leCxQY",
+        "session": "open"
     },
     {
         "name": "techjournalist",
@@ -231,7 +256,8 @@
         "bio": "Reporting on the latest in technology and startups.",
         "latitude": 35.7458,
         "longitude": 139.7724,
-        "spotifyLink": "https://open.spotify.com/artist/3QDphCnrqYjnau7cAB1Hef"
+        "spotifyLink": "https://open.spotify.com/artist/3QDphCnrqYjnau7cAB1Hef",
+        "session": "open"
     },
     {
         "name": "dance_fever",
@@ -240,7 +266,8 @@
         "bio": "Contemporary dancer and choreographer.",
         "latitude": 35.7614,
         "longitude": 139.6531,
-        "spotifyLink": "https://open.spotify.com/artist/1STAy1JvQQyNmcykEIh9rM"
+        "spotifyLink": "https://open.spotify.com/artist/1STAy1JvQQyNmcykEIh9rM",
+        "session": "open"
     },
     {
         "name": "eco_warrior",
@@ -249,7 +276,8 @@
         "bio": "Environmental activist and sustainable living advocate.",
         "latitude": 35.7395,
         "longitude": 139.6624,
-        "spotifyLink": "https://open.spotify.com/artist/79TdUM8JBfntiLVLJVTS98"
+        "spotifyLink": "https://open.spotify.com/artist/79TdUM8JBfntiLVLJVTS98",
+        "session": "open"
     },
     {
         "name": "urbanplanner",
@@ -258,7 +286,8 @@
         "bio": "Designing smart, livable cities for the future.",
         "latitude": 35.7536,
         "longitude": 139.769,
-        "spotifyLink": "https://open.spotify.com/artist/4XMpjogKcdhSarFU37oOTJ"
+        "spotifyLink": "https://open.spotify.com/artist/4XMpjogKcdhSarFU37oOTJ",
+        "session": "open"
     },
     {
         "name": "Arutepsu",
@@ -267,6 +296,7 @@
         "bio": "Hello, I am Artur!.",
         "latitude": 47.659216,
         "longitude": 9.1750718,
-        "spotifyLink": "https://open.spotify.com/artist/6OXkkVozDhZ1Ho7yPe4W07"
+        "spotifyLink": "https://open.spotify.com/artist/6OXkkVozDhZ1Ho7yPe4W07",
+        "session": "open"
     }
 ]
