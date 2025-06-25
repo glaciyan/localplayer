@@ -36,7 +36,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(MapLoading());
 
     try {
-      _allProfiles = await mapRepository.fetchProfilesWithSpotify(0, 0, 1000000);
+      const double initLatitude = 52.52;
+      const double initLongitude = 13.405;
+      const double initZoom = 10.5;
+      _allProfiles = await mapRepository.fetchProfilesWithSpotify(initLatitude, initLongitude, initZoom);
       add(InitializeMap());
     } on NoConnectionException {
       emit(MapError('No internet connection'));
@@ -46,22 +49,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   void _onInitializeMap(final InitializeMap event, final Emitter<MapState> emit) {
-    const double initLatitude = 37.7749;
-    const double initLongitude = -122.4194;
-    const double initZoom = 12;
+    const double initLatitude = 52.52;
+    const double initLongitude = 13.405;
+    const double initZoom = 10.5;
 
     final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(initLatitude - 0.01, initLongitude - 0.01),
       LatLng(initLatitude + 0.01, initLongitude + 0.01),
     );
 
-    final List<ProfileWithSpotify> visible = _allProfiles
-        .where(
-          (final ProfileWithSpotify profile) =>
-              bounds.contains(profile.user.position),
-        )
-        .toList();
-
+    final List<ProfileWithSpotify> visible = _allProfiles;
     emit(MapReady(
       latitude: initLatitude,
       longitude: initLongitude,
