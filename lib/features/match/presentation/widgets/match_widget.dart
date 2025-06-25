@@ -10,7 +10,6 @@ import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:localplayer/features/match/domain/interfaces/match_controller_interface.dart';
 import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
-import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_state.dart';
 
 class MatchWidget extends StatefulWidget {
@@ -45,8 +44,11 @@ class _MatchWidgetState extends State<MatchWidget> {
       );
 
   Widget _buildLoadedState(final BuildContext context, final List<ProfileWithSpotify> profiles) {
+    if (_currentIndex >= profiles.length) {
+      _currentIndex = 0;
+    }
     if (profiles.isEmpty) {
-      return const Center(child: Text('No more profiles.'));
+      return const Center(child: Text('Out of profiles to rate.'));
     }
     if (kDebugMode) {
       print("Loaded profiles: ${profiles.length}");
@@ -63,6 +65,7 @@ class _MatchWidgetState extends State<MatchWidget> {
       backCardOffset: const Offset(0, 20),
       maxAngle: 30,
       threshold: 60,
+      isLoop: false,
       allowedSwipeDirection: const AllowedSwipeDirection.symmetric(
         horizontal: true,
         vertical: false,
@@ -101,6 +104,9 @@ class _MatchWidgetState extends State<MatchWidget> {
           default:
             break;
         }
+        // if (_currentIndex >= profiles.length - 1) {
+        //   _matchController.loadProfiles();
+        // }
         return true;
       },
     );
@@ -109,19 +115,6 @@ class _MatchWidgetState extends State<MatchWidget> {
   Widget _buildSwipeButtons(final BuildContext context, final List<ProfileWithSpotify> profiles) {
     void handleSwipe(final CardSwiperDirection direction) {
       if (_currentIndex >= profiles.length) return;
-      final ProfileWithSpotify profile = profiles[_currentIndex];
-
-      switch (direction) {
-        case CardSwiperDirection.right:
-          context.read<MatchBloc>().add(LikePressed(profile.user));
-          break;
-        case CardSwiperDirection.left:
-          context.read<MatchBloc>().add(DislikePressed(profile.user));
-          break;
-        default:
-          return;
-      }
-
       _swiperController.swipe(direction);
     }
 
@@ -163,6 +156,7 @@ class _MatchWidgetState extends State<MatchWidget> {
                 child: Iconify(
                   icon,
                   size: 36,
+                  color: color,
                 ),
               ),
             ),

@@ -39,11 +39,14 @@ export class SwipeService {
                 id: {
                     not: profileId,
                 },
+                spotifyId: {
+                    not: null,
+                },
             },
             orderBy: {
                 createdAt: SortOrder.asc,
             },
-            include: PublicProfileIncludes
+            include: PublicProfileIncludes,
         });
 
         return candidates;

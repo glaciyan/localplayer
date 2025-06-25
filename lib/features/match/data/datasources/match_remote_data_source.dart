@@ -23,13 +23,14 @@ class MatchRemoteDataSource {
     return profiles;
   }
 
-  Future<Map<String, dynamic>> like(final String profileId) async {
-    final Response<dynamic> response = await apiClient.post('/swipe/good/$profileId');
+  Future<Map<String, dynamic>> rate(final String rating, final int swipeeId) async {
+    final Response<dynamic> response = await apiClient.post('/swipe/$rating/$swipeeId');
     return response.data as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>> dislike(final String profileId) async {
-    final Response<dynamic> response = await apiClient.post('/swipe/bad/$profileId');
-    return response.data as Map<String, dynamic>;
-  }
+  Future<Map<String, dynamic>> like(final int profileId) async =>
+      rate('good', profileId);
+
+  Future<Map<String, dynamic>> dislike(final int profileId) async =>
+      rate('bad', profileId);
 }

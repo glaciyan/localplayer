@@ -45,8 +45,8 @@ class MatchRepository implements IMatchRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> like(final String profileId) async => await matchRemoteDataSource.like(profileId);
+  Future<Map<String, dynamic>> like(final int profileId) async => await matchRemoteDataSource.like(profileId);
 
   @override
-  Future<Map<String, dynamic>> dislike(final String profileId) async => await matchRemoteDataSource.dislike(profileId);
+  Future<Map<String, dynamic>> dislike(final int profileId) async => await matchRemoteDataSource.dislike(profileId);
 }
