@@ -39,7 +39,7 @@ class UserProfile {
       location: json['location'] ?? '',
       spotifyId: json['spotifyId'] ?? '',
       position: _parsePosition(json),
-      color: HexColor(json['color']) ?? Color.fromARGB(255, 149, 149, 151),
+      color: HexColor(json['color']),
       listeners: json['listeners'] ?? 0,
     );
 

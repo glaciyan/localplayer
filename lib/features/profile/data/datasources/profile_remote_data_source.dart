@@ -12,7 +12,7 @@ class ProfileRemoteDataSource {
     return UserProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
-  Future<void> updateUserProfile(UserProfile profile) async {
+  Future<void> updateUserProfile(final UserProfile profile) async {
     final Map<String, dynamic> body = <String, dynamic>{
       'description': profile.biography,
       'avatarLink': profile.avatarLink,

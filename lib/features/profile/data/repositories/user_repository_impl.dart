@@ -15,14 +15,11 @@ class UserRepositoryImpl implements IUserRepository {
       await dataSource.fetchCurrentUserProfile();
 
   @override
-  Future<void> updateUserProfile(UserProfile profile) async =>
+  Future<void> updateUserProfile(final UserProfile profile) async =>
       dataSource.updateUserProfile(profile);
 
   @override
-  Future<List<UserProfile>> getDiscoverableUsers() async {
-    // Not implemented on backend yet
-    return <UserProfile>[];
-  }
+  Future<List<UserProfile>> getDiscoverableUsers() async => <UserProfile>[];
 }
 
 class FakeUserRepository implements IUserRepository {
