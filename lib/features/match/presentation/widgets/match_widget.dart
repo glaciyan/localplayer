@@ -48,7 +48,7 @@ class _MatchWidgetState extends State<MatchWidget> {
       _currentIndex = 0;
     }
     if (profiles.isEmpty) {
-      return const Center(child: Text('Out of profiles to rate.'));
+      return _buildNoMoreProfilesMessage(context);
     }
     if (kDebugMode) {
       print("Loaded profiles: ${profiles.length}");
@@ -73,20 +73,7 @@ class _MatchWidgetState extends State<MatchWidget> {
       cardsCount: profiles.length + 1,
       cardBuilder: (final BuildContext context, final int index, final int percentX, final int percentY) {
         if (index == profiles.length) {
-          return Center(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                'No more profiles',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
+          return _buildNoMoreProfilesMessage(context);
         }
         final ProfileWithSpotify profile = profiles[index];
         return BlocProvider<SpotifyProfileCubit>.value(
@@ -132,6 +119,21 @@ class _MatchWidgetState extends State<MatchWidget> {
         return true;
       },
     );
+
+  Widget _buildNoMoreProfilesMessage(final BuildContext context) => Center(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            'No more profiles',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
 
 
   Widget _buildSwipeButtons(final BuildContext context, final List<ProfileWithSpotify> profiles) {
