@@ -38,27 +38,10 @@ class EditableProfileWidget extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            // Fullscreen editable profile card
             Positioned.fill(
               child: EditableProfileCard(
                 key: cardKey,
                 profile: profile,
-              ),
-            ),
-
-            // Top-right overlay buttons (logout + save)
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Row(
-                children: <Widget> [
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    color: Colors.white,
-                    tooltip: 'Logout',
-                    onPressed: _profileController.signOut,
-                  ),
-                ],
               ),
             ),
 
