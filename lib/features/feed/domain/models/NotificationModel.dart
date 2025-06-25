@@ -1,8 +1,11 @@
+import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/features/session/domain/models/session_model.dart';
+
 enum NotificationType {
   sessionInvite,
   sessionAccepted,
   sessionRejected,
-  newMessage,
+  dislike,
   like,
   follow,
   other,
@@ -10,44 +13,36 @@ enum NotificationType {
 
 class NotificationModel {
   final int id;
-  final int artistId;
-  final String backgroundLink;
   final DateTime createdAt;
   final String title;
   final String? message;
   final bool read;
   final NotificationType type;
-  final int? sessionId;
-  final int? senderId;
-  final int recipientId;
+  final UserProfile sender;
+  final SessionModel session;
 
   NotificationModel({
     required this.id,
-    required this.artistId,
-    required this.backgroundLink,
     required this.createdAt,
     required this.title,
     this.message,
     required this.read,
     required this.type,
-    this.sessionId,
-    this.senderId,
-    required this.recipientId,
+    required this.sender,
+    required this.session,
   });
 
-  factory NotificationModel.fromJson(final Map<String, dynamic> json) => NotificationModel(
-    id: json['id'] as int,
-    artistId: json['artistId'] as int,
-    backgroundLink: json['backgroundLink'] as String,
-    createdAt: DateTime.parse(json['createdAt'] as String),
-    title: json['title'] as String,
-    message: json['message'] as String?,
-    read: json['read'] as bool,
-    type: _parseNotificationType(json['type'] as String),
-    sessionId: json['sessionId'] as int?,
-    senderId: json['senderId'] as int?,
-    recipientId: json['recipientId'] as int,
-  );
+  factory NotificationModel.fromJson(final Map<String, dynamic> json) =>
+      NotificationModel(
+        id: json['id'] as int,
+        createdAt: DateTime.parse(json['createdAt'] as String),
+        title: json['title'] as String,
+        message: json['message'] as String?,
+        read: json['read'] as bool,
+        type: _parseNotificationType(json['type'] as String),
+        sender: UserProfile.fromJson(json['sender'] as Map<String, dynamic>),
+        session: SessionModel.fromJson(json['session' as Map<String, dynamic>]),
+      );
 
   static NotificationType _parseNotificationType(final String type) {
     switch (type.toLowerCase()) {
@@ -57,28 +52,12 @@ class NotificationModel {
         return NotificationType.sessionAccepted;
       case 'session_rejected':
         return NotificationType.sessionRejected;
-      case 'new_message':
-        return NotificationType.newMessage;
+      case 'dislike':
+        return NotificationType.dislike;
       case 'like':
         return NotificationType.like;
-      case 'follow':
-        return NotificationType.follow;
       default:
         return NotificationType.other;
     }
   }
-
-  Map<String, dynamic> toJson() => <String, dynamic> {
-    'id': id,
-    'artistId': artistId,
-    'backgroundLink': backgroundLink,
-    'createdAt': createdAt.toIso8601String(),
-    'title': title,
-    'message': message,
-    'read': read,
-    'type': type.name,
-    'sessionId': sessionId,
-    'senderId': senderId,
-    'recipientId': recipientId,
-  };
-} 
+}
