@@ -47,6 +47,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             biography:
                 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
             tracks: tracks,
+            popularity: (artist['popularity'] as num?)?.toInt() ?? 0,
+            listeners: (artist['followers'] as num?)?.toInt() ?? 0,
           );
         } catch (_) {
           artistData = SpotifyArtistData(
@@ -55,6 +57,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             imageUrl: user.avatarLink,
             biography: user.biography,
             tracks: <TrackEntity>[],
+            popularity: 0,
+            listeners: 0,
           );
         }
       } else {
@@ -64,6 +68,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           imageUrl: user.avatarLink,
           biography: user.biography,
           tracks: <TrackEntity>[],
+          popularity: 0,
+          listeners: 0,
         );
       }
 
@@ -106,6 +112,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             biography:
                 'Spotify artist with genre: ${(artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
             tracks: tracks,
+            popularity: (artistJson['popularity'] as num?)?.toInt() ?? 0,
+            listeners: (artistJson['followers'] as num?)?.toInt() ?? 0,
           );
         } catch (_) {
           artistData = SpotifyArtistData(
@@ -114,6 +122,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             imageUrl: updated.avatarLink,
             biography: updated.biography,
             tracks: <TrackEntity>[],
+            popularity: 0,
+            listeners: 0,
           );
         }
       } else {
@@ -123,6 +133,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           imageUrl: updated.avatarLink,
           biography: updated.biography,
           tracks: <TrackEntity>[],
+          popularity: 0,
+          listeners: 0,
         );
       }
 

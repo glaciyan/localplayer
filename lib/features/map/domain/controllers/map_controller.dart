@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
 import 'dart:async';
 
@@ -16,13 +17,13 @@ class MapController implements IMapController {
 
   double _currentZoom = 13.0;
   LatLngBounds? _currentBounds;
-  List<ProfileWithSpotify> _visiblePeople = <ProfileWithSpotify>[];
+  List<UserProfile> _visiblePeople = <UserProfile>[];
 
   MapController(this.context, this.addEvent);
 
   @override
-  void selectProfile(final ProfileWithSpotify profile) {
-    addEvent(map_event.SelectPlayer(profile.user));
+  void selectProfile(final UserProfile profile) {
+    addEvent(map_event.SelectPlayer(profile));
   }
 
   @override
@@ -55,7 +56,7 @@ class MapController implements IMapController {
   void updateCameraPosition(
     final double latitude,
     final double longitude,
-    final List<ProfileWithSpotify> visiblePeople,
+    final List<UserProfile> visiblePeople,
     final LatLngBounds visibleBounds,
     final double zoom,
   ) {
@@ -68,7 +69,7 @@ class MapController implements IMapController {
       addEvent(map_event.UpdateCameraPosition(
         latitude,
         longitude,
-        visiblePeople.map((final ProfileWithSpotify profile) => profile.user).toList(),
+        visiblePeople,
         visibleBounds,
         zoom,
       ));
@@ -83,7 +84,7 @@ class MapController implements IMapController {
       _currentBounds ?? LatLngBounds(LatLng(0, 0), LatLng(0, 0));
 
   @override
-  List<ProfileWithSpotify> get visiblePeople => _visiblePeople;
+  List<UserProfile> get visiblePeople => _visiblePeople;
 
   void dispose() {
     _debounceTimer?.cancel();

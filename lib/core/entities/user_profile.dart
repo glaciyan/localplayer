@@ -14,6 +14,11 @@ class UserProfile {
   final LatLng position;
   final Color? color;
   final int? listeners;
+  final int? likes;
+  final int? dislikes;
+  final int? popularity;
+  final String? sessionStatus;
+  final DateTime? createdAt;
 
   const UserProfile({
     required this.id,
@@ -27,6 +32,11 @@ class UserProfile {
     required this.position,
     this.color,
     this.listeners,
+    this.likes,
+    this.dislikes,
+    this.popularity,
+    this.sessionStatus,
+    this.createdAt,
   });
 
   factory UserProfile.fromJson(final Map<String, dynamic> json) => UserProfile(
@@ -40,7 +50,12 @@ class UserProfile {
       spotifyId: json['spotifyId'] ?? '',
       position: _parsePosition(json),
       color: HexColor(json['color']),
-      listeners: json['listeners'] ?? 0,
+      listeners: json['followers'] ?? json['listeners'] ?? 0,
+      likes: json['likes'] ?? 0,
+      dislikes: json['dislikes'] ?? 0,
+      popularity: json['popularity'] ?? 0,
+      sessionStatus: json['sessionStatus'],
+      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
     );
 
   static LatLng _parsePosition(final Map<String, dynamic> json) {
@@ -79,6 +94,7 @@ class UserProfile {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
+    'id': id,
     'handle': handle,
     'displayName': displayName,
     'biography': biography,
@@ -89,6 +105,11 @@ class UserProfile {
     'position': position,
     'color': color,
     'listeners': listeners,
+    'likes': likes,
+    'dislikes': dislikes,
+    'popularity': popularity,
+    'sessionStatus': sessionStatus,
+    'createdAt': createdAt?.toIso8601String(),
   };
 
   UserProfile copyWith({
@@ -103,6 +124,11 @@ class UserProfile {
     final LatLng? position,
     final Color? color,
     final int? listeners,
+    final int? likes,
+    final int? dislikes,
+    final int? popularity,
+    final String? sessionStatus,
+    final DateTime? createdAt,
   }) => UserProfile(
       id: id ?? this.id,
       handle: handle ?? this.handle,
@@ -115,5 +141,10 @@ class UserProfile {
       position: position ?? this.position,
       color: color ?? this.color,
       listeners: listeners ?? this.listeners,
+      likes: likes ?? this.likes,
+      dislikes: dislikes ?? this.dislikes,
+      popularity: popularity ?? this.popularity,
+      sessionStatus: sessionStatus ?? this.sessionStatus,
+      createdAt: createdAt ?? this.createdAt,
     );
 }

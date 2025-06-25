@@ -20,7 +20,6 @@ class LoadMapProfiles extends MapEvent {
 
 class SelectPlayer extends MapEvent {
   final UserProfile selectedUser;
-
   SelectPlayer(this.selectedUser);
 }
 

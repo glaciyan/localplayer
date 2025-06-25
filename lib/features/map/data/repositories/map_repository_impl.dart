@@ -12,6 +12,26 @@ class MapRepository implements IMapRepository {
   const MapRepository(this.spotifyRepository, this.mapRemoteDataSource);
 
   @override
+  Future<ProfileWithSpotify> fetchProfileWithSpotify(final UserProfile user) async {
+    try {
+      final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
+      return ProfileWithSpotify(user: user, artist: artist);
+    } catch (e) {
+      return ProfileWithSpotify(
+        user: user,
+        artist: SpotifyArtistData(
+          name: user.displayName,
+          genres: 'Unknown',
+          imageUrl: user.avatarLink,
+          biography: user.biography,
+          tracks: <TrackEntity> [],
+          popularity: 0,
+          listeners: 0,
+        ),
+      );
+    }
+  }
+  @override
   Future<List<ProfileWithSpotify>> fetchProfilesWithSpotify(final double latitude, final double longitude, final double radiusKm) async {
     final Map<String, dynamic> rawData = await mapRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);    
     final List<dynamic> profilesList = rawData['profiles'] as List<dynamic>? ?? <dynamic>[];
@@ -42,7 +62,9 @@ class MapRepository implements IMapRepository {
               genres: 'Unknown',
               imageUrl: user.avatarLink,
               biography: user.biography,
-              tracks: <TrackEntity> [], 
+              tracks: <TrackEntity> [],
+              popularity: 0,
+              listeners: 0,
             ),
           );
         }
@@ -51,5 +73,20 @@ class MapRepository implements IMapRepository {
 
     // final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => profile.artist.genres != 'Unknown').toList();
     return enriched;
+  }
+
+  @override
+  Future<List<UserProfile>> fetchProfiles(final double latitude, final double longitude, final double radiusKm) async {
+    final Map<String, dynamic> rawData = await mapRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);    
+    final List<dynamic> profilesList = rawData['profiles'] as List<dynamic>? ?? <dynamic>[];
+    final List<UserProfile> profilesInRadius = <UserProfile> [];
+    for (final dynamic entry in profilesList) {
+      try {
+        final UserProfile user = UserProfile.fromJson(entry as Map<String, dynamic>);
+        profilesInRadius.add(user);
+      } catch (e) {
+      }
+    }
+    return profilesInRadius;
   }
 }

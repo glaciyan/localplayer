@@ -1,5 +1,6 @@
 import 'package:flutter_map/flutter_map.dart';
-import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/entities/profile_with_spotify.dart'; 
+import 'package:localplayer/core/entities/user_profile.dart';
 
 abstract class MapState {}
 
@@ -15,7 +16,7 @@ class MapReady extends MapState {
   final double latitude;
   final double longitude;
   final LatLngBounds visibleBounds;
-  final List<ProfileWithSpotify> visiblePeople;
+  final List<UserProfile> visiblePeople;
   final double zoom;
 
   MapReady({
@@ -30,7 +31,7 @@ class MapReady extends MapState {
     final double? latitude,
     final double? longitude,
     final LatLngBounds? visibleBounds,
-    final List<ProfileWithSpotify>? visiblePeople,
+    final List<UserProfile>? visiblePeople,
     final double? zoom,
   }) => MapReady(
       latitude: latitude ?? this.latitude,
@@ -45,7 +46,7 @@ class MapProfileSelected extends MapState {
   final double latitude;
   final double longitude;
   final LatLngBounds visibleBounds;
-  final List<ProfileWithSpotify> visiblePeople;
+  final List<UserProfile> visiblePeople;
   final double zoom;
   final ProfileWithSpotify selectedUser;
 
@@ -62,7 +63,7 @@ class MapProfileSelected extends MapState {
     final double? latitude,
     final double? longitude,
     final LatLngBounds? visibleBounds,
-    final List<ProfileWithSpotify>? visiblePeople,
+    final List<UserProfile>? visiblePeople,
     final double? zoom,
     final ProfileWithSpotify? selectedUser,
   }) => MapProfileSelected(

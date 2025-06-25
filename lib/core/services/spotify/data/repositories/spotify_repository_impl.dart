@@ -10,8 +10,11 @@ class SpotifyRepositoryImpl implements ISpotifyRepository {
 
   @override
   Future<SpotifyArtistData> fetchArtistData(final String artistId) async {
+    print("fetching artist data");
     final Map<String, dynamic> artist = await api.getArtist(artistId);
+    print("artist: $artist");
     final List<TrackEntity> allTracks = await api.getArtistTopTracks(artistId);
+    print("allTracks: $allTracks");
 
     final List<TrackEntity> topTracks = allTracks.take(3).toList();
 
@@ -21,6 +24,8 @@ class SpotifyRepositoryImpl implements ISpotifyRepository {
       imageUrl: ((artist['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
       biography: 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
       tracks: topTracks,
+      popularity: (artist['popularity'] as num?)?.toInt() ?? 0,
+      listeners: ((artist['followers'] as Map<String, dynamic>?)?['total'] as num?)?.toInt() ?? 0,
     );
   }
 }
