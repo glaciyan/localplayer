@@ -4,10 +4,10 @@
 
 # 🎵 LocalPlayer
 [![Flutter](https://img.shields.io/badge/flutter-3.7.2-blue?logo=flutter)](https://flutter.dev)
-[![Version](https://img.shields.io/badge/version-1.0.0-success)](#)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange)](#)
 [![Platform](https://img.shields.io/badge/platform-android%20%7C%20ios-yellow?logo=flutter)](#)
 [![Backend: Prisma](https://img.shields.io/badge/backend-prisma-7D3C98?logo=prisma)](https://www.prisma.io/)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/glaciyan/localplayer)](https://github.com/glaciyan/localplayer/graphs/commit-activity)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/glaciyan/localplayer?color=brightgreen)](https://github.com/glaciyan/localplayer/graphs/commit-activity)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](#)
 
 A Flutter-based social matching app that connects nearby music lovers using geolocation and Spotify integration.  
@@ -96,7 +96,7 @@ Despite his energy and talent, Malik faces challenges like:
 
 This app follows the **Clean Architecture** pattern, ensuring maintainability, scalability, and clear separation of concerns. Each layer has a distinct role and communicates only with adjacent layers through well-defined interfaces.
 
-### Layers
+### 🧱 Layers
 
 - **🎨 Presentation Layer**  
   Handles everything related to the user interface: rendering widgets, reacting to state changes, and processing user input. It communicates with the application layer to trigger business logic and display results.
