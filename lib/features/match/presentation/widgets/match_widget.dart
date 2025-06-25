@@ -30,6 +30,7 @@ class _MatchWidgetState extends State<MatchWidget> {
     _swiperController = CardSwiperController();
     final MatchBloc bloc = context.read<MatchBloc>();
     _matchController = MatchModule.provideController(context, bloc);
+    _matchController.loadProfiles();
   }
 
   @override
@@ -61,7 +62,7 @@ class _MatchWidgetState extends State<MatchWidget> {
   Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) => CardSwiper(
       controller: _swiperController,
       padding: EdgeInsets.zero,
-      numberOfCardsDisplayed: 1,
+      numberOfCardsDisplayed: 2,
       backCardOffset: const Offset(0, 20),
       maxAngle: 30,
       threshold: 60,
