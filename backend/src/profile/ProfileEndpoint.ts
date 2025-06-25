@@ -62,8 +62,8 @@ export const ProfileDTOMap = async (p: any) => {
             (swipe: { type: SwipeType }) => swipe.type === "NEGATIVE"
         ).length,
         spotifyId: p.spotifyId,
-        avatarLink: avatarLink,
-        backgroundLink: backgroundLink,
+        // avatarLink: avatarLink,
+        // backgroundLink: backgroundLink,
         presence: p.fakePresence
             ? {
                   latitude: p.fakePresence?.latitude,
