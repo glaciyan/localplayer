@@ -72,8 +72,7 @@ class EditableProfileWidget extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     final ProfileWithSpotify? updatedProfile = cardKey.currentState?.getUpdatedProfile();
-                    print('Updated profile: $updatedProfile');
-
+                    
                     if (updatedProfile != null) {
                       _profileController.updateProfile(updatedProfile);
                     }
