@@ -10,12 +10,8 @@ class SpotifyRepositoryImpl implements ISpotifyRepository {
 
   @override
   Future<SpotifyArtistData> fetchArtistData(final String artistId) async {
-    print("fetching artist data");
     final Map<String, dynamic> artist = await api.getArtist(artistId);
-    print("artist: $artist");
     final List<TrackEntity> allTracks = await api.getArtistTopTracks(artistId);
-    print("allTracks: $allTracks");
-
     final List<TrackEntity> topTracks = allTracks.take(3).toList();
 
     return SpotifyArtistData(

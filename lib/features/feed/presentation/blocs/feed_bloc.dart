@@ -28,9 +28,13 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   }
 
   void _onAcceptSession(final AcceptSession event, final Emitter<FeedState> emit) async {
-      emit(FeedLoading());
       try {
-        await feedRepository.acceptSession(event.sessionId, event.userId);
+        final bool success = await feedRepository.acceptSession(event.userId, event.sessionId);
+        if (success && state is FeedLoaded) {
+          emit(FeedLoaded(notifications: (state as FeedLoaded).notifications));
+        } else if (!success) {
+          emit(FeedError("Error accepting session"));
+        }
       } catch (e) {
         emit(FeedError(e.toString()));
       }
@@ -39,7 +43,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   void _onRejectSession(final RejectSession event, final Emitter<FeedState> emit) async {
       emit(FeedLoading());
       try {
-        await feedRepository.rejectSession(event.sessionId, event.userId);
+        await feedRepository.rejectSession(event.userId, event.sessionId);
       } catch (e) {
         emit(FeedError(e.toString()));
       }

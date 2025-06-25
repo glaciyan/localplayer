@@ -15,8 +15,8 @@ class FeedController implements IFeedController {
   void refreshFeed() => addEvent(RefreshFeed());
 
   @override
-  void acceptSession(final int sessionId, final int userId) => addEvent(AcceptSession(sessionId, userId));
+  void acceptSession(final int userId, final int sessionId) => addEvent(AcceptSession(sessionId, userId));
 
   @override
-  void rejectSession(final int sessionId, final int userId) => addEvent(RejectSession(sessionId, userId));
+  void rejectSession(final int userId, final int sessionId) => addEvent(RejectSession(sessionId, userId));
 }

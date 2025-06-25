@@ -19,7 +19,7 @@ class NotificationModel {
   final bool read;
   final NotificationType type;
   final UserProfile sender;
-  final SessionModel session;
+  final SessionModel? session;
 
   NotificationModel({
     required this.id,
@@ -29,7 +29,7 @@ class NotificationModel {
     required this.read,
     required this.type,
     required this.sender,
-    required this.session,
+    this.session,
   });
 
   factory NotificationModel.fromJson(final Map<String, dynamic> json) =>
@@ -41,7 +41,9 @@ class NotificationModel {
         read: json['read'] as bool,
         type: _parseNotificationType(json['type'] as String),
         sender: UserProfile.fromJson(json['sender'] as Map<String, dynamic>),
-        session: SessionModel.fromJson(json['session'] as Map<String, dynamic>),
+        session: json['session'] != null
+            ? SessionModel.fromJson(json['session'] as Map<String, dynamic>)
+            : null,
       );
 
   static NotificationType _parseNotificationType(final String type) {
