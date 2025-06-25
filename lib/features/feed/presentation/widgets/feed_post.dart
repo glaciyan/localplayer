@@ -107,7 +107,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                 Image.network(
                   _backgroundLink!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => ColoredBox(color: widget.post.sender.color ?? Colors.black12)
+                  errorBuilder: (final BuildContext context, final Object error, final StackTrace? stackTrace) => ColoredBox(color: widget.post.sender.color ?? Colors.black12)
                 )
               else
                 ColoredBox(color: widget.post.sender.color ?? Colors.black12),
@@ -175,7 +175,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             clipBehavior: Clip.antiAlias,
                             child: FlutterMap(
                               options: MapOptions(
-                                initialCenter: LatLng(52.52, 13.405),
+                                initialCenter: /*widget.post.session?.position ?? */LatLng(52.52, 13.405),
                                 initialZoom: 13.0,
                               ),
                               children: <Widget> [
@@ -186,7 +186,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                                 MarkerLayer(
                                   markers: <Marker> [
                                     Marker(
-                                      point: LatLng(52.52, 13.405),
+                                      point: /*widget.post.session?.position ?? */LatLng(52.52, 13.405),
                                       child: Icon(Icons.location_on, color: Colors.red, size: 50),
                                     ),
                                   ],
@@ -203,9 +203,8 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                               setState(() {
                                 _isLoading = true;
                               });
-                              
-                              // Simulate API call
-                              await Future<void>.delayed(const Duration(seconds: 2));
+
+                              widget.feedController.pingUser(widget.post.sender.id);
                               
                               setState(() {
                                 _isLoading = false;

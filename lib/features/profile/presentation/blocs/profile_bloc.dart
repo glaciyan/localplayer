@@ -6,6 +6,7 @@ import 'profile_event.dart';
 import 'profile_state.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart' as profile_event;
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart' as profile_state;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final IProfileRepository profileRepository;
@@ -18,6 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfile>(_onUpdateProfile);
     on<profile_event.ProfileUpdateSuccess>(_onProfileUpdateSuccess);
+    on<profile_event.SignOut>(_onSignOut);
   }
 
   Future<void> _onLoadProfile(
@@ -56,5 +58,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final Emitter<ProfileState> emit,
   ) async {
     await _onLoadProfile(LoadProfile(), emit);
+  }
+
+  Future<void> _onSignOut(
+    final profile_event.SignOut event,
+    final Emitter<ProfileState> emit,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    if (token != null) {
+      prefs.remove('token');
+    }
+    await profileRepository.signOut();
+    emit(ProfileSignedOut());
   }
 }

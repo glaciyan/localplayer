@@ -14,6 +14,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     on<RefreshFeed>(_onRefreshFeed);
     on<AcceptSession>(_onAcceptSession);
     on<RejectSession>(_onRejectSession);
+    on<PingUser>(_onPingUser);
   }
 
   void _onRefreshFeed(final RefreshFeed event, final Emitter<FeedState> emit) async {
@@ -47,5 +48,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       } catch (e) {
         emit(FeedError(e.toString()));
       }
+  }
+
+  void _onPingUser(final PingUser event, final Emitter<FeedState> emit) async {
+    try {
+      await feedRepository.pingUser(event.userId);
+      emit(PingUserSuccess((state as FeedLoaded).notifications));
+    } catch (e) {
+      emit(PingUserError(e.toString()));
+    }
   }
 }

@@ -22,6 +22,6 @@ class ProfileRemoteDataSource {
   }
 
   Future<void> signOut() async {
-    await apiClient.post('/auth/logout');
+    await apiClient.post('/user/logout');
   }
 }
