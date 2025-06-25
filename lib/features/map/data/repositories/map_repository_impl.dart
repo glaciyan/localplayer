@@ -1,9 +1,9 @@
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
-
 import 'package:localplayer/features/map/data/datasources/map_remote_data_source.dart';
 
 class MapRepository implements IMapRepository {
@@ -12,72 +12,44 @@ class MapRepository implements IMapRepository {
   const MapRepository(this.spotifyRepository, this.mapRemoteDataSource);
 
   @override
-  Future<List<ProfileWithSpotify>> fetchProfiles(final double latitude, final double longitude, final double radiusKm) async {
-    final Map<String, dynamic> rawData = await mapRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);
+  Future<List<ProfileWithSpotify>> fetchProfilesWithSpotify(final double latitude, final double longitude, final double radiusKm) async {
+    final Map<String, dynamic> rawData = await mapRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);    
+    final List<dynamic> profilesList = rawData['profiles'] as List<dynamic>? ?? <dynamic>[];
     
-    final List<UserProfile> profilesInRadius = rawData.values
-        .map((final dynamic entry) => UserProfile.fromJson(entry as Map<String, dynamic>))
-        .toList();
+    final List<UserProfile> profilesInRadius = <UserProfile> [];
+    for (final dynamic entry in profilesList) {
+      try {
+        final UserProfile user = UserProfile.fromJson(entry as Map<String, dynamic>);
+        profilesInRadius.add(user);
+      } catch (e) {
+      }
+    }
+    
+    if (profilesInRadius.isEmpty) {
+      return <ProfileWithSpotify>[];
+    }
 
     final List<ProfileWithSpotify> enriched = await Future.wait(
       profilesInRadius.map((final UserProfile user) async {
-        final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
-        return ProfileWithSpotify(user: user, artist: artist);
+        try {
+          final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
+          return ProfileWithSpotify(user: user, artist: artist);
+        } catch (e) {
+          return ProfileWithSpotify(
+            user: user,
+            artist: SpotifyArtistData(
+              name: user.displayName,
+              genres: 'Unknown',
+              imageUrl: user.avatarLink,
+              biography: user.biography,
+              tracks: <TrackEntity> [], 
+            ),
+          );
+        }
       }),
     );
-    return enriched;
+
+    final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => profile.artist.genres != 'Unknown').toList();
+    return filteredEnriched;
   }
-  
-  /*
-  static const List<UserProfile> _fakeProfiles = <UserProfile> [
-    UserProfile(
-      handle: '@cgmar',
-      displayName: 'Tanaka',
-      biography: 'I love Flutter and beats.',
-      avatarLink: 'https://placekitten.com/300/300',
-      backgroundLink: '',
-      location: 'Tokyo, Japan',
-      spotifyId: "6OXkkVozDhZ1Ho7yPe4W07",
-      position: LatLng(35.6895, 139.6917), // Tokyo
-      color: Colors.orange,
-      listeners: 1200000,
-    ),
-    UserProfile(
-      handle: '@miyu',
-      displayName: 'Miyu',
-      biography: 'Jazz pianist and tea lover.',
-      avatarLink: 'https://placekitten.com/301/301',
-      backgroundLink: '',
-      location: 'Kyoto, Japan',
-      spotifyId: "3TVXtAsR1Inumwj472S9r4",
-      position: LatLng(35.0116, 135.7681), // Kyoto
-      color: Colors.green,
-      listeners: 540000,
-    ),
-    UserProfile(
-      handle: '@lee',
-      displayName: 'Lee',
-      biography: 'Dancing through code.',
-      avatarLink: 'https://placekitten.com/302/302',
-      backgroundLink: '',
-      location: 'Seoul, Korea',
-      spotifyId: "5K4W6rqBFWDnAN6FQUkS6x",
-      position: LatLng(37.5665, 126.9780), // Seoul
-      color: Colors.purple,
-      listeners: 800000,
-    ),
-    UserProfile(
-      handle: '@sophia',
-      displayName: 'Sophia',
-      biography: 'Sings in 4 languages.',
-      avatarLink: 'https://placekitten.com/303/303',
-      backgroundLink: '',
-      location: 'Berlin, Germany',
-      spotifyId: "1uNFoZAHBGtllmzznpCI3s",
-      position: LatLng(52.5200, 13.4050), // Berlin
-      color: Colors.blue,
-      listeners: 950000,
-    ),
-  ];
-  */
 }

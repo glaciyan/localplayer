@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:localplayer/core/services/spotify/data/repositories/spotify_repository_impl.dart';
 import 'package:localplayer/core/services/spotify/data/repositories/track_repository_impl.dart';
 import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
@@ -27,6 +26,4 @@ class SpotifyModule {
 
   static SpotifyPreviewCubit providePreviewCubit(final ConfigService config) =>
     SpotifyPreviewCubit(ApiClient(baseUrl: config.apiBaseUrl));
-
-
 }
