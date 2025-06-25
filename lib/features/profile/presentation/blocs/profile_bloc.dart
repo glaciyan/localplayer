@@ -19,48 +19,118 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<UpdateProfile>(_onUpdateProfile);
   }
 
-  Future<void> _onLoadProfile(final LoadProfile event, final Emitter<ProfileState> emit) async {
-  try {
-    final UserProfile user = await userRepository.getCurrentUserProfile();
-    final Map<String, dynamic> artist = await spotifyService.getArtist(user.spotifyId);
-    final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(user.spotifyId);
+  Future<void> _onLoadProfile(
+    final LoadProfile event,
+    final Emitter<ProfileState> emit,
+  ) async {
+    try {
+      final UserProfile user = await userRepository.getCurrentUserProfile();
 
-    final SpotifyArtistData artistData = SpotifyArtistData(
-      name: artist['name']?.toString() ?? '',
-      genres: (artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? '',
-      imageUrl: ((artist['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
-      biography: 'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
-      tracks: tracks,
-    );
+      SpotifyArtistData artistData;
 
-    emit(ProfileLoaded(ProfileWithSpotify(
-      user: user,
-      artist: artistData,
-    )));
-  } catch (e) {
-    emit(ProfileError('Failed to load profile: $e'));
+      if (user.spotifyId.isNotEmpty) {
+        try {
+          final Map<String, dynamic> artist =
+              await spotifyService.getArtist(user.spotifyId);
+          final List<TrackEntity> tracks =
+              await spotifyService.getArtistTopTracks(user.spotifyId);
+
+          artistData = SpotifyArtistData(
+            name: artist['name']?.toString() ?? user.displayName,
+            genres: (artist['genres'] as List<dynamic>?)
+                    ?.map((final dynamic e) => e.toString())
+                    .join(', ') ??
+                'Unknown',
+            imageUrl: ((artist['images'] as List<dynamic>?)?[0]
+                        as Map<String, dynamic>?)?['url']?.toString() ??
+                    user.avatarLink,
+            biography:
+                'Spotify artist with genre: ${(artist['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
+            tracks: tracks,
+          );
+        } catch (_) {
+          artistData = SpotifyArtistData(
+            name: user.displayName,
+            genres: 'Unknown',
+            imageUrl: user.avatarLink,
+            biography: user.biography,
+            tracks: <TrackEntity>[],
+          );
+        }
+      } else {
+        artistData = SpotifyArtistData(
+          name: user.displayName,
+          genres: 'Unknown',
+          imageUrl: user.avatarLink,
+          biography: user.biography,
+          tracks: <TrackEntity>[],
+        );
+      }
+
+      emit(
+        ProfileLoaded(
+          ProfileWithSpotify(user: user, artist: artistData),
+        ),
+      );
+    } catch (e) {
+      emit(ProfileError('Failed to load profile: $e'));
+    }
   }
-}
 
-  Future<void> _onUpdateProfile(final UpdateProfile event, final Emitter<ProfileState> emit) async {
+  Future<void> _onUpdateProfile(
+    final UpdateProfile event,
+    final Emitter<ProfileState> emit,
+  ) async {
     try {
       await userRepository.updateUserProfile(event.updatedProfile.user);
 
-      final Map<String, dynamic> artistJson = await spotifyService.getArtist(event.updatedProfile.user.spotifyId);
-      final List<TrackEntity> tracks = await spotifyService.getArtistTopTracks(event.updatedProfile.user.spotifyId);
+      final UserProfile updated = event.updatedProfile.user;
+      SpotifyArtistData artistData;
 
-      final SpotifyArtistData artistData = SpotifyArtistData(
-        name: artistJson['name']?.toString() ?? '',
-        genres: (artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? '',
-        imageUrl: ((artistJson['images'] as List<dynamic>?)?[0] as Map<String, dynamic>?)?['url']?.toString() ?? '',
-        biography: 'Spotify artist with genre: ${(artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
-        tracks: tracks,
+      if (updated.spotifyId.isNotEmpty) {
+        try {
+          final Map<String, dynamic> artistJson =
+              await spotifyService.getArtist(updated.spotifyId);
+          final List<TrackEntity> tracks =
+              await spotifyService.getArtistTopTracks(updated.spotifyId);
+
+          artistData = SpotifyArtistData(
+            name: artistJson['name']?.toString() ?? updated.displayName,
+            genres: (artistJson['genres'] as List<dynamic>?)
+                    ?.map((final dynamic e) => e.toString())
+                    .join(', ') ??
+                'Unknown',
+            imageUrl: ((artistJson['images'] as List<dynamic>?)?[0]
+                        as Map<String, dynamic>?)?['url']?.toString() ??
+                    updated.avatarLink,
+            biography:
+                'Spotify artist with genre: ${(artistJson['genres'] as List<dynamic>?)?.map((final dynamic e) => e.toString()).join(', ') ?? 'Unknown'}',
+            tracks: tracks,
+          );
+        } catch (_) {
+          artistData = SpotifyArtistData(
+            name: updated.displayName,
+            genres: 'Unknown',
+            imageUrl: updated.avatarLink,
+            biography: updated.biography,
+            tracks: <TrackEntity>[],
+          );
+        }
+      } else {
+        artistData = SpotifyArtistData(
+          name: updated.displayName,
+          genres: 'Unknown',
+          imageUrl: updated.avatarLink,
+          biography: updated.biography,
+          tracks: <TrackEntity>[],
+        );
+      }
+
+      emit(
+        ProfileLoaded(
+          ProfileWithSpotify(user: updated, artist: artistData),
+        ),
       );
-
-      emit(ProfileLoaded(ProfileWithSpotify(
-        user: event.updatedProfile.user,
-        artist: artistData,
-      )));
     } catch (e) {
       emit(ProfileError('Failed to update profile: $e'));
     }

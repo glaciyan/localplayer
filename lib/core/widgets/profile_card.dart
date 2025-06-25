@@ -24,7 +24,13 @@ class ProfileCard extends StatelessWidget {
     child: Stack(
       children: <Widget>[
         Positioned.fill(
-          child: Image.network(profile.artist.imageUrl, fit: BoxFit.cover),
+          child: Image.network(
+            profile.artist.imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (final BuildContext context, final Object error,
+                    final StackTrace? stackTrace) =>
+                const ColoredBox(color: Colors.black12),
+          ),
         ),
         Positioned.fill(
           child: BackdropFilter(
