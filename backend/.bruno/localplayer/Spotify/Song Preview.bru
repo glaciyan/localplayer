@@ -5,11 +5,15 @@ meta {
 }
 
 get {
-  url: https://api.spotify.com/v1/tracks/{{id}}
+  url: https://api.spotify.com/v1/tracks/:id
   body: none
   auth: bearer
 }
 
+params:path {
+  id: 
+}
+
 auth:bearer {
-  token: BQAOkHDBcLtMCPheej1uK5fgsthoTDU3BDwy8U0oQaXb_EOmxmdNCpTbSl986F8gsWulOsCK-XJmY5w_GIXju3pCcvJK7sZERqGpdTCtAWzvUTXNAG-FXZe_T7NeadAJ556jZNIKVYA
+  token: BQAfbJxqGES_FJzspfkTkJCiLrqEuEBxU7ZDfRfLMhVBW-blyC4lvAVnjXXT7R3hi0rgUS55Y4nPIiDddi5-QkAxbh2EnRzLHKLIaC2_IMyQ4V201uKQMsY4Lm12UJ51AtP1_QVLJ_E
 }
