@@ -25,7 +25,7 @@ class MapModule {
     final MapBloc bloc,
   ) => MapController(context, bloc.add);
 
-  static IMapRepository provideRepository(final ISpotifyRepository spotifyRepository, final ConfigService config) => MapRepository(
+  static IMapRepository provideRepository(final ConfigService config, final ISpotifyRepository spotifyRepository) => MapRepository(
     spotifyRepository,
     MapRemoteDataSource(ApiClient(baseUrl: config.apiBaseUrl))
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
@@ -40,4 +41,10 @@ class EditProfileScreen extends StatelessWidget {
         },
       ),
     );
+
+  @override
+  void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<GlobalKey<EditableProfileCardState>>.has('_cardKey', _cardKey));
+  }
 }

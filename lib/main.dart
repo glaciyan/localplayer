@@ -28,9 +28,10 @@ import 'package:localplayer/features/session/data/session_repository_interface.d
 import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_event.dart';
 import 'package:localplayer/features/session/session_module.dart';
-import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
+import 'package:localplayer/features/profile/data/profile_repository_interface.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
-import 'package:localplayer/features/profile/user_module.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
+import 'package:localplayer/features/profile/profile_module.dart';
 import 'package:localplayer/features/match/data/match_repository_interface.dart';
 
 void main() async {
@@ -38,17 +39,14 @@ void main() async {
 
   final ConfigService config = ConfigService();
   await config.load();
-  final IUserRepository userRepo = UserModule.provideRepository(config);
-  runApp(MyApp(config: config, userRepo: userRepo,));
+  runApp(MyApp(config: config));
 }
 
 class MyApp extends StatelessWidget {
   final ConfigService config;
-  final IUserRepository userRepo;
 
   const MyApp({
     required this.config,
-    required this.userRepo,
     super.key,
   });
 
@@ -56,14 +54,12 @@ class MyApp extends StatelessWidget {
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<ConfigService>('config', config));
-    properties.add(DiagnosticsProperty<IUserRepository>('userRepo', userRepo));
   }
 
   @override
   Widget build(final BuildContext context) => MultiRepositoryProvider(
       providers: <RepositoryProvider<dynamic>>[
         RepositoryProvider<ConfigService>.value(value: config),
-        RepositoryProvider<IUserRepository>.value(value: userRepo),
         RepositoryProvider<SpotifyApiService>(
           create: (_) => SpotifyModule.provideService(config),
         ),
@@ -77,7 +73,12 @@ class MyApp extends StatelessWidget {
           create: (_) => SpotifyModule.provideUseCase(config),
         ),
         RepositoryProvider<IMapRepository>(
-          create: (final BuildContext context) => MapModule.provideRepository(context.read<ISpotifyRepository>(), config),
+          create: (final BuildContext context) 
+          => MapModule.provideRepository(config, context.read<ISpotifyRepository>()),
+        ),
+        RepositoryProvider<IProfileRepository>(
+          create: (final BuildContext context) 
+          => ProfileModule.provideRepository(config, context.read<ISpotifyRepository>()),
         ),
         RepositoryProvider<IAuthRepository>(
           create: (_) => AuthModule.provideRepository(config),
@@ -101,15 +102,15 @@ class MyApp extends StatelessWidget {
             )..add(LoadProfiles()),
           ),
           BlocProvider<ProfileBloc>(
-            create: (final BuildContext context) => UserModule.provideBloc(
-              userRepo,
-              config,
-            ),
+            create: (final BuildContext context) => ProfileModule.provideBloc(
+              profileRepository: context.read<IProfileRepository>(),
+              spotifyRepository: context.read<ISpotifyRepository>(),
+            )..add(LoadProfile()),
           ),
           BlocProvider<FeedBloc>(
             create: (final BuildContext context) => FeedModule.provideBloc( 
               feedRepository: context.read<IFeedRepository>(),
-            )..add(RefreshFeed()), 
+            )..add(RefreshFeed()),
           ),
           BlocProvider<AuthBloc>(
             create: (final BuildContext context) => AuthModule.provideBloc(
