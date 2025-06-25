@@ -159,7 +159,9 @@ export class LPSessionService {
                 status: "PENDING",
             },
             include: {
-                participant: ParticipantInclude,
+                participant: {
+                    include: PublicProfileIncludes
+                },
             },
         });
 
@@ -173,7 +175,9 @@ export class LPSessionService {
                 // status: "PENDING",
             },
             include: {
-                participant: ParticipantInclude,
+                participant: {
+                    include: PublicProfileIncludes
+                },
             },
         });
 
