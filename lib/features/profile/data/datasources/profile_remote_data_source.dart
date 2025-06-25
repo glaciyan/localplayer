@@ -1,5 +1,5 @@
-import 'package:localplayer/core/network/api_client.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/network/api_client.dart';
 import 'package:dio/dio.dart';
 
 class ProfileRemoteDataSource {
@@ -12,13 +12,16 @@ class ProfileRemoteDataSource {
     return UserProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
-  Future<void> updateUserProfile(final UserProfile profile) async {
+  Future<void> updateUserProfile(final String name, final String biography, final String spotifyId) async {
     final Map<String, dynamic> body = <String, dynamic>{
-      'description': profile.biography,
-      'avatarLink': profile.avatarLink,
-      'backgroundLink': profile.backgroundLink,
-      'location': profile.location,
+      'name': name,
+      'spotifyId': spotifyId,
+      'biography': biography,
     };
     await apiClient.patch('/profile/me', data: body);
+  }
+
+  Future<void> signOut() async {
+    await apiClient.post('/auth/logout');
   }
 }
