@@ -23,7 +23,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       emit(ProfileLoading());
+      print('Loading profile');
       final ProfileWithSpotify profile = await profileRepository.fetchCurrentUserEnrichedProfile();
+      print('Profile loaded: ${profile.user.id}');
       emit(
         ProfileLoaded(
           profile,
@@ -40,9 +42,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       emit(ProfileLoading());
-      final ProfileWithSpotify updatedProfile = await profileRepository.fetchCurrentUserEnrichedProfile();
-
-      emit(ProfileLoaded(updatedProfile,),);
+      await profileRepository.updateUserProfile(event.updatedProfile);
     } catch (e) {
       emit(ProfileError('Failed to update profile: $e'));
     }

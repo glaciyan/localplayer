@@ -157,7 +157,7 @@ class MapWidget extends StatelessWidget {
                             ),
 
                             Padding(
-                              padding: const EdgeInsets.all(50.0),
+                              padding: const EdgeInsets.all(60.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[

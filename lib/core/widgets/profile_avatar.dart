@@ -34,9 +34,8 @@ class ProfileAvatar extends StatelessWidget {
       child: ClipOval(
         child: AspectRatio(
           aspectRatio: 1,
-          child: avatarLink.isEmpty
-              ? const Icon(Icons.person, size: 40, color: Colors.white)
-              : Image.network(
+          child: (avatarLink.isNotEmpty)
+              ? Image.network(
                   avatarLink,
                   fit: BoxFit.cover,
                   loadingBuilder: (final BuildContext context, final Widget child, final ImageChunkEvent? loadingProgress) {
@@ -44,7 +43,8 @@ class ProfileAvatar extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator(strokeWidth: 2));
                   },
                   errorBuilder: (final BuildContext context, final Object error, final StackTrace? stackTrace) => const Icon(Icons.person_off, size: 40, color: Colors.white),
-                ),
+                )
+              : const Icon(Icons.person, size: 40, color: Colors.white),
         ),
       ),
     );

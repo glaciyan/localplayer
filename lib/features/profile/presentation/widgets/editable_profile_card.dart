@@ -73,7 +73,9 @@ class EditableProfileCardState extends State<EditableProfileCard> {
             children: <Widget>[
               // background image
               Positioned.fill(
-                child: Image.network(artist.imageUrl, fit: BoxFit.cover),
+                child: (artist.imageUrl.isNotEmpty)
+                  ? Image.network(artist.imageUrl, fit: BoxFit.cover)
+                  : const ColoredBox(color: Colors.black12),
               ),
               // blur layer
               Positioned.fill(

@@ -14,7 +14,7 @@ class ProfileRemoteDataSource {
 
   Future<void> updateUserProfile(final String name, final String biography, final String spotifyId) async {
     final Map<String, dynamic> body = <String, dynamic>{
-      'name': name,
+      'displayName': name,
       'spotifyId': spotifyId,
       'biography': biography,
     };
