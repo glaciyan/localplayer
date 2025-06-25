@@ -33,9 +33,7 @@ interface SpotifyUserProfile {
     };
 }
 
-export async function fetchSpotifyUserData(
-    userId: string
-)  {
+export async function fetchSpotifyUserData(userId: string) {
     const response = await fetch(
         `https://api.spotify.com/v1/artists/${encodeURIComponent(userId)}`,
         {
@@ -92,16 +90,18 @@ export class ProfileRepository {
         });
     }
 
-    getSpotifyArtistId(url: string): string | null {
+    getSpotifyArtistId(input: string): string | null {
+        // If input is just the artist ID (alphanumeric), return it directly
+        if (/^[A-Za-z0-9]+$/.test(input)) {
+            return input;
+        }
+
         try {
-            const regex = /spotify\.com\/artist\/([a-zA-Z0-9]+)/;
-            const match = url.match(regex);
-            if (match && match[1]) {
-                return match[1];
-            } else {
-                return null;
-            }
-        } catch (error) {
+            // Look for "artist/<id>" anywhere in the string
+            const regex = /artist\/([A-Za-z0-9]+)/;
+            const match = input.match(regex);
+            return match?.[1] ?? null;
+        } catch {
             return null;
         }
     }
