@@ -61,6 +61,11 @@ class _SplashScreenState extends State<SplashScreen>
           listener: (final BuildContext context, final AuthState state) {
             if (state is FoundYou) {
               context.go('/map');
+            } else if (state is AuthError) {
+              context.go('/signup');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
             } else if (state is Unauthenticated) {
               context.go('/signup');
               ScaffoldMessenger.of(context).showSnackBar(

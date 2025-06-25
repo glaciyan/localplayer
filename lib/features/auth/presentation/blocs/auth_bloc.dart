@@ -3,6 +3,7 @@ import 'package:localplayer/features/auth/data/IAuthRepository.dart';
 import 'package:localplayer/features/auth/domain/entities/login_token.dart';
 import 'package:localplayer/features/auth/presentation/blocs/auth_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:localplayer/core/network/no_connection_exception.dart';
 import '../../domain/entities/user_auth.dart';
 import 'auth_state.dart';
 
@@ -30,6 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", loginToken.token);
       add(AuthSuccessEvent(UserAuth(id: '', name: event.name, token: '')));
+    } on NoConnectionException {
+      add(AuthFailureEvent('No internet connection, please check again later'));
     } catch (e) {
       add(AuthFailureEvent(e.toString()));
     }
@@ -40,6 +43,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await authRepository.signUp(event.name, event.password);
       add(AuthRegisteredEvent());
+    } on NoConnectionException {
+      add(AuthFailureEvent('No internet connection, please check again later'));
     } catch (e) {
       add(AuthFailureEvent(e.toString()));
     }
@@ -56,6 +61,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await authRepository.findMe(token as String);
         add(FoundYouEvent());
       }
+    } on NoConnectionException {
+      add(AuthFailureEvent('No internet connection'));
     } catch (e) {
       add(AuthFailureEvent(e.toString()));
     }
@@ -74,7 +81,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onAuthFailure(final AuthFailureEvent event, final Emitter<AuthState> emit) {
-    emit(Unauthenticated());
+    emit(AuthError(event.message));
   }
 
   void _onFoundYou(final FoundYouEvent event, final Emitter<AuthState> emit) {

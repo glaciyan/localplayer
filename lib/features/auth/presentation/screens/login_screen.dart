@@ -87,11 +87,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           context.go('/map');
                         } else if (state is Registered) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Account has been created, please log in.')));
+                            const SnackBar(content: Text('Account has been created, please log in.')),
+                          );
+                        } else if (state is AuthError) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(state.message)),
+                          );
                         } else if (state is Unauthenticated) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Authentication Failed')),
-                        );
+                          );
                         }
                       },
                       child: BlocBuilder<AuthBloc, AuthState>(
