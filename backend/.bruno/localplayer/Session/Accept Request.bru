@@ -7,7 +7,11 @@ meta {
 post {
   url: {{host}}/session/requests/respond
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{bearer}}
 }
 
 body:json {

@@ -7,9 +7,13 @@ meta {
 post {
   url: {{host}}/session/close/:id
   body: none
-  auth: inherit
+  auth: bearer
 }
 
 params:path {
   id: 1
+}
+
+auth:bearer {
+  token: {{bearer}}
 }

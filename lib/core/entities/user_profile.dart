@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/entities/hex_color.dart';
 
 class UserProfile {
   final int id;
@@ -38,7 +39,7 @@ class UserProfile {
       location: json['location'] ?? '',
       spotifyId: json['spotifyId'] ?? '',
       position: _parsePosition(json),
-      color: json['color'] ?? Color.fromARGB(255, 0, 0, 255),
+      color: HexColor(json['color']) ?? Color.fromARGB(255, 149, 149, 151),
       listeners: json['listeners'] ?? 0,
     );
 

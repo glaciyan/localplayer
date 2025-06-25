@@ -149,21 +149,22 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
 
             log.info(`Got ${profiles.length} profiles from nearby search`);
 
-            return {
-                profiles: profiles.map((p) => {
-                    const session = p.sessionsMade[0];
-                    if (session) {
-                        return {
-                            ...ProfileDTOMap(p),
-                            session: SessionDTOMapWithoutParticipantsAndCreator(
-                                p.sessionsMade[0]
-                            ),
-                        };
-                    } else {
-                        return { ...ProfileDTOMap(p), session: null };
-                    }
-                }),
-            };
+            const profilesDTO = await Promise.all(
+                profiles.map(async (p) => {
+                    const dto = await ProfileDTOMap(p);
+                    const session = p.sessionsMade[0] ?? null;
+                    return {
+                        ...dto,
+                        session: session
+                            ? SessionDTOMapWithoutParticipantsAndCreator(
+                                  session
+                              )
+                            : null,
+                    };
+                })
+            );
+
+            return { profiles: profilesDTO };
         },
         {
             requireProfile: true,
