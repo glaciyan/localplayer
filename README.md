@@ -30,7 +30,7 @@ Swipe through artist profiles, explore their top tracks, and connect based on sh
   Like and Dislike — your choices are remembered and tracked.
 
 - 📰 **Feed of Liked/Disliked Profiles**  
-  View a personal feed of all the users you've liked or disliked for easy access and follow-up.
+  View recent activity such as profile likes, dislikes, and session interactions in a centralized feed.
 
 - 🎶 **Spotify Integration**  
   Preview top tracks from users’ Spotify artist profiles to match based on musical taste.
