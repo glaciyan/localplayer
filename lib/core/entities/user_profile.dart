@@ -38,8 +38,8 @@ class UserProfile {
       location: json['location'] ?? '',
       spotifyId: json['spotifyId'] ?? '',
       position: _parsePosition(json),
-      color: json['color'],
-      listeners: json['listeners'],
+      color: json['color'] ?? Color.fromARGB(255, 0, 0, 255),
+      listeners: json['listeners'] ?? 0,
     );
 
   static LatLng _parsePosition(final Map<String, dynamic> json) {

@@ -5,6 +5,9 @@ import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/services/spotify/domain/usecases/get_spotify_artist_data_use_case.dart';
 
 class FeedPost extends StatefulWidget {
   final NotificationModel post;
@@ -24,6 +27,30 @@ class FeedPost extends StatefulWidget {
 class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   bool _isLoading = false;
+  String? _backgroundLink;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackgroundLink();
+  }
+
+  Future<void> _loadBackgroundLink() async {
+    final String spotifyId = widget.post.sender.spotifyId;
+    if (spotifyId.isEmpty) {
+      setState(() => _backgroundLink = widget.post.sender.avatarLink);
+      return;
+    }
+
+    try {
+      final GetSpotifyArtistDataUseCase getArtist =
+          context.read<GetSpotifyArtistDataUseCase>();
+      final SpotifyArtistData artist = await getArtist(spotifyId);
+      setState(() => _backgroundLink = artist.imageUrl);
+    } catch (_) {
+      setState(() => _backgroundLink = widget.post.sender.avatarLink);
+    }
+  }
 
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
@@ -67,10 +94,16 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: <Widget> [
-              Image.network(
-                widget.post.backgroundLink,
-                fit: BoxFit.cover,
-              ),
+              if (_backgroundLink != null)
+                Image.network(
+                  _backgroundLink!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (final BuildContext context, final Object error,
+                          final StackTrace? stackTrace) =>
+                      const ColoredBox(color: Colors.black12),
+                )
+              else
+                const ColoredBox(color: Colors.black12),
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
@@ -102,7 +135,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget> [
                         ProfileAvatar(
-                          avatarLink: widget.post.backgroundLink,
+                          avatarLink: _backgroundLink ?? '',
                           color: Colors.white,
                           scale: 0.75,
                         ),

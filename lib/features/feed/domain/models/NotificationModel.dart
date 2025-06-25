@@ -41,16 +41,16 @@ class NotificationModel {
         read: json['read'] as bool,
         type: _parseNotificationType(json['type'] as String),
         sender: UserProfile.fromJson(json['sender'] as Map<String, dynamic>),
-        session: SessionModel.fromJson(json['session' as Map<String, dynamic>]),
+        session: SessionModel.fromJson(json['session'] as Map<String, dynamic>),
       );
 
   static NotificationType _parseNotificationType(final String type) {
     switch (type.toLowerCase()) {
-      case 'session_invite':
+      case 'session_requested':
         return NotificationType.sessionInvite;
-      case 'session_accepted':
+      case 'session_request_accepted':
         return NotificationType.sessionAccepted;
-      case 'session_rejected':
+      case 'session_request_rejected':
         return NotificationType.sessionRejected;
       case 'dislike':
         return NotificationType.dislike;
