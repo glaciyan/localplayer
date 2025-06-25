@@ -14,6 +14,44 @@
 A Flutter-based social matching app that connects nearby music lovers using geolocation and Spotify integration.  
 Swipe through artist profiles, explore their top tracks, and connect based on shared vibes — all powered by a beautiful map UI and swipe gestures.
 
+## 🧩 What Problem Does It Solve?
+
+In many urban areas, musicians and music enthusiasts are looking for spontaneous, local collaboration opportunities. However, existing platforms don't combine location awareness with personal taste in music.
+
+**LocalPlayer** solves this by letting users:
+- 📍 Discover others nearby based on location and musical interests  
+- 🖼️ View rich, Spotify-integrated profiles  
+- 🤝 Connect through swipe-based matching or 🎤 session requests
+
+---
+
+## 🎯 Who Is It For?
+
+**🎵 Persona: Malik Johnson, 24, Music Student**
+
+Malik is a passionate guitarist, singer, and producer from New York City, currently studying music in Munich. He recently moved to Germany to pursue his dream and spends most of his time creating music and trying to build a network of like-minded artists.
+
+He wants to:
+- 🧑‍🤝‍🧑 Build a band or artist collective to perform with  
+- 🎤 Play live at local bars, open mic nights, and creative spaces  
+- 📱 Expand his social media presence to increase his reach
+
+Despite his energy and talent, Malik faces challenges like:
+- 🌐 Language barriers  
+- 🕸️ Limited networking opportunities  
+- 🔒 A closed-off local scene
+
+**LocalPlayer** helps him discover and connect with nearby musicians based on shared music interests and location.
+
+
+## 🖼 Screens Overview
+
+| Screen            | Description                                                                 |
+|-------------------|-----------------------------------------------------------------------------|
+| 🗺️ **Map Screen**     | Displays nearby users as interactive markers. Users can tap markers to view profiles and send session requests. |
+| 💌 **Rate Screen**    | Tinder-style swipe screen where users can like ❤️ or dislike ❌ profiles based on shared interests and Spotify previews. |
+| 📥 **Feed Screen**    | Shows a history of recent likes, dislikes, and session interactions in a scrollable activity feed. |
+| 👤 **Profile Screen** | Displays the full user profile, including avatar, biography, location, and top Spotify tracks. |
 
 ## 📸 Screenshots
 <img src="assets/screenshots/map_screen.png" alt="Map Screen" width="200"/>
