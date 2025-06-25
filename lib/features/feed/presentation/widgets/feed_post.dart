@@ -100,10 +100,10 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                   fit: BoxFit.cover,
                   errorBuilder: (final BuildContext context, final Object error,
                           final StackTrace? stackTrace) =>
-                      const ColoredBox(color: Colors.black12),
+                      ColoredBox(color: widget.post.sender.color ?? Colors.black12)
                 )
               else
-                const ColoredBox(color: Colors.black12),
+                ColoredBox(color: widget.post.sender.color ?? Colors.black12),
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 30, sigmaY: 20),
@@ -136,7 +136,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                       children: <Widget> [
                         ProfileAvatar(
                           avatarLink: _backgroundLink ?? '',
-                          color: Colors.white,
+                          color: widget.post.sender.color ?? Colors.black12,
                           scale: 0.75,
                         ),
                         const SizedBox(width: 16),
