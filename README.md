@@ -13,6 +13,7 @@
 A Flutter-based social matching app that connects nearby music lovers using geolocation and Spotify integration.  
 Swipe through artist profiles, explore their top tracks, and connect based on shared vibes — all powered by a beautiful map UI and swipe gestures.
 
+
 ## 📸 Screenshots
 <img src="assets/screenshots/map_screen.png" alt="Map Screen" width="400"/>
 
@@ -52,22 +53,23 @@ Swipe through artist profiles, explore their top tracks, and connect based on sh
 - 🗺 **Popularity-Based Marker Scaling**  
   Map markers grow in size based on user popularity (number of listeners).
 
+
 ## 🏗 Architecture
 
 This app follows the **Clean Architecture** pattern, ensuring maintainability, scalability, and clear separation of concerns. Each layer has a distinct role and communicates only with adjacent layers through well-defined interfaces.
 
 ### Layers
 
-- **Presentation Layer**  
+- **🎨 Presentation Layer**  
   Handles everything related to the user interface: rendering widgets, reacting to state changes, and processing user input. It communicates with the application layer to trigger business logic and display results.
 
-- **Application Layer**  
+- **🧠 Application Layer**  
   Acts as the middleman between the UI and the core logic. It contains controllers and use cases that coordinate user actions, business processes, and communication with external services via abstract interfaces.
 
-- **Domain Layer**  
+- **📦 Domain Layer**  
   Contains the pure business logic and definitions — including core entities, models, and abstract interfaces (e.g., for repositories or services). This layer is completely independent and testable on its own.
 
-- **Data Layer**  
+- **🗄 Data Layer**  
   Implements the interfaces defined in the domain layer. This includes network services, local storage, API clients, and data mapping logic that translates raw responses into domain models.
 
 
@@ -120,8 +122,6 @@ Follow these steps to run the app locally:
 - A running backend (e.g., Prisma + Bun)
 - A Spotify Developer Account (for client credentials)
 
----
-
 ### 🚀 Steps
 
 1. **Clone the repository**
@@ -143,8 +143,6 @@ Follow these steps to run the app locally:
     flutter run
     ```
 
----
-
 ### 📡 API Configuration
 
 Create a `.env` file in the root directory (or use a package like `flutter_dotenv`), and include the following:
@@ -153,4 +151,16 @@ Create a `.env` file in the root directory (or use a package like `flutter_doten
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 BACKEND_URL=http://localhost:3000  # or your deployed API
+```
 
+---
+
+#### 👨‍💻 Developed and designed with passion by:
+
+- [@glaciyan](https://github.com/glaciyan)
+- [@globuli94](https://github.com/globuli94)
+- [@arutepsu](https://github.com/arutepsu)
+
+
+> 💬 Feel free to reach out for questions, feedback, or collaboration ideas! 🤝🚀
+---
