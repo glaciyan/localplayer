@@ -175,22 +175,22 @@ Follow these steps to run the app locally:
 
 1. **Clone the repository**
 
-    ```bash
-    git clone https://github.com/glaciyan/localplayer.git
-    cd localplayer
-    ```
+```bash
+git clone https://github.com/glaciyan/localplayer.git
+cd localplayer
+```
 
 2. **Install Flutter dependencies**
 
-    ```bash
-    flutter pub get
-    ```
+```bash
+flutter pub get
+```
 
 3. **Run the app**
 
-    ```bash
-    flutter run
-    ```
+```bash
+flutter run
+```
 
 ### 📡 API Configuration
 
