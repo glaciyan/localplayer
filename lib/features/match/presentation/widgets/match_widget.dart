@@ -73,9 +73,20 @@ class _MatchWidgetState extends State<MatchWidget> {
       cardsCount: profiles.length + 1,
       cardBuilder: (final BuildContext context, final int index, final int percentX, final int percentY) {
         if (index == profiles.length) {
-          return Positioned.fill(
-                child: Text("No more profiels")
-              );
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                'No more profiles',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
         }
         final ProfileWithSpotify profile = profiles[index];
         return BlocProvider<SpotifyProfileCubit>.value(
@@ -96,22 +107,28 @@ class _MatchWidgetState extends State<MatchWidget> {
         );
       },
       onSwipe: (final int? previousIndex, final int? currentIndex, final CardSwiperDirection direction) {
-        if (currentIndex == null || currentIndex >= profiles.length) return true;
-        setState(() => _currentIndex = currentIndex);
-        final ProfileWithSpotify profile = profiles[currentIndex];
+        if (previousIndex == null || previousIndex >= profiles.length) {
+          return true;
+        }
+
+        final ProfileWithSpotify swipedProfile = profiles[previousIndex];
         switch (direction) {
           case CardSwiperDirection.right:
-            _matchController.like(profile);
+            _matchController.like(swipedProfile);
             break;
           case CardSwiperDirection.left:
-            _matchController.dislike(profile);
+            _matchController.dislike(swipedProfile);
             break;
           default:
             break;
         }
-        // if (_currentIndex >= profiles.length - 1) {
-        //   _matchController.loadProfiles();
-        // }
+
+        if (currentIndex != null && currentIndex < profiles.length) {
+          setState(() => _currentIndex = currentIndex);
+        } else {
+          setState(() => _currentIndex = profiles.length);
+        }
+
         return true;
       },
     );
