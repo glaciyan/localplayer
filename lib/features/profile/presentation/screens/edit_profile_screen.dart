@@ -21,6 +21,7 @@ class EditProfileScreen extends StatelessWidget {
       selectedIndex: 3,
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (final BuildContext context, final ProfileState state) {
+
           if (state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
@@ -28,6 +29,8 @@ class EditProfileScreen extends StatelessWidget {
               listener: (final BuildContext context, final ProfileState state) {
                 if (state is profile_state.ProfileUpdateSuccess) {
                   context.pop();
+                } else if (state is ProfileSignedOut) {
+                  context.go('/signup');
                 }
               },
               child: EditableProfileWidget(

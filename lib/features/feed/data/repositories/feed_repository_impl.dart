@@ -33,4 +33,9 @@ class FeedRepository implements IFeedRepository {
     final Response<dynamic> response = await _dataSource.rejectSession(userId, sessionId);
     return response.statusCode == 200;
   }
+
+  @override
+  Future<void> pingUser(final int userId) async {
+    await _dataSource.pingUser(userId);
+  }
 }

@@ -20,3 +20,13 @@ class FeedError extends FeedState {
   final String message;
   FeedError(this.message);
 }
+
+class PingUserSuccess extends FeedState {
+  final List<NotificationModel> notifications;
+  PingUserSuccess(this.notifications);
+}
+
+class PingUserError extends FeedState {
+  final String message;
+  PingUserError(this.message);
+}

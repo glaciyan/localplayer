@@ -17,3 +17,9 @@ class RejectSession extends FeedEvent {
 
   RejectSession(this.sessionId, this.userId);
 }
+
+class PingUser extends FeedEvent {
+  final int userId;
+
+  PingUser(this.userId);
+}

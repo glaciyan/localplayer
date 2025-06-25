@@ -19,4 +19,7 @@ class FeedController implements IFeedController {
 
   @override
   void rejectSession(final int userId, final int sessionId) => addEvent(RejectSession(sessionId, userId));
+
+  @override
+  void pingUser(final int userId) => addEvent(PingUser(userId));
 }
