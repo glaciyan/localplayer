@@ -2,6 +2,7 @@ import { prisma } from "../database.ts";
 import { NotificationType } from "../generated/prisma/index.ts";
 import { SortOrder } from "../generated/prisma/internal/prismaNamespace.ts";
 import { mklog } from "../logger.ts";
+import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
 import { SessionIncludes } from "../session/LPSessionService.ts";
 
 const log = mklog("notification");
@@ -61,7 +62,9 @@ export class NotificationService {
                 recipientId: profileId,
             },
             include: {
-                sender: true,
+                sender: {
+                    include: PublicProfileIncludes
+                },
                 session: {
                     include: SessionIncludes,
                 },
