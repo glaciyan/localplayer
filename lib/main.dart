@@ -28,6 +28,7 @@ import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:localplayer/features/profile/user_module.dart';
+import 'package:localplayer/features/match/data/match_repository_interface.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,11 +83,15 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<IFeedRepository>(
           create: (_) => FeedModule.provideRepository(config),
         ),
+        RepositoryProvider<IMatchRepository>(
+          create: (final BuildContext context) => MatchModule.provideRepository(context.read<ISpotifyRepository>(), config),
+        ),
       ],
       child: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
           BlocProvider<MatchBloc>(
             create: (final BuildContext context) => MatchModule.provideBloc(
+              matchRepository: context.read<IMatchRepository>(),
               spotifyRepository: context.read<ISpotifyRepository>(),
             )..add(LoadProfiles()),
           ),
