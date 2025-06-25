@@ -61,7 +61,7 @@ class _MatchWidgetState extends State<MatchWidget> {
   Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) => CardSwiper(
       controller: _swiperController,
       padding: EdgeInsets.zero,
-      numberOfCardsDisplayed: 2,
+      numberOfCardsDisplayed: 1,
       backCardOffset: const Offset(0, 20),
       maxAngle: 30,
       threshold: 60,
@@ -70,8 +70,13 @@ class _MatchWidgetState extends State<MatchWidget> {
         horizontal: true,
         vertical: false,
       ),
-      cardsCount: profiles.length,
+      cardsCount: profiles.length + 1,
       cardBuilder: (final BuildContext context, final int index, final int percentX, final int percentY) {
+        if (index == profiles.length) {
+          return Positioned.fill(
+                child: Text("No more profiels")
+              );
+        }
         final ProfileWithSpotify profile = profiles[index];
         return BlocProvider<SpotifyProfileCubit>.value(
           value: context.read<SpotifyProfileCubit>(),
