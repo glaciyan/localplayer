@@ -103,13 +103,11 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: <Widget> [
-              if (_backgroundLink != null)
+              if (_backgroundLink != null && _backgroundLink!.isNotEmpty)
                 Image.network(
                   _backgroundLink!,
                   fit: BoxFit.cover,
-                  errorBuilder: (final BuildContext context, final Object error,
-                          final StackTrace? stackTrace) =>
-                      ColoredBox(color: widget.post.sender.color ?? Colors.black12)
+                  errorBuilder: (context, error, stackTrace) => ColoredBox(color: widget.post.sender.color ?? Colors.black12)
                 )
               else
                 ColoredBox(color: widget.post.sender.color ?? Colors.black12),
