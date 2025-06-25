@@ -1,6 +1,7 @@
 import { prisma } from "../database.ts";
 import { Profile } from "../generated/prisma/client.ts";
 import { mklog } from "../logger.ts";
+import { spotify } from "./spotify.ts";
 
 const log = mklog("profile-repo");
 
@@ -8,21 +9,58 @@ export const PublicProfileIncludes = {
     fakePresence: true,
     realPresence: true,
     swipesReceived: true,
-    // _count: {
-    //     select: {
-    //         swipesReceived: {
-    //             where: {
-    //                 type: "POSITIVE",
-    //             },
-    //         },
-    //     },
-    // },
 } as const;
 
 export const PublicProfileIncludesWithoutLikeCount = {
     fakePresence: true,
     realPresence: true,
 } as const;
+
+interface SpotifyImage {
+    url: string;
+    height: number | null;
+    width: number | null;
+}
+
+interface SpotifyUserProfile {
+    id: string;
+    display_name: string;
+    images: SpotifyImage[];
+    popularity: number;
+    followers: {
+        href: string;
+        total: number;
+    };
+}
+
+export async function fetchSpotifyUserData(
+    userId: string
+)  {
+    const response = await fetch(
+        `https://api.spotify.com/v1/artists/${encodeURIComponent(userId)}`,
+        {
+            headers: {
+                Authorization: `Bearer ${await spotify.getAccessToken()}`,
+                "Content-Type": "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
+        log.error(
+            `Spotify API error: ${response.status} ${response.statusText} ${userId}`
+        );
+        return null;
+    }
+
+    const profile: SpotifyUserProfile = await response.json();
+    // Return the first image's URL, if available
+    return {
+        image: profile.images.length > 0 ? profile.images[0]!.url : null,
+        popularity: profile.popularity,
+        followers: profile.followers.total,
+    };
+}
 
 export class ProfileRepository {
     async getProfileByOwner(index: number, ownerId: number) {
@@ -78,6 +116,10 @@ export class ProfileRepository {
             displayName?: string;
             biography?: string;
             spotifyId?: string;
+            avatarLink?: string;
+            backgroundLink?: string;
+            followers?: number;
+            popularity?: number;
         } = {};
 
         if (displayName !== undefined) {
@@ -90,13 +132,21 @@ export class ProfileRepository {
 
         if (spotifyLink !== undefined) {
             const spotifyId = this.getSpotifyArtistId(spotifyLink);
-            if (spotifyId) {
-                log.info(`Got valid id ${spotifyId}`)
-                updateData.spotifyId = spotifyId;
-            } else {
+            if (!spotifyId) {
                 log.error(`No artist id found in link ${spotifyLink}`);
                 return null;
             }
+
+            const profile = await fetchSpotifyUserData(spotifyId);
+            if (profile && profile.image) {
+                updateData.avatarLink = profile.image;
+                updateData.backgroundLink = profile.image;
+                updateData.followers = profile.followers;
+                updateData.popularity = profile.popularity;
+            }
+
+            log.info(`Got valid id ${spotifyId}`);
+            updateData.spotifyId = spotifyId;
         }
 
         if (Object.keys(updateData).length === 0) {

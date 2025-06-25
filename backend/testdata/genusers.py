@@ -21,7 +21,8 @@ def main():
             "password": user["password"]
         }
 
-        client.post("/user/signup", json=payload)
+        response = client.post("/user/signup", json=payload)
+        print(response)
 
 if __name__ == "__main__":
     main()

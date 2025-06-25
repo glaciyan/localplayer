@@ -3,7 +3,6 @@ import profileController from "./profile.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { SwipeType } from "../generated/prisma/enums.ts";
-import { spotify } from "../spotify/SpotifyEndpoint.ts";
 import lpsessionController from "../session/session.ts";
 
 const log = mklog("profile-api");
@@ -23,29 +22,18 @@ function getColorForSessionStatus(status: string) {
 export const ProfileDTOMap = async (p: any) => {
     if (!p) return null;
     let color = "#C4C4C4";
+    let sessionStatus = null;
 
     try {
         const session = await lpsessionController.findRunningSession(p.id);
         if (session) {
             color = getColorForSessionStatus(session.status);
+            sessionStatus = session.status;
         }
     } catch (e) {
         log.error(
             "could not get currenct session for user, using default color"
         );
-    }
-
-    let avatarLink = null;
-    let backgroundLink = null;
-
-    if (p.spotifyId) {
-        try {
-            const image = await fetchSpotifyUserAvatar(p.spotifyId);
-            avatarLink = image;
-            backgroundLink = image;
-        } catch (e) {
-            log.error("failed to get profile image for spotify account");
-        }
     }
 
     return {
@@ -62,8 +50,11 @@ export const ProfileDTOMap = async (p: any) => {
             (swipe: { type: SwipeType }) => swipe.type === "NEGATIVE"
         ).length,
         spotifyId: p.spotifyId,
-        // avatarLink: avatarLink,
-        // backgroundLink: backgroundLink,
+        avatarLink: p.avatarLink,
+        backgroundLink: p.backgroundLink,
+        followers: p.followers,
+        popularity: p.popularity,
+        sessionStatus: sessionStatus,
         presence: p.fakePresence
             ? {
                   latitude: p.fakePresence?.latitude,
@@ -76,43 +67,6 @@ export const ProfileDTOMap = async (p: any) => {
 export const FullProfileDTOMap = async (p: any) => {
     return { ...(await ProfileDTOMap(p)), ...p };
 };
-
-interface SpotifyImage {
-    url: string;
-    height: number | null;
-    width: number | null;
-}
-
-interface SpotifyUserProfile {
-    id: string;
-    display_name: string;
-    images: SpotifyImage[];
-}
-
-export async function fetchSpotifyUserAvatar(
-    userId: string
-): Promise<string | null> {
-    const response = await fetch(
-        `https://api.spotify.com/v1/artists/${encodeURIComponent(userId)}`,
-        {
-            headers: {
-                Authorization: `Bearer ${await spotify.getAccessToken()}`,
-                "Content-Type": "application/json",
-            },
-        }
-    );
-
-    if (!response.ok) {
-        log.error(
-            `Spotify API error: ${response.status} ${response.statusText} ${userId}`
-        );
-        return null;
-    }
-
-    const profile: SpotifyUserProfile = await response.json();
-    // Return the first image's URL, if available
-    return profile.images.length > 0 ? profile.images[0]!.url : null;
-}
 
 export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
     .use(AuthService)
@@ -141,26 +95,8 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 profile.ownerId,
                 profile.profileOwnerIndex
             ))!;
-            if (prof.spotifyId) {
-                try {
-                    const image = await fetchSpotifyUserAvatar(prof.spotifyId);
-                    return await FullProfileDTOMap({
-                        ...prof,
-                        avatarLink: image,
-                        backgroundLink: image,
-                    });
-                } catch {
-                    log.error(
-                        "could not fetch spotify images for id " +
-                            prof.spotifyId
-                    );
-                }
-            }
-
             return await FullProfileDTOMap({
-                ...prof,
-                avatarLink: null,
-                backgroundLink: null,
+                ...prof
             });
         },
         {

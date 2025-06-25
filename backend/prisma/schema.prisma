@@ -52,10 +52,14 @@ model Profile {
   ownerId           Int
   profileOwnerIndex Int
 
-  handle      String
-  displayName String?
-  biography   String?
-  spotifyId   String?
+  handle         String
+  displayName    String?
+  biography      String?
+  spotifyId      String?
+  avatarLink     String?
+  backgroundLink String?
+  popularity     Int?
+  followers      Int?
 
   realPresenceId Int?         @map("presenceId")
   realPresence   MapPresence? @relation("realPresence", fields: [realPresenceId], references: [id])
