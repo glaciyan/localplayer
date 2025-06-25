@@ -31,67 +31,70 @@ class ProfileWidget extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: ProfileCard(profile: profile),
-            ),
-
-            Positioned(
-              top: 12,
-              right: 12,
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    color: Colors.white,
-                    tooltip: 'Logout',
-                    onPressed: _profileController.signOut,
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(
+                child: ProfileCard(profile: profile),
               ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 24,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+
+              Positioned(
+                top: 12,
+                right: 12,
                 child: Row(
                   children: <Widget>[
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: onEdit,
-                        icon: const Icon(Icons.edit, size: 28),
-                        label: const Text(
-                          "Edit Profile",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(60),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: onCreateSession,
-                        icon: const Icon(Icons.play_arrow, size: 28),
-                        label: Text(
-                          hasSession ? 'Close Session' : 'Create Session',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(60),
-                        ),
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      color: Colors.white,
+                      tooltip: 'Logout',
+                      onPressed: _profileController.signOut,
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 24,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: onEdit,
+                          icon: const Icon(Icons.edit, size: 28),
+                          label: const Text(
+                            "Edit Profile",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(60),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: onCreateSession,
+                          icon: const Icon(Icons.play_arrow, size: 28),
+                          label: Text(
+                            hasSession ? 'Close Session' : 'Create Session',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(60),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+       ),
       ),
     );
   }

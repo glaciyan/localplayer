@@ -36,43 +36,45 @@ class EditableProfileWidget extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Positioned.fill(
-              child: EditableProfileCard(
-                key: cardKey,
-                profile: profile,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(
+                child: EditableProfileCard(
+                  key: cardKey,
+                  profile: profile,
+                ),
               ),
-            ),
 
-            // Bottom save button
-            Positioned(
-              bottom: 24,
-              left: 16,
-              right: 16,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    final ProfileWithSpotify? updatedProfile = cardKey.currentState?.getUpdatedProfile();
-                    
-                    if (updatedProfile != null) {
-                      _profileController.updateProfile(updatedProfile);
-                    }
-                  },
-                  icon: const Icon(Icons.edit, size: 28),
-                  label: const Text(
-                    "Save Changes",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(60),
+              Positioned(
+                bottom: 24,
+                left: 16,
+                right: 16,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final ProfileWithSpotify? updatedProfile = cardKey.currentState?.getUpdatedProfile();
+                      
+                      if (updatedProfile != null) {
+                        _profileController.updateProfile(updatedProfile);
+                      }
+                    },
+                    icon: const Icon(Icons.edit, size: 28),
+                    label: const Text(
+                      "Save Changes",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(60),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ),   
       ),
     );
   }
