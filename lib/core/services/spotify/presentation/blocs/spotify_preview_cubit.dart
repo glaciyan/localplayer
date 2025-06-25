@@ -11,7 +11,7 @@ class SpotifyPreviewCubit extends Cubit<SpotifyPreviewState> {
 
   SpotifyPreviewCubit(this.dio) : super(SpotifyPreviewInitial());
 
-  Future<void> loadAndPlayPreview(String trackId) async {
+  Future<void> loadAndPlayPreview(final String trackId) async {
     if (trackId.isEmpty) {
       emit(SpotifyPreviewError('Track ID is empty'));
       return;
@@ -20,18 +20,17 @@ class SpotifyPreviewCubit extends Cubit<SpotifyPreviewState> {
     try {
       emit(SpotifyPreviewLoading());
 
-      final response = await dio.get(
+      final Response<dynamic> response = await dio.get(
         '/spotify/preview',
-        queryParameters: {'trackId': trackId},
+        queryParameters: <String, dynamic> {'trackId': trackId},
         options: Options(responseType: ResponseType.bytes),
       );
 
-      final bytes = response.data!;
+      final List<int> bytes = response.data!;
 
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/$trackId.mp3');
+      final Directory dir = await getTemporaryDirectory();
+      final File file = File('${dir.path}/$trackId.mp3');
       await file.writeAsBytes(bytes);
-      final fileSize = await file.length();
 
       emit(SpotifyPreviewLoaded(file.path));
     } catch (e) {

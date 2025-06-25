@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:localplayer/features/auth/auth_module.dart';
 import 'package:localplayer/features/auth/domain/interfaces/auth_controller_interface.dart';

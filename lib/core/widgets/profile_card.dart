@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/core/services/spotify/presentation/widgets/spotify_preview_container.dart';
 import 'package:flutter/foundation.dart';
@@ -73,7 +74,7 @@ class ProfileCard extends StatelessWidget {
                 Text(profile.artist.genres, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 12),
 
-                for (final track in profile.artist.tracks.take(3))
+                for (final TrackEntity track in profile.artist.tracks.take(3))
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: SpotifyPreviewContainer(track: track),

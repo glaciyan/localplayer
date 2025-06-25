@@ -12,7 +12,7 @@ class SpotifyAudioService {
 
   SpotifyAudioService._internal();
 
-  Future<void> play(String filePath, String trackId, VoidCallback onStop) async {
+  Future<void> play(final String filePath, final String trackId, final VoidCallback onStop) async {
     if (_currentTrackId != trackId) {
       _player.stop();
       _onStopCurrentPlayback?.call();
@@ -29,7 +29,7 @@ class SpotifyAudioService {
     await _player.pause();
   }
 
-  void setOnComplete(VoidCallback onComplete) {
+  void setOnComplete(final VoidCallback onComplete) {
     _player.onPlayerComplete.listen((_) {
       onComplete();
     });
