@@ -21,7 +21,8 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final IMapController mapController = MapModule.provideController(context, context.read<MapBloc>());
+    final IMapController mapController =
+        MapModule.provideController(context, context.read<MapBloc>());
 
     return BlocBuilder<MapBloc, MapState>(
       builder: (final BuildContext context, final MapState state) {
@@ -33,7 +34,26 @@ class MapWidget extends StatelessWidget {
           currentZoom = (state as dynamic).zoom;
 
           sortedPeople = List<ProfileWithSpotify>.from(visiblePeople)
-            ..sort((final ProfileWithSpotify a, final ProfileWithSpotify b) => _getListeners(b.user).compareTo(_getListeners(a.user)));
+            ..sort(
+              (final ProfileWithSpotify a, final ProfileWithSpotify b) =>
+                  _getListeners(b.user).compareTo(
+                _getListeners(a.user),
+              ),
+            );
+        }
+
+        if (state is MapError) {
+          return Scaffold(
+            body: Center(
+              child: Text(
+                state.message,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.red),
+              ),
+            ),
+          );
         }
 
         return Scaffold(
@@ -75,7 +95,11 @@ class MapWidget extends StatelessWidget {
                           .map((final ProfileWithSpotify profile) {
                             final UserProfile user = profile.user;
                             final int listenerCount = _getListeners(user);
-                            final double scale = calculateScale(listenerCount, maxListeners: maxListeners);
+                            final double scale =
+                                calculateScale(
+                              listenerCount,
+                              maxListeners: maxListeners,
+                            );
 
                             return Marker(
                               point: _getLatLng(user),
