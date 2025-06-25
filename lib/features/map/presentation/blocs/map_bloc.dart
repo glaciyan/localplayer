@@ -34,8 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     emit(MapLoading());
 
     try {
-      _allProfiles = await mapRepository.fetchProfiles(0, 0, 0);
-
+      _allProfiles = await mapRepository.fetchProfilesWithSpotify(0, 0, 1000000);
       add(InitializeMap());
     } catch (e) {
       emit(MapError("Failed to load map profiles: $e"));
@@ -64,33 +63,29 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   void _onUpdateCameraPosition(final UpdateCameraPosition event, final Emitter<MapState> emit) async {
-    _debounceTimer?.cancel();
+    final double radius = calculateRadiusFromBounds(event.visibleBounds);
     
-    _debounceTimer = Timer(const Duration(milliseconds: 300), () async {
-      final double radius = calculateRadiusFromBounds(event.visibleBounds);
-      
-      try {
-        final List<ProfileWithSpotify> profilesInRadius = await mapRepository.fetchProfiles(
-          event.latitude,
-          event.longitude,
-          radius,
-        );
-        
-        final List<ProfileWithSpotify> visible = profilesInRadius
-            .where((final ProfileWithSpotify profile) => event.visibleBounds.contains(profile.user.position))
-            .toList();
+    try {
+      final List<ProfileWithSpotify> profilesInRadius = await mapRepository.fetchProfilesWithSpotify(
+        event.latitude,
+        event.longitude,
+        radius,
+      );
 
-        emit(MapReady(
-          latitude: event.latitude,
-          longitude: event.longitude,
-          visiblePeople: visible,
-          visibleBounds: event.visibleBounds,
-          zoom: event.zoom,
-        ));
-      } catch (e) {
-        emit(MapError("Failed to fetch profiles: $e"));
-      }
-    });
+      final List<ProfileWithSpotify> visible = profilesInRadius
+          .where((final ProfileWithSpotify profile) => event.visibleBounds.contains(profile.user.position))
+          .toList();
+
+      emit(MapReady(
+        latitude: event.latitude,
+        longitude: event.longitude,
+        visiblePeople: visible,
+        visibleBounds: event.visibleBounds,
+        zoom: event.zoom,
+      ));
+    } catch (e) {
+      emit(MapError("Failed to fetch profiles: $e"));
+    }
   }
 
   Future<void> _onSelectPlayer(final SelectPlayer event, final Emitter<MapState> emit) async {

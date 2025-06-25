@@ -34,10 +34,45 @@ class UserProfile {
       backgroundLink: json['backgroundLink'] ?? '',
       location: json['location'] ?? '',
       spotifyId: json['spotifyId'] ?? '',
-      position: json['position'] as LatLng,
+      position: _parsePosition(json),
       color: json['color'],
       listeners: json['listeners'],
     );
+
+  static LatLng _parsePosition(final Map<String, dynamic> json) {
+    if (json['position'] != null) {
+      return json['position'] as LatLng;
+    }
+    
+    if (json['presence'] != null) {
+      final Map<String, dynamic> presence = json['presence'] as Map<String, dynamic>;
+      
+      final dynamic latValue = presence['latitude'];
+      final dynamic lngValue = presence['longitude'];
+      
+      double lat, lng;
+      
+      if (latValue is String) {
+        lat = double.parse(latValue);
+      } else if (latValue is num) {
+        lat = latValue.toDouble();
+      } else {
+        lat = 0.0;
+      }
+      
+      if (lngValue is String) {
+        lng = double.parse(lngValue);
+      } else if (lngValue is num) {
+        lng = lngValue.toDouble();
+      } else {
+        lng = 0.0;
+      }
+      
+      return LatLng(lat, lng);
+    }
+    
+    return const LatLng(0, 0);
+  }
 
   Map<String, dynamic> toJson() => <String, dynamic> {
     'handle': handle,
