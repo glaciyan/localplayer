@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
-
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
@@ -16,8 +14,7 @@ import 'package:localplayer/core/widgets/profile_card.dart';
 class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
 
-  static const int maxOnScreen = 5;
-  static const int maxListeners = 1000000;
+  static const int maxOnScreen = 10;
 
   @override
   Widget build(final BuildContext context) {
@@ -26,20 +23,24 @@ class MapWidget extends StatelessWidget {
 
     return BlocBuilder<MapBloc, MapState>(
       builder: (final BuildContext context, final MapState state) {
-        List<ProfileWithSpotify> sortedPeople = <ProfileWithSpotify>[];
+        List<UserProfile> sortedPeople = <UserProfile>[];
         double currentZoom = 13.0;
+        int maxListeners = 1;
 
         if (state is MapReady || state is MapProfileSelected) {
-          final List<ProfileWithSpotify> visiblePeople = (state as dynamic).visiblePeople;
+          final List<UserProfile> visiblePeople = (state as dynamic).visiblePeople;
           currentZoom = (state as dynamic).zoom;
 
-          sortedPeople = List<ProfileWithSpotify>.from(visiblePeople)
+          sortedPeople = List<UserProfile>.from(visiblePeople)
             ..sort(
-              (final ProfileWithSpotify a, final ProfileWithSpotify b) =>
-                  _getListeners(b.user).compareTo(
-                _getListeners(a.user),
+              (final UserProfile a, final UserProfile b) =>
+                  _getPopularity(b).compareTo(
+                _getPopularity(a),
               ),
             );
+          if (sortedPeople.isNotEmpty) {
+            maxListeners = sortedPeople.map(_getPopularity).reduce((final int a, final int b) => a > b ? a : b);
+          }
         }
 
         if (state is MapError) {
@@ -92,17 +93,16 @@ class MapWidget extends StatelessWidget {
                     MarkerLayer(
                       markers: sortedPeople
                           .take(maxOnScreen)
-                          .map((final ProfileWithSpotify profile) {
-                            final UserProfile user = profile.user;
-                            final int listenerCount = _getListeners(user);
+                          .map((final UserProfile profile) {
+                            final int popularity = _getPopularity(profile);
                             final double scale =
                                 calculateScale(
-                              listenerCount,
+                              popularity,
                               maxListeners: maxListeners,
                             );
 
                             return Marker(
-                              point: _getLatLng(user),
+                              point: _getLatLng(profile),
                               width: 100 * scale * currentZoom / 10,
                               height: 100 * scale * currentZoom / 10,
                               child: GestureDetector(
@@ -110,8 +110,8 @@ class MapWidget extends StatelessWidget {
                                   mapController.selectProfile(profile);
                                 },
                                 child: ProfileAvatar(
-                                  avatarLink: profile.artist.imageUrl,
-                                  color: user.color ?? Colors.blue,
+                                  avatarLink: profile.avatarLink,
+                                  color: profile.color ?? Colors.blue,
                                   scale: scale,
                                 ),
                               ),
@@ -157,7 +157,7 @@ class MapWidget extends StatelessWidget {
                             ),
 
                             Padding(
-                              padding: const EdgeInsets.all(20.0),
+                              padding: const EdgeInsets.all(50.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
@@ -166,7 +166,7 @@ class MapWidget extends StatelessWidget {
                                     children: <Widget>[
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size(200, 60),
+                                          minimumSize: const Size(150, 60),
                                           backgroundColor: Colors.green,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(20),
@@ -198,7 +198,7 @@ class MapWidget extends StatelessWidget {
     );
   }
 
-  int _getListeners(final UserProfile user) => user.listeners ?? 0;
+  int _getPopularity(final UserProfile user) => user.popularity ?? 0;
 
   LatLng _getLatLng(final UserProfile user) => user.position;
 }

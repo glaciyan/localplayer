@@ -33,7 +33,9 @@ class MatchRepository implements IMatchRepository {
               genres: 'Unknown',
               imageUrl: user.avatarLink,
               biography: user.biography,
-              tracks: <TrackEntity> [], 
+              tracks: <TrackEntity> [],
+              popularity: 0,
+              listeners: 0,
             ),
           );
         }

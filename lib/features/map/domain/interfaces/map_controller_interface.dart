@@ -1,8 +1,9 @@
 import 'package:flutter_map/flutter_map.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 
 abstract class IMapController {
-  void selectProfile(final ProfileWithSpotify profile);
+  void selectProfile(final UserProfile profile);
 
   void requestJoinSession(final ProfileWithSpotify profile);
 
@@ -11,7 +12,7 @@ abstract class IMapController {
   void updateCameraPosition(
     final double latitude,
     final double longitude,
-    final List<ProfileWithSpotify> visiblePeople,
+    final List<UserProfile> visiblePeople,
     final LatLngBounds visibleBounds,
     final double zoom,
   );
@@ -19,5 +20,5 @@ abstract class IMapController {
 
   LatLngBounds get currentBounds;
 
-  List<ProfileWithSpotify> get visiblePeople;
+  List<UserProfile> get visiblePeople;
 }

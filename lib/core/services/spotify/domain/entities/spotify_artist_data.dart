@@ -6,6 +6,8 @@ class SpotifyArtistData {
   final String imageUrl;
   final String biography;
   final List<TrackEntity> tracks;
+  final int popularity;
+  final int listeners;
 
   SpotifyArtistData({
     required this.name,
@@ -13,6 +15,8 @@ class SpotifyArtistData {
     required this.imageUrl,
     required this.biography,
     required this.tracks,
+    required this.popularity,
+    required this.listeners,
   });
 }
 
