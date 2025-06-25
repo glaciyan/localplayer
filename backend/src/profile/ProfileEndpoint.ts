@@ -104,7 +104,7 @@ export async function fetchSpotifyUserAvatar(
 
     if (!response.ok) {
         log.error(
-            `Spotify API error: ${response.status} ${response.statusText}`
+            `Spotify API error: ${response.status} ${response.statusText} ${userId}`
         );
         return null;
     }

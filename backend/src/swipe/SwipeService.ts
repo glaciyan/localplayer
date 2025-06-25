@@ -47,6 +47,7 @@ export class SwipeService {
                 createdAt: SortOrder.asc,
             },
             include: PublicProfileIncludes,
+            take: 5,
         });
 
         return candidates;
