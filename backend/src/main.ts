@@ -14,6 +14,7 @@ import { SessionEndpoint } from "./session/SessionEndpoint.ts";
 import { SwipeEndpoint } from "./swipe/SwipeEndpoint.ts";
 import { NotificationEndpoint } from "./notification/NotificationEndpoint.ts";
 import { SpotifyEndpoint } from "./spotify/SpotifyEndpoint.ts";
+import { PingEndpoint } from "./ping/PingEndpoint.ts";
 
 const log = mklog("main");
 const error_handling = mklog("error_handling");
@@ -102,6 +103,7 @@ const main = async () => {
         .use(SwipeEndpoint)
         .use(NotificationEndpoint)
         .use(SpotifyEndpoint)
+        .use(PingEndpoint)
         .use(cors())
         .listen(PORT);
 
