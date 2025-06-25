@@ -1,5 +1,5 @@
 <p align="center">
-<img src="assets/LocalPlayer.png" alt="Logo" height="200"/>
+<img src="assets/LocalPlayer.png" alt="Logo" height="300"/>
 </p>
 
 # 🎵 LocalPlayer
@@ -15,7 +15,7 @@ Swipe through artist profiles, explore their top tracks, and connect based on sh
 
 
 ## 📸 Screenshots
-<img src="assets/screenshots/map_screen.png" alt="Map Screen" width="400"/>
+<img src="assets/screenshots/map_screen.png" alt="Map Screen" width="200"/>
 
 
 ## 🚀 Features
