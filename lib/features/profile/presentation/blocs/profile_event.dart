@@ -20,3 +20,5 @@ class UpdateProfile extends ProfileEvent {
 }
 
 class SignOut extends ProfileEvent {}
+
+class ProfileUpdateSuccess extends ProfileEvent {}

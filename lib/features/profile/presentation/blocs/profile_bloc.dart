@@ -4,6 +4,8 @@ import 'package:localplayer/features/profile/data/profile_repository_interface.d
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart' as profile_event;
+import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart' as profile_state;
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final IProfileRepository profileRepository;
@@ -15,6 +17,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }) : super(ProfileLoading()) {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfile>(_onUpdateProfile);
+    on<profile_event.ProfileUpdateSuccess>(_onProfileUpdateSuccess);
   }
 
   Future<void> _onLoadProfile(
@@ -23,9 +26,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       emit(ProfileLoading());
-      print('Loading profile');
       final ProfileWithSpotify profile = await profileRepository.fetchCurrentUserEnrichedProfile();
-      print('Profile loaded: ${profile.user.id}');
       emit(
         ProfileLoaded(
           profile,
@@ -43,8 +44,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       emit(ProfileLoading());
       await profileRepository.updateUserProfile(event.updatedProfile);
+      emit(profile_state.ProfileUpdateSuccess());
+      await _onLoadProfile(LoadProfile(), emit);
     } catch (e) {
       emit(ProfileError('Failed to update profile: $e'));
     }
+  }
+
+  Future<void> _onProfileUpdateSuccess(
+    final profile_event.ProfileUpdateSuccess event,
+    final Emitter<ProfileState> emit,
+  ) async {
+    await _onLoadProfile(LoadProfile(), emit);
   }
 }
