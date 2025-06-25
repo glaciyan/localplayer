@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:flutter/foundation.dart';
+import 'package:localplayer/features/profile/domain/controllers/profile_controller.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 
 
 class ProfileWidget extends StatelessWidget {
@@ -19,16 +23,34 @@ class ProfileWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(final BuildContext context) {
+    final ProfileController _profileController = ProfileController(
+      context,
+      (final ProfileEvent event) => context.read<ProfileBloc>().add(event),
+    );
+
+    return Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            // Fullscreen ProfileCard
             Positioned.fill(
               child: ProfileCard(profile: profile),
             ),
 
-            // Buttons always fixed at bottom
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.logout),
+                    color: Colors.white,
+                    tooltip: 'Logout',
+                    onPressed: _profileController.signOut,
+                  ),
+                ],
+              ),
+            ),
             Positioned(
               left: 0,
               right: 0,
@@ -72,6 +94,7 @@ class ProfileWidget extends StatelessWidget {
         ),
       ),
     );
+  }
 
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
