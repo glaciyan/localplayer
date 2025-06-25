@@ -3,6 +3,9 @@ import { AuthService } from "../authentication/AuthService.ts";
 import { swipeController } from "./swipe.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { notificationController } from "../notification/notification.ts";
+import { mklog } from "../logger.ts";
+
+const log = mklog("swipe");
 
 enum RatingOptions {
     good = "good",
@@ -72,6 +75,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
             const candidates = await swipeController.getSwipeCandidates(
                 profile.id
             );
+            log.info(`Found ${candidates.length} candiates`);
             return candidates.map((c) => ProfileDTOMap(c));
         },
         {

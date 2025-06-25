@@ -14,18 +14,8 @@ class MatchRepository implements IMatchRepository {
 
   @override
   Future<List<ProfileWithSpotify>> fetchProfilesWithSpotify(final double latitude, final double longitude, final double radiusKm) async {
-    final Map<String, dynamic> rawData = await matchRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);    
-    final List<dynamic> profilesList = rawData['profiles'] as List<dynamic>? ?? <dynamic>[];
-    
-    final List<UserProfile> profilesInRadius = <UserProfile> [];
-    for (final dynamic entry in profilesList) {
-      try {
-        final UserProfile user = UserProfile.fromJson(entry as Map<String, dynamic>);
-        profilesInRadius.add(user);
-      } catch (e) {
-      }
-    }
-    
+    final List<UserProfile> profilesInRadius = await matchRemoteDataSource.fetchProfiles(latitude, longitude, radiusKm);
+
     if (profilesInRadius.isEmpty) {
       return <ProfileWithSpotify>[];
     }
@@ -55,8 +45,8 @@ class MatchRepository implements IMatchRepository {
   }
 
   @override
-  Future<Map<String, dynamic>> like(final String profileId) async => await matchRemoteDataSource.like(profileId);
+  Future<Map<String, dynamic>> like(final int profileId) async => await matchRemoteDataSource.like(profileId);
 
   @override
-  Future<Map<String, dynamic>> dislike(final String profileId) async => await matchRemoteDataSource.dislike(profileId);
+  Future<Map<String, dynamic>> dislike(final int profileId) async => await matchRemoteDataSource.dislike(profileId);
 }

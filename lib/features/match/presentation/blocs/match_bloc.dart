@@ -52,13 +52,21 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
 
   void _onLikePressed(final LikePressed event, final Emitter<MatchState> emit) async {
     if (state is MatchLoaded) {
-      // Implementation for like action
+      try {
+        await repository.like(event.profile.id);
+      } catch (_) {
+        // ignore errors silently
+      }
     }
   }
 
   void _onDislikePressed(final DislikePressed event, final Emitter<MatchState> emit) async {
     if (state is MatchLoaded) {
-      // Implementation for dislike action
+      try {
+        await repository.dislike(event.profile.id);
+      } catch (_) {
+        // ignore errors silently
+      }
     }
   }
 }

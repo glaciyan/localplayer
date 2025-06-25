@@ -4,7 +4,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/features/profile/domain/repositories/i_user_repository.dart';
 
-
 // class UserRepositoryImpl implements IUserRepository {
 //   final Dio dio;
 
@@ -20,7 +19,6 @@ import 'package:localplayer/features/profile/domain/repositories/i_user_reposito
 //       throw Exception('Failed to load user profile');
 //     }
 //   }
-
 
 //   @override
 //   Future<void> updateUserProfile(UserProfile profile) async {
@@ -42,6 +40,7 @@ import 'package:localplayer/features/profile/domain/repositories/i_user_reposito
 
 class FakeUserRepository implements IUserRepository {
   UserProfile mock = const UserProfile(
+    id: 1,
     handle: '@cgmar',
     displayName: 'Tanaka',
     biography: 'I love Flutter and beats.',
@@ -54,8 +53,9 @@ class FakeUserRepository implements IUserRepository {
     listeners: 1200000,
   );
 
-  final List<UserProfile> fakeProfiles = const <UserProfile> [
+  final List<UserProfile> fakeProfiles = const <UserProfile>[
     UserProfile(
+      id: 2,
       handle: '@cgmar',
       displayName: 'Tanaka',
       biography: 'I love Flutter and beats.',
@@ -68,6 +68,7 @@ class FakeUserRepository implements IUserRepository {
       listeners: 1200000,
     ),
     UserProfile(
+      id: 3,
       handle: '@miyu',
       displayName: 'Miyu',
       biography: 'Jazz pianist and tea lover.',
@@ -80,6 +81,7 @@ class FakeUserRepository implements IUserRepository {
       listeners: 540000,
     ),
     UserProfile(
+      id: 4,
       handle: '@lee',
       displayName: 'Lee',
       biography: 'Dancing through code.',
@@ -92,6 +94,7 @@ class FakeUserRepository implements IUserRepository {
       listeners: 800000,
     ),
     UserProfile(
+      id: 5,
       handle: '@sophia',
       displayName: 'Sophia',
       biography: 'Sings in 4 languages.',
@@ -123,4 +126,3 @@ class FakeUserRepository implements IUserRepository {
     return fakeProfiles;
   }
 }
-

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:latlong2/latlong.dart';
 
 class UserProfile {
+  final int id;
   final String handle;
   final String displayName;
   final String biography;
@@ -14,6 +15,7 @@ class UserProfile {
   final int? listeners;
 
   const UserProfile({
+    required this.id,
     required this.handle,
     required this.displayName,
     required this.biography,
@@ -27,6 +29,7 @@ class UserProfile {
   });
 
   factory UserProfile.fromJson(final Map<String, dynamic> json) => UserProfile(
+      id: json['id'],
       handle: json['handle'] ?? '',
       displayName: json['displayName'] ?? '',
       biography: json['biography'] ?? '',
@@ -88,6 +91,7 @@ class UserProfile {
   };
 
   UserProfile copyWith({
+    final int? id,
     final String? handle,
     final String? displayName,
     final String? biography,
@@ -99,6 +103,7 @@ class UserProfile {
     final Color? color,
     final int? listeners,
   }) => UserProfile(
+      id: id ?? this.id,
       handle: handle ?? this.handle,
       displayName: displayName ?? this.displayName,
       biography: biography ?? this.biography,

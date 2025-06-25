@@ -1,6 +1,7 @@
 import { prisma } from "../database.ts";
 import { SwipeType } from "../generated/prisma/enums.ts";
 import { SortOrder } from "../generated/prisma/internal/prismaNamespace.ts";
+import { PublicProfileIncludes } from "../profile/ProfileRepository.ts";
 
 export class SwipeService {
     async createSwipe(swiperId: number, swipeeId: number, rating: SwipeType) {
@@ -38,13 +39,14 @@ export class SwipeService {
                 id: {
                     not: profileId,
                 },
+                spotifyId: {
+                    not: null,
+                },
             },
             orderBy: {
                 createdAt: SortOrder.asc,
             },
-            include: {
-                fakePresence: true,
-            }
+            include: PublicProfileIncludes,
         });
 
         return candidates;
