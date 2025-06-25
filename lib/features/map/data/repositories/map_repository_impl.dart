@@ -49,7 +49,7 @@ class MapRepository implements IMapRepository {
       }),
     );
 
-    final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => profile.artist.genres != 'Unknown').toList();
-    return filteredEnriched;
+    // final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => profile.artist.genres != 'Unknown').toList();
+    return enriched;
   }
 }
