@@ -18,3 +18,5 @@ class UpdateProfile extends ProfileEvent {
 
   UpdateProfile(this.updatedProfile);
 }
+
+class SignOut extends ProfileEvent {}

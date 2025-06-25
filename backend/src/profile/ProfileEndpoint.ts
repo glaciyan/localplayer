@@ -8,7 +8,6 @@ import lpsessionController from "../session/session.ts";
 const log = mklog("profile-api");
 
 function getColorForSessionStatus(status: string) {
-    log.info(status);
     switch (status) {
         case "OPEN":
             return "#98D67C";

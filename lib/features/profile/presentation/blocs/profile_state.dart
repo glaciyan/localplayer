@@ -10,6 +10,7 @@ class ProfileLoaded extends ProfileState {
   ProfileLoaded(this.profile);
 }
 
+class ProfileSignedOut extends ProfileState {}
 
 class ProfileError extends ProfileState {
   final String message;
