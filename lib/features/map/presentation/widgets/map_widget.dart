@@ -66,8 +66,8 @@ class MapWidget extends StatelessWidget {
                     rotationThreshold: 360,
                     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
-                  initialCenter: LatLng(51.509364, -0.128928),
-                  initialZoom: 13.0,
+                  initialCenter: LatLng(52.52, 13.405),
+                  initialZoom: 10.5,
                   maxZoom: 20,
                   onPositionChanged: (final MapCamera position, final bool hasGesture) {
                     if (state is MapReady) {

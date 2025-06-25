@@ -141,7 +141,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             clipBehavior: Clip.antiAlias,
                             child: FlutterMap(
                               options: MapOptions(
-                                initialCenter: LatLng(51.5, -0.09),
+                                initialCenter: LatLng(52.52, 13.405),
                                 initialZoom: 13.0,
                               ),
                               children: <Widget> [
@@ -152,7 +152,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                                 MarkerLayer(
                                   markers: <Marker> [
                                     Marker(
-                                      point: LatLng(51.5, -0.09),
+                                      point: LatLng(52.52, 13.405),
                                       child: Icon(Icons.location_on, color: Colors.red, size: 50),
                                     ),
                                   ],
