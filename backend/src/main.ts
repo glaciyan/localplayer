@@ -4,7 +4,7 @@ import { mklog } from "./logger.ts";
 import { UserEndpoint } from "./user/UserEndpoint.ts";
 import { AuthService } from "./authentication/AuthService.ts";
 import { swaggerConfig } from "./swagger.ts";
-import { CustomValidationError, UNAUTHORIZED } from "./errors.ts";
+import { AuthenticationError, CustomValidationError, ErrorTemplates, respond } from "./errors.ts";
 import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
 import { SessionCleanCrontab } from "./authentication/session/SessionCleanCrontab.ts";
@@ -28,6 +28,7 @@ const main = async () => {
         .use(SessionCleanCrontab)
         .error({
             CustomValidationError,
+            AuthenticationError
         })
         .onError(({ error, code, path }) => {
             if (code === "INTERNAL_SERVER_ERROR") {
@@ -38,7 +39,11 @@ const main = async () => {
                         cause: error.cause,
                     }
                 );
-                return status(500);
+                return respond(ErrorTemplates.INTERNAL_SERVER_ERROR);
+            }
+
+            if (code === "AuthenticationError") {
+                return error.toResponse();
             }
 
             if (code === "CustomValidationError") {
@@ -51,7 +56,7 @@ const main = async () => {
             if (code === "VALIDATION") {
                 if (error.type === "cookie") {
                     error_handling.http(`Unauthorized access on ${path}`);
-                    return status(401, UNAUTHORIZED);
+                    return respond(ErrorTemplates.AUTH_NOSESSION);
                 }
                 return;
             }

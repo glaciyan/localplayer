@@ -2,7 +2,7 @@ import { Elysia, status, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import lpsessionController from "./session.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
-import { UNAUTHORIZED } from "../errors.ts";
+import { AuthenticationError, ErrorTemplates } from "../errors.ts";
 import { mklog } from "../logger.ts";
 
 const log = mklog("lpsession");
@@ -190,7 +190,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             }
 
             if (session.creatorId !== profile.id) {
-                return status(403, UNAUTHORIZED);
+                throw new AuthenticationError(ErrorTemplates.INVALID_PROFILE);
             }
 
             const request = await lpsessionController.respondRequest(
@@ -225,7 +225,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             }
 
             if (session.creatorId !== profile.id) {
-                return status(403, UNAUTHORIZED);
+                throw new AuthenticationError(ErrorTemplates.INVALID_PROFILE);
             }
 
             return await lpsessionController.closeSession(session.id);
