@@ -1,4 +1,4 @@
-import { Elysia, ValidationError } from "elysia";
+import { Elysia } from "elysia";
 import { swagger } from "@elysiajs/swagger";
 import { mklog } from "./logger.ts";
 import { UserEndpoint } from "./user/UserEndpoint.ts";
@@ -74,7 +74,7 @@ const main = async () => {
                 for (const issue of error.all) {
                     log.info(JSON.stringify(issue));
                     if (issue?.summary && issue?.path && issue?.message) {
-                        fieldErrors[issue.path] = issue.message;
+                        fieldErrors[issue.path.substring(1)] = issue.message;
                     }
                 }
 

@@ -26,14 +26,10 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
                 return status(422, "No Secret 'not_secret' set in header");
             }
 
-            const success = await userController.register(
+            await userController.register(
                 body.name,
                 body.password
             );
-
-            if (!success) {
-                return status(433);
-            }
 
             log.info(`Registered new user ${body.name}`);
             return status(200);
