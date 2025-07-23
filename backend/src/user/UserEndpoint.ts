@@ -1,8 +1,9 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import userController from "./user.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { sessionController } from "../authentication/session/session.ts";
+import { AuthenticationError, ErrorTemplates, UnknownError } from "../errors.ts";
 
 const log = mklog("user-api");
 
@@ -18,37 +19,34 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
     .use(AuthService)
     .post(
         "/signup",
-        async ({ body, headers }) => {
-            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
+        async ({ body, request }) => {
+            if (request.headers.get("not_secret") !== NOT_SO_SECRET_SECRET) {
                 log.warn(
                     "Someone tried to access an open endoint without auth."
                 );
-                return status(422, "No Secret 'not_secret' set in header");
+                throw new AuthenticationError(ErrorTemplates.NO_SECRET);
             }
 
-            await userController.register(
-                body.name,
-                body.password
-            );
+            await userController.register(body.name, body.password);
 
             log.info(`Registered new user ${body.name}`);
-            return status(200);
         },
         {
             body: "userRegister",
             headers: t.Object({
                 not_secret: t.String(),
             }),
+            requireSecret: true,
         }
     )
     .post(
         "/login",
-        async ({ headers, body }) => {
-            if (headers.not_secret !== NOT_SO_SECRET_SECRET) {
+        async ({ body, request }) => {
+            if (request.headers.get("not_secret") !== NOT_SO_SECRET_SECRET) {
                 log.warn(
                     "Someone tried to access an open endoint without auth."
                 );
-                return status(403, "No Secret 'not_secret' set in header");
+                throw new AuthenticationError(ErrorTemplates.NO_SECRET);
             }
 
             const goodLogin = await userController.authenticateUser(
@@ -57,8 +55,8 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             if (goodLogin === null) {
-                log.error("Wrong username or password " + body.name.trim())
-                return status(403, "Wrong username or password");
+                log.error("Wrong username or password " + body.name.trim());
+                throw new AuthenticationError(ErrorTemplates.INVALID_CREDENTIALS);
             }
 
             const { sessionToken, expiresOn } =
@@ -74,6 +72,7 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             };
         },
         {
+            requireSecret: true,
             body: "userLogin",
             cookie: "optionalSession",
             headers: t.Object({
@@ -91,10 +90,9 @@ export const UserEndpoint = new Elysia({ prefix: "/user" })
             );
 
             if (!success) {
-                return status(500);
+                log.error(`unknown error for logging out ${sessionId}`)
+                throw new UnknownError();
             }
-
-            return status(200);
         },
         {
             requireSession: true,

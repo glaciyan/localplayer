@@ -5,10 +5,14 @@ import { UserEndpoint } from "./user/UserEndpoint.ts";
 import { AuthService } from "./authentication/AuthService.ts";
 import { swaggerConfig } from "./swagger.ts";
 import {
+    ApiError,
     AuthenticationError,
     CustomValidationError,
     ErrorTemplates,
+    NotFoundError,
+    ProfileNotFoundError,
     respond,
+    UnknownError,
 } from "./errors.ts";
 import { cors } from "@elysiajs/cors";
 import { Prisma } from "./generated/prisma/client.ts";
@@ -34,6 +38,10 @@ const main = async () => {
         .error({
             CustomValidationError,
             AuthenticationError,
+            NotFoundError,
+            ProfileNotFoundError,
+            UnknownError,
+            ApiError,
         })
         .onError(({ error, code, path }) => {
             // Prisma errors
@@ -55,11 +63,14 @@ const main = async () => {
                 return respond(ErrorTemplates.INTERNAL_SERVER_ERROR);
             }
 
-            if (code === "AuthenticationError") {
-                return error.toResponse();
-            }
-
-            if (code === "CustomValidationError") {
+            if (
+                code === "AuthenticationError" ||
+                code === "CustomValidationError" ||
+                code === "NotFoundError" ||
+                code === "ProfileNotFoundError" ||
+                code === "UnknownError" ||
+                code === "ApiError"
+            ) {
                 return error.toResponse();
             }
 
