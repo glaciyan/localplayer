@@ -53,7 +53,7 @@ export const AuthService = new Elysia() //
     })
     .macro({
         requireSession: {
-            async resolve({ status, headers, request }) {
+            async resolve({ headers, request }) {
                 const session = await resolveSession(
                     headers[authHeader],
                     request
