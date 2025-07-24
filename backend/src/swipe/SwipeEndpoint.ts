@@ -1,9 +1,10 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import { swipeController } from "./swipe.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { notificationController } from "../notification/notification.ts";
 import { mklog } from "../logger.ts";
+import { ApiError, ErrorTemplates } from "../errors.ts";
 
 const log = mklog("swipe");
 
@@ -18,7 +19,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
         "/:rating/:swipeeId",
         async ({ params: { swipeeId, rating }, profile }) => {
             if (profile.id === swipeeId) {
-                return status(422, "You cannot rate yourself.");
+                throw new ApiError(ErrorTemplates.SWIPE_CANT_RATE_YOURSELF);
             }
             const result = await swipeController.createSwipe(
                 profile.id,
@@ -27,10 +28,7 @@ export const SwipeEndpoint = new Elysia({ prefix: "swipe" }) //
             );
 
             if (result === null) {
-                return status(400, {
-                    type: "validation",
-                    message: "You have already rated this user.",
-                });
+                throw new ApiError(ErrorTemplates.USER_ALREADY_RATED);
             }
 
             if (rating === "good") {

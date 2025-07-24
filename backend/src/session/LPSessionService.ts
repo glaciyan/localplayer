@@ -107,14 +107,18 @@ export class LPSessionService {
             log.info(
                 "user probably is already the creator or in the participants list"
             );
-            throw new CustomValidationError("You are already in this session");
+            throw new CustomValidationError({
+                id: "You are already in this session",
+            });
         }
 
         if (session.status === "CONCLUDED") {
             log.error(
                 `${profile.handle}:${profile.id} has tried to join a concluded session.`
             );
-            throw new CustomValidationError("This session has already ended.");
+            throw new CustomValidationError({
+                id: "This session has already ended.",
+            });
         }
 
         const request = await prisma.lPSessionParticipation.create({
@@ -160,7 +164,7 @@ export class LPSessionService {
             },
             include: {
                 participant: {
-                    include: PublicProfileIncludes
+                    include: PublicProfileIncludes,
                 },
             },
         });
@@ -176,7 +180,7 @@ export class LPSessionService {
             },
             include: {
                 participant: {
-                    include: PublicProfileIncludes
+                    include: PublicProfileIncludes,
                 },
             },
         });

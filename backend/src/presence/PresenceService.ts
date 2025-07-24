@@ -10,12 +10,18 @@ export class PresenceService {
     }
 
     public validateCoords(lat: CDecimal, lng: CDecimal) {
+        const fieldErrors: Record<string, string> = {};
+
         if (lat.lessThan(-90) || lat.greaterThan(90)) {
-            throw new CustomValidationError("latitude is out of range");
+            fieldErrors["latitude"] = "Latitude is out of range";
         }
 
         if (lng.lessThan(-180) || lng.greaterThan(180)) {
-            throw new CustomValidationError("longitude is out of range");
+            fieldErrors["longitude"] = "Longitude is out of range";
+        }
+
+        if (Object.keys(fieldErrors).length > 0) {
+            throw new CustomValidationError(fieldErrors);
         }
     }
 

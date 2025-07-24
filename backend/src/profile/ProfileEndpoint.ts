@@ -1,9 +1,10 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import profileController from "./profile.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { SwipeType } from "../generated/prisma/enums.ts";
 import lpsessionController from "../session/session.ts";
+import { ProfileNotFoundError } from "../errors.ts";
 
 const log = mklog("profile-api");
 
@@ -110,7 +111,7 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
         async ({ params: { id }, user }) => {
             const profileId = parseInt(id);
             if (isNaN(profileId)) {
-                return status(400, "Invalid profile ID");
+                throw new ProfileNotFoundError();
             }
 
             log.http(
@@ -119,7 +120,7 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
 
             const profile = await profileController.getPublicProfile(profileId);
             if (profile === null) {
-                return status(404, "Profile Not Found");
+                throw new ProfileNotFoundError();
             }
 
             log.info(JSON.stringify(profile));
@@ -146,10 +147,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 body.biography,
                 body.spotifyLink
             );
-
-            if (updatedProfile === null) {
-                return status(500, "Failed to update profile");
-            }
 
             return updatedProfile;
         },

@@ -1,8 +1,8 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import lpsessionController from "./session.ts";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
-import { UNAUTHORIZED } from "../errors.ts";
+import { ApiError, AuthenticationError, ErrorTemplates } from "../errors.ts";
 import { mklog } from "../logger.ts";
 
 const log = mklog("lpsession");
@@ -57,7 +57,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
                 profile.id
             );
             if (!session) {
-                return status(404, "null");
+                return null;
             }
 
             return await SessionDTOMap(session);
@@ -66,7 +66,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             requireProfile: true,
             detail: {
                 description:
-                    "Get your current session. Returns 404 and `null` if you are not running a session.",
+                    "Get your current session. Returns `null` if you are not running a session.",
             },
         }
     )
@@ -82,7 +82,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             );
 
             if (session === null) {
-                return status(403, "You already have an open session");
+                throw new ApiError(ErrorTemplates.SESSION_ALREADY_OPEN);
             }
 
             return await SessionDTOMap(session);
@@ -100,7 +100,7 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
         async ({ params: { id } }) => {
             const session = await lpsessionController.getSession(id);
             if (session === null) {
-                return status(404);
+                throw new ApiError(ErrorTemplates.SESSION_NOT_FOUND);
             }
 
             return await SessionDTOMap(session);
@@ -186,11 +186,11 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
 
             if (!session) {
                 log.http(`could not find session with id ${sessionId}`);
-                return status(404);
+                throw new ApiError(ErrorTemplates.SESSION_NOT_FOUND);
             }
 
             if (session.creatorId !== profile.id) {
-                return status(403, UNAUTHORIZED);
+                throw new AuthenticationError(ErrorTemplates.INVALID_PROFILE);
             }
 
             const request = await lpsessionController.respondRequest(
@@ -221,11 +221,11 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
 
             if (!session) {
                 log.http(`could not find session with id ${id}`);
-                return status(404);
+                throw new ApiError(ErrorTemplates.SESSION_NOT_FOUND);
             }
 
             if (session.creatorId !== profile.id) {
-                return status(403, UNAUTHORIZED);
+                throw new AuthenticationError(ErrorTemplates.INVALID_PROFILE);
             }
 
             return await lpsessionController.closeSession(session.id);

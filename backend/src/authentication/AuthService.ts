@@ -1,6 +1,6 @@
 import { Elysia, t } from "elysia";
 import { mklog } from "../logger.ts";
-import { UNAUTHORIZED } from "../errors.ts";
+import { AuthenticationError, ErrorTemplates } from "../errors.ts";
 import { sessionController } from "./session/session.ts";
 import profileController from "../profile/profile.ts";
 
@@ -53,21 +53,31 @@ export const AuthService = new Elysia() //
     })
     .macro({
         requireSession: {
-            async resolve({ status, headers, request }) {
-                const session = await resolveSession(headers[authHeader], request);
+            async resolve({ headers, request }) {
+                const session = await resolveSession(
+                    headers[authHeader],
+                    request
+                );
                 if (session === false) {
-                    return status(401, UNAUTHORIZED);
+                    throw new AuthenticationError(
+                        ErrorTemplates.AUTH_NOSESSION
+                    );
                 }
 
                 return session;
             },
         },
         requireProfile: {
-            async resolve({ status, headers, request }) {
-                const session = await resolveSession(headers[authHeader], request);
+            async resolve({ headers, request }) {
+                const session = await resolveSession(
+                    headers[authHeader],
+                    request
+                );
 
                 if (session === false) {
-                    return status(401, UNAUTHORIZED);
+                    throw new AuthenticationError(
+                        ErrorTemplates.AUTH_NOSESSION
+                    );
                 }
 
                 const profileIndex = headers["x-profile-index"] || "0";
@@ -76,15 +86,16 @@ export const AuthService = new Elysia() //
                     log.http(
                         "No profile index header (x-profile-index) was provided"
                     );
-                    return status(
-                        400,
-                        "Profile index header (x-profile-index) is required"
+                    throw new AuthenticationError(
+                        ErrorTemplates.INVALID_PROFILE
                     );
                 }
                 const index_parsed = parseInt(profileIndex);
                 if (isNaN(index_parsed)) {
                     log.http(`Invalid profile index provided: ${profileIndex}`);
-                    return status(400, "Invalid profile ID");
+                    throw new AuthenticationError(
+                        ErrorTemplates.INVALID_PROFILE
+                    );
                 }
 
                 const profile = await profileController.getProfile(
@@ -93,14 +104,18 @@ export const AuthService = new Elysia() //
                 );
                 if (profile === null) {
                     log.http(`Profile ${index_parsed} not found`);
-                    return status(403, UNAUTHORIZED);
+                    throw new AuthenticationError(
+                        ErrorTemplates.INVALID_PROFILE
+                    );
                 }
 
                 if (profile.ownerId !== session.user.id) {
                     log.http(
                         `User ${session.user.username} attempted to access profile ${index_parsed} owned by user ${profile.ownerId}`
                     );
-                    return status(403, UNAUTHORIZED);
+                    throw new AuthenticationError(
+                        ErrorTemplates.INVALID_PROFILE
+                    );
                 }
 
                 return {
