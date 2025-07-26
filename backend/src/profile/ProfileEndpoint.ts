@@ -148,7 +148,9 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 body.spotifyLink
             );
 
-            return updatedProfile;
+            log.info(JSON.stringify(updatedProfile))
+
+            return await ProfileDTOMap(updatedProfile);
         },
         {
             requireProfile: true,

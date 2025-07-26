@@ -44,9 +44,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       emit(ProfileLoading());
-      await profileRepository.updateUserProfile(event.updatedProfile);
-      emit(profile_state.ProfileUpdateSuccess());
-      await _onLoadProfile(LoadProfile(), emit);
+      final ProfileWithSpotify profile = await profileRepository.updateUserProfile(event.updatedProfile);
+      // emit(profile_state.ProfileUpdateSuccess());
+      // await _onLoadProfile(LoadProfile(), emit);
+      emit(ProfileLoaded(profile));
     } catch (e) {
       emit(ProfileError('Failed to update profile: $e'));
     }
@@ -56,7 +57,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final profile_event.ProfileUpdateSuccess event,
     final Emitter<ProfileState> emit,
   ) async {
-    await _onLoadProfile(LoadProfile(), emit);
+    // await _onLoadProfile(LoadProfile(), emit);
   }
 
   Future<void> _onSignOut(
