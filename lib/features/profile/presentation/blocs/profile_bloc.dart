@@ -45,7 +45,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       emit(ProfileLoading());
       final ProfileWithSpotify profile = await profileRepository.updateUserProfile(event.updatedProfile);
-      // emit(profile_state.ProfileUpdateSuccess());
+      emit(profile_state.ProfileUpdateSuccess());
       // await _onLoadProfile(LoadProfile(), emit);
       emit(ProfileLoaded(profile));
     } catch (e) {
