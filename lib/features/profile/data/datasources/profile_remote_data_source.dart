@@ -12,13 +12,14 @@ class ProfileRemoteDataSource {
     return UserProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
-  Future<void> updateUserProfile(final String name, final String biography, final String spotifyId) async {
+  Future<UserProfile> updateUserProfile(final String name, final String biography, final String spotifyId) async {
     final Map<String, dynamic> body = <String, dynamic>{
       'displayName': name,
       'spotifyLink': spotifyId,
       'biography': biography,
     };
-    await apiClient.patch('/profile/me', data: body);
+    final Response<dynamic> response = await apiClient.patch('/profile/me', data: body);
+    return UserProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
   Future<void> signOut() async {

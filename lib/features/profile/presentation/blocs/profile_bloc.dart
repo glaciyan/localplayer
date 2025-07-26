@@ -5,7 +5,6 @@ import 'package:localplayer/core/services/spotify/domain/repositories/spotify_re
 import 'profile_event.dart';
 import 'profile_state.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart' as profile_event;
-import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart' as profile_state;
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final IProfileRepository profileRepository;
@@ -31,6 +30,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(
         ProfileLoaded(
           profile,
+          false
         ),
       );
     } catch (e) {
@@ -44,9 +44,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     try {
       emit(ProfileLoading());
-      await profileRepository.updateUserProfile(event.updatedProfile);
-      emit(profile_state.ProfileUpdateSuccess());
-      await _onLoadProfile(LoadProfile(), emit);
+      final ProfileWithSpotify profile = await profileRepository.updateUserProfile(event.updatedProfile);
+      emit(ProfileLoaded(profile, true));
     } catch (e) {
       emit(ProfileError('Failed to update profile: $e'));
     }
@@ -56,7 +55,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final profile_event.ProfileUpdateSuccess event,
     final Emitter<ProfileState> emit,
   ) async {
-    await _onLoadProfile(LoadProfile(), emit);
+    // await _onLoadProfile(LoadProfile(), emit);
   }
 
   Future<void> _onSignOut(

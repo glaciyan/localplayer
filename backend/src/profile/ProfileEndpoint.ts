@@ -123,8 +123,6 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 throw new ProfileNotFoundError();
             }
 
-            log.info(JSON.stringify(profile));
-
             return await ProfileDTOMap(profile);
         },
         {
@@ -148,7 +146,7 @@ export const ProfileEndpoint = new Elysia({ prefix: "/profile" })
                 body.spotifyLink
             );
 
-            return updatedProfile;
+            return await ProfileDTOMap(updatedProfile);
         },
         {
             requireProfile: true,
