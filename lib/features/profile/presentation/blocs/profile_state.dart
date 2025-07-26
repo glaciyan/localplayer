@@ -6,8 +6,9 @@ class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
   final ProfileWithSpotify profile;
+  final bool updated;
 
-  ProfileLoaded(this.profile);
+  ProfileLoaded(this.profile, this.updated);
 }
 
 class ProfileSignedOut extends ProfileState {}
