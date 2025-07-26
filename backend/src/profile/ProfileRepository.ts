@@ -156,7 +156,7 @@ export class ProfileRepository {
         return await prisma.profile.update({
             where: { id: id },
             data: updateData,
-            include: PublicProfileIncludes
+            include: PublicProfileIncludes,
         });
     }
 }
