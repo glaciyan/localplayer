@@ -5,10 +5,10 @@ const env = { ...process.env }
 
 // If running the web server then migrate existing database
 if (process.argv.slice(-2).join(' ') === 'bun src/main.ts') {
+  await exec('bunx prisma generate')
   const url = new URL(process.env.DATABASE_URL)
   const target = url.protocol === 'file:' && url.pathname
   await exec('bunx prisma migrate deploy')
-  await exec('bunx prisma generate')
 }
 
 // launch application
