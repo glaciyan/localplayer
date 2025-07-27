@@ -53,7 +53,18 @@ Despite his energy and talent, Malik faces challenges like:
 | 👤 **Profile Screen** | Displays the full user profile, including avatar, biography, location, and top Spotify tracks. |
 
 ## 📸 Screenshots
-<img src="assets/screenshots/map_screen.png" alt="Map Screen" width="200"/>
+<div style="display: flex; gap: 5px;">
+  <img src="assets/screenshots/map_screen.png" alt="Map Screen" width="250"/>
+  <img src="assets/screenshots/swipe_screen.png" alt="Swipe Screen" width="250"/>
+  <img src="assets/screenshots/feed_accepted_screen.png" alt="Feed Accepted" width="250"/>
+</div>
+
+<br/>
+
+<div style="display: flex; gap: 5px;">
+  <img src="assets/screenshots/feed_extended_screen.png" alt="Feed Extended" width="250"/>
+  <img src="assets/screenshots/edit_profile_screen.png" alt="Edit Profile" width="250"/>
+</div>
 
 
 ## 🚀 Features
@@ -164,22 +175,22 @@ Follow these steps to run the app locally:
 
 1. **Clone the repository**
 
-    ```bash
-    git clone https://github.com/glaciyan/localplayer.git
-    cd localplayer
-    ```
+```bash
+git clone https://github.com/glaciyan/localplayer.git
+cd localplayer
+```
 
 2. **Install Flutter dependencies**
 
-    ```bash
-    flutter pub get
-    ```
+```bash
+flutter pub get
+```
 
 3. **Run the app**
 
-    ```bash
-    flutter run
-    ```
+```bash
+flutter run
+```
 
 ### 📡 API Configuration
 

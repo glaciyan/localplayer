@@ -66,7 +66,7 @@ class ProfileScreen extends StatelessWidget {
               );
             } else {
               return const Scaffold(
-                body: Center(child: Text("Failed to load profile")),
+                body: Center(child: Text("Failed to load profile", style: TextStyle(color: Colors.red))),
               );
             }
           },

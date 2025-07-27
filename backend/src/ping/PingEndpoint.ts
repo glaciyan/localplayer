@@ -1,8 +1,9 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import { notificationController } from "../notification/notification.ts";
 import profileController from "../profile/profile.ts";
 import { mklog } from "../logger.ts";
+import { ProfileNotFoundError } from "../errors.ts";
 
 const log = mklog("ping");
 
@@ -14,7 +15,7 @@ export const PingEndpoint = new Elysia({ prefix: "ping" })
             log.info(`Ping to ${profileId}`);
             const profiles = await profileController.getPublicProfile(profileId);
             if (!profiles) {
-                return status(404);
+                throw new ProfileNotFoundError();
             }
 
             await notificationController.createNotification({
@@ -26,8 +27,6 @@ export const PingEndpoint = new Elysia({ prefix: "ping" })
                 message: null,
                 notifType: "PING",
             });
-
-            return status(200);
         },
         {
             requireProfile: true,

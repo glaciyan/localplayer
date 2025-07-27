@@ -1,6 +1,7 @@
-import { Elysia, t, status } from "elysia";
+import { Elysia, t } from "elysia";
 import { AuthService } from "../authentication/AuthService.ts";
 import { mklog } from "../logger.ts";
+import { ApiError, ErrorTemplates } from "../errors.ts";
 
 const log = mklog("spotify");
 
@@ -26,7 +27,7 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
 
                 if (!mp3Url) {
                     log.error(`Could not find mp3 for song ${trackId}`);
-                    return status(404);
+                    throw new ApiError(ErrorTemplates.SPOTIFY_SONG_NOT_FOUND);
                 }
 
                 log.info(`Found mp3 url ${mp3Url} for song ${trackId}`);
@@ -37,7 +38,7 @@ export const SpotifyEndpoint = new Elysia({ prefix: "/spotify" })
                 log.error(
                     `Failed to fetch spotify song preview for ${trackId}`
                 );
-                return status(404);
+                throw new ApiError(ErrorTemplates.SPOTIFY_SONG_NOT_FOUND);
             }
         },
         {

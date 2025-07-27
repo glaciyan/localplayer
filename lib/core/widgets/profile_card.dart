@@ -57,7 +57,7 @@ class ProfileCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(profile.user.displayName, style: Theme.of(context).textTheme.titleLarge),
+                        Text(profile.user.displayName.isNotEmpty ? profile.user.displayName : profile.user.handle, style: Theme.of(context).textTheme.titleLarge),
                         Text(profile.user.location, style: Theme.of(context).textTheme.bodySmall),
                       ],
                     ),

@@ -1,10 +1,11 @@
-import { Elysia, status, t } from "elysia";
+import { Elysia, t } from "elysia";
 import presenceController from "./presence.ts";
 import { mklog } from "../logger.ts";
 import { AuthService } from "../authentication/AuthService.ts";
 import { Decimal } from "@prisma/client/runtime/client";
 import { ProfileDTOMap } from "../profile/ProfileEndpoint.ts";
 import { SessionDTOMapWithoutParticipantsAndCreator } from "../session/SessionEndpoint.ts";
+import { ApiError, ErrorTemplates, UnknownError } from "../errors.ts";
 
 const log = mklog("presence-api");
 
@@ -61,7 +62,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             );
 
             if (!profile.realPresenceId) {
-                return status(404, "No presence set for this profile");
+                throw new ApiError(ErrorTemplates.PRESENCE_NOT_FOUND);
             }
 
             const presence = await presenceController.getPresence(
@@ -93,7 +94,7 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             );
 
             if (!presence) {
-                return status(500, "Failed to set presence");
+                throw new UnknownError("Failed to set presence.")
             }
 
             return PresenceDTOMapWithPrivate(presence);
@@ -119,10 +120,8 @@ export const PresenceEndpoint = new Elysia({ prefix: "/presence" })
             );
 
             if (!success) {
-                return status(500, "Failed to remove presence");
+                throw new UnknownError("Unable to delete current presence.");
             }
-
-            return status(200);
         },
         {
             requireProfile: true,

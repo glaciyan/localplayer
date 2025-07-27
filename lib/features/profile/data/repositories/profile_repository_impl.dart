@@ -17,9 +17,23 @@ class ProfileRepositoryImpl implements IProfileRepository {
   Future<ProfileWithSpotify> fetchCurrentUserEnrichedProfile() async {
     final UserProfile user = await dataSource.fetchCurrentUserProfile();
 
+    return await appendSpotifyData(user);
+  }
+
+  @override
+  Future<ProfileWithSpotify> updateUserProfile(
+    final ProfileWithSpotify profile,
+  ) async => await appendSpotifyData(await dataSource.updateUserProfile(
+    profile.user.displayName,
+    profile.user.biography,
+    profile.user.spotifyId,
+  ));
+
+  Future<ProfileWithSpotify> appendSpotifyData(final UserProfile user) async {
     try {
       if (user.spotifyId.isNotEmpty) {
-        final SpotifyArtistData artist = await spotifyRepository.fetchArtistData(user.spotifyId);
+        final SpotifyArtistData artist = await spotifyRepository
+            .fetchArtistData(user.spotifyId);
         return ProfileWithSpotify(user: user, artist: artist);
       } else {
         return ProfileWithSpotify(
@@ -29,7 +43,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
             genres: 'Unknown',
             imageUrl: user.avatarLink,
             biography: user.biography,
-            tracks: <TrackEntity> [],
+            tracks: <TrackEntity>[],
             popularity: 0,
             listeners: 0,
           ),
@@ -43,7 +57,7 @@ class ProfileRepositoryImpl implements IProfileRepository {
           genres: 'Unknown',
           imageUrl: user.avatarLink,
           biography: user.biography,
-          tracks: <TrackEntity> [],
+          tracks: <TrackEntity>[],
           popularity: 0,
           listeners: 0,
         ),
@@ -52,11 +66,5 @@ class ProfileRepositoryImpl implements IProfileRepository {
   }
 
   @override
-  Future<void> updateUserProfile(final ProfileWithSpotify profile) async {
-    dataSource.updateUserProfile(profile.user.displayName, profile.user.biography, profile.user.spotifyId);
-  }
-      
-
-  @override
   Future<void> signOut() async => dataSource.signOut();
-} 
+}
