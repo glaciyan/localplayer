@@ -148,7 +148,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.white,
               ),
               bodyMedium: GoogleFonts.poppins(
-                fontSize: 16,
+                fontSize: 14,
                 color: Colors.white,
               ),
               bodySmall: GoogleFonts.poppins(

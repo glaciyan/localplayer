@@ -62,9 +62,9 @@ class EditableProfileWidget extends StatelessWidget {
                       }
                     },
                     icon: const Icon(Icons.edit, size: 28),
-                    label: const Text(
+                    label: Text(
                       "Save Changes",
-                      style: TextStyle(fontSize: 18),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(60),

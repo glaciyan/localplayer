@@ -153,7 +153,7 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget> [
                               Text(
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                                 overflow: TextOverflow.visible,
                                 widget.post.title,
                                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(

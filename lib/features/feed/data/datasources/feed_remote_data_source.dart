@@ -11,9 +11,9 @@ class FeedRemoteDataSource {
     return response.data as List<dynamic>;
   }
 
-  Future<List<dynamic>> pingUser(final int userId) async {
+  Future<Response<dynamic>> pingUser(final int userId) async {
     final Response<dynamic> response = await apiClient.post('/ping/$userId');
-    return response.data as List<dynamic>;
+    return response.data as Response<dynamic>;
   }
 
   Future<Response<dynamic>> acceptSession(final int userId, final int sessionId) async {    

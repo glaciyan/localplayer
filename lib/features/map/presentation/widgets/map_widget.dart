@@ -165,20 +165,22 @@ class MapWidget extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size(150, 60),
-                                          backgroundColor: Colors.green,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: const Size(10, 60),
+                                            backgroundColor: Colors.green,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(20),
+                                            ),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          mapController.requestJoinSession(state.selectedUser);
-                                        },
-                                        child: Text(
-                                          'Request to join Session',
-                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          onPressed: () {
+                                            mapController.requestJoinSession(state.selectedUser);
+                                          },
+                                          child: Text(
+                                            'Request to join Session',
+                                            style: Theme.of(context).textTheme.bodyMedium,
+                                          ),
                                         ),
                                       ),
                                     ],

@@ -65,9 +65,9 @@ class ProfileWidget extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: onEdit,
                           icon: const Icon(Icons.edit, size: 28),
-                          label: const Text(
+                          label: Text(
                             "Edit Profile",
-                            style: TextStyle(fontSize: 18),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
                           ),
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(60),
@@ -81,7 +81,7 @@ class ProfileWidget extends StatelessWidget {
                           icon: const Icon(Icons.play_arrow, size: 28),
                           label: Text(
                             hasSession ? 'Close Session' : 'Create Session',
-                            style: const TextStyle(fontSize: 18),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
                           ),
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(60),
