@@ -9,8 +9,6 @@ import 'package:localplayer/features/profile/presentation/blocs/profile_event.da
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart';
 import 'package:localplayer/features/profile/presentation/widgets/editable_profile_card.dart';
 import 'package:localplayer/features/profile/presentation/widgets/editable_profile_widget.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart'
-    as profile_state;
 
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
