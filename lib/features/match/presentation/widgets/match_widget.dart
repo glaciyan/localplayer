@@ -5,6 +5,7 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/icon_park_solid.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_audio_service.dart';
 import 'package:localplayer/core/services/spotify/presentation/blocs/spotify_profile_cubit.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:localplayer/features/match/domain/interfaces/match_controller_interface.dart';
@@ -104,6 +105,8 @@ class _MatchWidgetState extends State<MatchWidget> {
         );
       },
       onSwipe: (final int? previousIndex, final int? currentIndex, final CardSwiperDirection direction) {
+        SpotifyAudioService().stop();
+
         if (previousIndex == null || previousIndex >= profiles.length) {
           return true;
         }

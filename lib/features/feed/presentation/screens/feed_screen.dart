@@ -19,7 +19,6 @@ class FeedScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: <Widget> [
-            Text("Feed", style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: Colors.black)),
             Expanded(child: FeedWidget()),
           ],
         ),
