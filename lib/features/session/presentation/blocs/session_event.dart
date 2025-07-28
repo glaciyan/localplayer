@@ -16,3 +16,9 @@ class CloseSession extends SessionEvent {
 
   CloseSession(this.id);
 }
+
+class JoinSession extends SessionEvent {
+  final int sessionId;
+
+  JoinSession(this.sessionId);
+}

@@ -21,4 +21,7 @@ class SessionController implements ISessionController {
 
   @override
   void closeSession(final int id) => addEvent(CloseSession(id));
+
+  @override
+  void joinSession(final int sessionId) => addEvent(JoinSession(sessionId));
 }

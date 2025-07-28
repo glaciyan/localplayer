@@ -38,7 +38,6 @@ class MapRepository implements IMapRepository {
     
     final List<UserProfile> profilesInRadius = <UserProfile> [];
     for (final dynamic entry in profilesList) {
-      print('Profile: ${entry}');
       try {
         final UserProfile user = UserProfile.fromJson(entry as Map<String, dynamic>);
         profilesInRadius.add(user);
@@ -72,8 +71,11 @@ class MapRepository implements IMapRepository {
       }),
     );
 
-    // final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => profile.artist.genres != 'Unknown').toList();
-    return enriched;
+    // Filter out profiles that don't have Spotify data
+    final List<ProfileWithSpotify> filteredEnriched = enriched.where((final ProfileWithSpotify profile) => 
+      profile.user.spotifyId.isNotEmpty
+    ).toList();
+    return filteredEnriched;
   }
 
   @override
@@ -88,6 +90,11 @@ class MapRepository implements IMapRepository {
       } catch (e) {
       }
     }
-    return profilesInRadius;
+    
+    // Filter out profiles that don't have Spotify data
+    final List<UserProfile> filteredProfiles = profilesInRadius.where((final UserProfile profile) => 
+      profile.spotifyId.isNotEmpty
+    ).toList();
+    return filteredProfiles;
   }
 }

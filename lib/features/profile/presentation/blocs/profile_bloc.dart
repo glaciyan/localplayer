@@ -27,7 +27,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       emit(ProfileLoading());
       final ProfileWithSpotify profile = await profileRepository.fetchCurrentUserEnrichedProfile();
-      print('Profile loaded: ${profile.user.position}');
       emit(
         ProfileLoaded(
           profile,

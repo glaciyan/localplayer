@@ -7,22 +7,48 @@ import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
+import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
 import 'package:localplayer/features/map/map_module.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 
-class MapWidget extends StatelessWidget {
+class MapWidget extends StatefulWidget {
   const MapWidget({super.key});
 
   static const int maxOnScreen = 20;
+
+  @override
+  State<MapWidget> createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  MapController? _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = MapController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MapBloc>().add(LoadMapProfiles());
+    });
+  }
 
   @override
   Widget build(final BuildContext context) {
     final IMapController mapController =
         MapModule.provideController(context, context.read<MapBloc>());
 
-    return BlocBuilder<MapBloc, MapState>(
-      builder: (final BuildContext context, final MapState state) {
+    return BlocListener<MapBloc, MapState>(
+      listener: (final BuildContext context, final MapState state) {
+        if (state is MapReady && _mapController != null) {
+          _mapController!.move(
+            LatLng(state.latitude, state.longitude),
+            state.zoom,
+          );
+        }
+      },
+      child: BlocBuilder<MapBloc, MapState>(
+        builder: (final BuildContext context, final MapState state) {
         List<UserProfile> sortedPeople = <UserProfile>[];
         double currentZoom = 13.0;
         int maxListeners = 1;
@@ -61,13 +87,14 @@ class MapWidget extends StatelessWidget {
           body: Stack(
             children: <Widget> [
               FlutterMap(
+                mapController: _mapController,
                 options: MapOptions(
                   initialRotation: 0.0,
                   interactionOptions: InteractionOptions(
                     rotationThreshold: 360,
                     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
-                  initialCenter: LatLng(52.52, 13.405),
+                  initialCenter: LatLng(52.52, 13.405), // Will be overridden
                   initialZoom: 10.5,
                   maxZoom: 20,
                   onPositionChanged: (final MapCamera position, final bool hasGesture) {
@@ -92,7 +119,7 @@ class MapWidget extends StatelessWidget {
                   if (state is MapReady || state is MapProfileSelected)
                     MarkerLayer(
                       markers: sortedPeople
-                          .take(maxOnScreen)
+                          .take(MapWidget.maxOnScreen)
                           .map((final UserProfile profile) {
                             final int popularity = _getPopularity(profile);
                             final double scale =
@@ -157,7 +184,7 @@ class MapWidget extends StatelessWidget {
                               ),
                             ),
 
-                            if (state.selectedUser.user.sessionStatus == 'OPEN') ...<Widget>[
+                            if (state.selectedUser.user.sessionStatus == 'OPEN' || state.selectedUser.user.sessionStatus == 'CLOSED') ...<Widget>[
                               // Gradient overlay for button background
                               Positioned(
                                 left: 0,
@@ -222,7 +249,8 @@ class MapWidget extends StatelessWidget {
             ],
           ),
         );
-      },
+        },
+      ),
     );
   }
 

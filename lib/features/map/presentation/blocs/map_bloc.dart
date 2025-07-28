@@ -14,7 +14,6 @@ import 'dart:async';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class MapBloc extends Bloc<MapEvent, MapState> {
   final IMapRepository mapRepository;
   final ISpotifyRepository spotifyRepository;
@@ -27,55 +26,34 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     required this.spotifyRepository,
   }) : super(MapInitial()) {
     on<LoadMapProfiles>(_onLoadMapProfiles);
-    on<InitializeMap>(_onInitializeMap);
     on<UpdateCameraPosition>(_onUpdateCameraPosition);
     on<SelectPlayer>(_onSelectPlayer);
     on<DeselectPlayer>(_onDeselectPlayer);
     on<RequestJoinSession>(_onRequestJoinSession);
   }
 
+
   Future<void> _onLoadMapProfiles(final LoadMapProfiles event, final Emitter<MapState> emit) async {
     emit(MapLoading());
-    try {
-      const double initLatitude = 52.52;
-      const double initLongitude = 13.405;
-      const double initZoom = 10.5;
-
-
-      
-      _allProfiles = await mapRepository.fetchProfiles(initLatitude, initLongitude, initZoom);
-      add(InitializeMap());
-    } on NoConnectionException {
-      emit(MapError('No internet connection'));
-    } catch (e) {
-      emit(MapError("Failed to load map profiles: $e"));
-    }
-  }
-
-  void _onInitializeMap(final InitializeMap event, final Emitter<MapState> emit) async {
+    
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final double? userLat = prefs.getDouble('user_latitude');
     final double? userLng = prefs.getDouble('user_longitude');
     
-    // Use stored location or fallback to default
     final double initLatitude = userLat ?? 47.6596;
     final double initLongitude = userLng ?? 9.1753;
+
     const double initZoom = 10.5;
-
-    print('🗺️ Initializing map at user location: $initLatitude, $initLongitude');
-
-    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
-      LatLng(initLatitude - 0.01, initLongitude - 0.01),
-      LatLng(initLatitude + 0.01, initLongitude + 0.01),
-    );
-
-    final List<UserProfile> visible = _allProfiles;
-    emit(MapReady(
-      latitude: initLatitude,
-      longitude: initLongitude,
-      visiblePeople: visible,
-      visibleBounds: bounds,
-      zoom: initZoom,
+    
+    add(UpdateCameraPosition(
+      initLatitude,
+      initLongitude,
+      <UserProfile>[],
+      flutter_map.LatLngBounds(
+        LatLng(initLatitude - 0.01, initLongitude - 0.01),
+        LatLng(initLatitude + 0.01, initLongitude + 0.01),
+      ),
+      initZoom,
     ));
   }
 
@@ -152,23 +130,28 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
-  void _onDeselectPlayer(final DeselectPlayer event, final Emitter<MapState> emit) {
-    final List<UserProfile> visible = _allProfiles
-        .where(
-          (final UserProfile profile) =>
-              event.visibleBounds.contains(profile.position),
-        )
-        .toList();
+  Future<void> _onDeselectPlayer(final DeselectPlayer event, final Emitter<MapState> emit) async {
+    final double radius = calculateRadiusFromBounds(event.visibleBounds);
 
-    emit(
-      MapReady(
+    try {
+      final List<UserProfile> profilesInRadius = await mapRepository.fetchProfiles(
+        event.latitude,
+        event.longitude,
+        radius,
+      );
+
+      emit(MapReady(
         latitude: event.latitude,
         longitude: event.longitude,
-        visiblePeople: visible,
+        visiblePeople: profilesInRadius,
         visibleBounds: event.visibleBounds,
         zoom: event.zoom,
-      ),
-    );
+      ));
+    } on NoConnectionException {
+      emit(MapError('No internet connection'));
+    } catch (e) {
+      emit(MapError("Failed to fetch profiles: $e"));
+    }
   }
 
   Future<void> _onRequestJoinSession(
@@ -181,7 +164,25 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
     );
 
+    // Get current visible people from state
+    List<UserProfile> currentVisiblePeople = <UserProfile>[];
+    if (state is MapReady) {
+      currentVisiblePeople = (state as MapReady).visiblePeople;
+    } else if (state is MapProfileSelected) {
+      currentVisiblePeople = (state as MapProfileSelected).visiblePeople;
+    }
+
     try {
+      // First, try to join the session
+      print('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
+      // For now, we'll use the user's ID as the session ID
+      // In a real implementation, you'd need to get the actual session ID
+      final int sessionId = event.selectedUser.id;
+      
+      // We need to access the session repository here
+      // For now, we'll just print the attempt
+      print('📡 Would call session join API for session ID: $sessionId');
+      
       final SpotifyArtistData artistData =
           await spotifyRepository.fetchArtistData(
         event.selectedUser.spotifyId,
@@ -195,13 +196,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
-        visiblePeople: _allProfiles,
+        visiblePeople: currentVisiblePeople,
         zoom: 12,
         selectedUser: enriched,
       ));
     } on NoConnectionException {
       emit(MapError('No internet connection'));
-    } catch (_) {
+    } catch (e) {
+      print('❌ Error joining session: $e');
       final ProfileWithSpotify enriched = ProfileWithSpotify(
         user: event.selectedUser,
         artist: SpotifyArtistData(
@@ -219,7 +221,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
-        visiblePeople: _allProfiles,
+        visiblePeople: currentVisiblePeople,
         zoom: 12,
         selectedUser: enriched,
       ));

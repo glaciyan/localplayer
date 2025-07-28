@@ -11,6 +11,7 @@ import 'package:localplayer/features/map/presentation/widgets/map_widget.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
+  
 
   @override
   Widget build(final BuildContext context) => BlocProvider<MapBloc>(
