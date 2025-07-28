@@ -11,6 +11,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<LoadSession>(_onLoadSession);
     on<CreateSession>(_onCreateSession);
     on<CloseSession>(_onCloseSession);
+    on<JoinSession>(_onJoinSession);
   }
 
   Future<void> _onLoadSession(
@@ -58,6 +59,27 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       emit(SessionInactive());
     } catch (e) {
       emit(SessionError('Failed to close session: $e'));
+    }
+  }
+
+  Future<void> _onJoinSession(
+    final JoinSession event,
+    final Emitter<SessionState> emit,
+  ) async {
+    emit(SessionLoading());
+    try {
+      final Map<String, dynamic> result = await repository.joinSession(event.sessionId);
+      print('✅ Successfully joined session: $result');
+      // Reload current session to reflect the join
+      final SessionModel? session = await repository.getCurrentSession();
+      if (session == null) {
+        emit(SessionInactive());
+      } else {
+        emit(SessionActive(session));
+      }
+    } catch (e) {
+      print('❌ Failed to join session: $e');
+      emit(SessionError('Failed to join session: $e'));
     }
   }
 }

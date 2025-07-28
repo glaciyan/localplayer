@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:localplayer/core/go_router/router.dart';
+import 'package:localplayer/core/services/geolocator/geolocator_interface.dart';
+import 'package:localplayer/core/services/presence/presence_interface.dart';
 import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 import 'package:localplayer/core/services/spotify/data/services/spotify_api_service.dart';
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
@@ -33,6 +35,9 @@ import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dar
 import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 import 'package:localplayer/features/profile/profile_module.dart';
 import 'package:localplayer/features/match/data/match_repository_interface.dart';
+import 'package:localplayer/core/services/geolocator/geolocator_impl.dart';
+import 'package:localplayer/core/services/presence/presence_impl.dart';
+import 'package:localplayer/core/network/api_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +65,14 @@ class MyApp extends StatelessWidget {
   Widget build(final BuildContext context) => MultiRepositoryProvider(
       providers: <RepositoryProvider<dynamic>>[
         RepositoryProvider<ConfigService>.value(value: config),
+        RepositoryProvider<IGeolocatorService>(
+          create: (_) => GeolocatorService(),
+        ),
+        RepositoryProvider<IPresenceService>(
+          create: (final BuildContext context) => PresenceService(
+            ApiClient(baseUrl: config.apiBaseUrl),
+          ),
+        ),
         RepositoryProvider<SpotifyApiService>(
           create: (_) => SpotifyModule.provideService(config),
         ),
@@ -115,6 +128,8 @@ class MyApp extends StatelessWidget {
           BlocProvider<AuthBloc>(
             create: (final BuildContext context) => AuthModule.provideBloc(
               authRepository: context.read<IAuthRepository>(),
+              geolocatorService: context.read<IGeolocatorService>(),
+              presenceService: context.read<IPresenceService>(),
             ),
           ),
         BlocProvider<MapBloc>(

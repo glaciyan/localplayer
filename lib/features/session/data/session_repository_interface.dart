@@ -9,4 +9,5 @@ abstract class ISessionRepository {
     final bool open,
   );
   Future<void> closeSession(final int id);
+  Future<Map<String, dynamic>> joinSession(final int sessionId);
 }

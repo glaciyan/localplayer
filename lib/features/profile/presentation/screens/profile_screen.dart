@@ -5,14 +5,29 @@ import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart';
+import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 import 'package:localplayer/features/profile/presentation/widgets/profile_widget.dart';
 import 'package:localplayer/features/session/domain/interfaces/session_controller_interface.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_state.dart';
 import 'package:localplayer/features/session/session_module.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Trigger profile reload when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(LoadProfile());
+    });
+  }
 
   @override
   Widget build(final BuildContext context) => WithNavBar(
