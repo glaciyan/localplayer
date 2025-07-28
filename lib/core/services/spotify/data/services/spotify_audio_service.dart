@@ -29,6 +29,14 @@ class SpotifyAudioService {
     await _player.pause();
   }
 
+  void stop() {
+    _player.stop();
+    _onStopCurrentPlayback?.call();
+    _currentTrackId = null;
+    _onStopCurrentPlayback = null;
+  }
+
+
   void setOnComplete(final VoidCallback onComplete) {
     _player.onPlayerComplete.listen((_) {
       onComplete();
