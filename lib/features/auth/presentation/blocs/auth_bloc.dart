@@ -56,7 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final Object? token = prefs.get("token");
       if (token == null && !(token is String)) {
-        add(AuthFailureEvent("invalid token"));
+        add(AuthFailureEvent("You are not logged in"));
       } else {
         await authRepository.findMe(token as String);
         add(FoundYouEvent());
