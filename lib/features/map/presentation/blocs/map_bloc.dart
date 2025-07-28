@@ -12,6 +12,7 @@ import 'map_event.dart';
 import 'map_state.dart';
 import 'dart:async';
 import 'package:localplayer/features/map/utils/marker_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MapBloc extends Bloc<MapEvent, MapState> {
@@ -39,6 +40,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       const double initLatitude = 52.52;
       const double initLongitude = 13.405;
       const double initZoom = 10.5;
+
+
+      
       _allProfiles = await mapRepository.fetchProfiles(initLatitude, initLongitude, initZoom);
       add(InitializeMap());
     } on NoConnectionException {
@@ -48,10 +52,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
   }
 
-  void _onInitializeMap(final InitializeMap event, final Emitter<MapState> emit) {
-    const double initLatitude = 52.52;
-    const double initLongitude = 13.405;
+  void _onInitializeMap(final InitializeMap event, final Emitter<MapState> emit) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final double? userLat = prefs.getDouble('user_latitude');
+    final double? userLng = prefs.getDouble('user_longitude');
+    
+    // Use stored location or fallback to default
+    final double initLatitude = userLat ?? 47.6596;
+    final double initLongitude = userLng ?? 9.1753;
     const double initZoom = 10.5;
+
+    print('🗺️ Initializing map at user location: $initLatitude, $initLongitude');
 
     final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(initLatitude - 0.01, initLongitude - 0.01),

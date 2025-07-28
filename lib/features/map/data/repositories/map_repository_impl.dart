@@ -38,6 +38,7 @@ class MapRepository implements IMapRepository {
     
     final List<UserProfile> profilesInRadius = <UserProfile> [];
     for (final dynamic entry in profilesList) {
+      print('Profile: ${entry}');
       try {
         final UserProfile user = UserProfile.fromJson(entry as Map<String, dynamic>);
         profilesInRadius.add(user);
