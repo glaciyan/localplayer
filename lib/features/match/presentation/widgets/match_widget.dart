@@ -52,9 +52,6 @@ class _MatchWidgetState extends State<MatchWidget> {
     if (profiles.isEmpty) {
       return _buildNoMoreProfilesMessage(context);
     }
-    if (kDebugMode) {
-      print("Loaded profiles: ${profiles.length}");
-    }
     return SafeArea(
       child: _buildCardSwiper(profiles),
     );
@@ -87,8 +84,30 @@ class _MatchWidgetState extends State<MatchWidget> {
                 Positioned.fill(
                   child: ProfileCard(profile: profile),
                 ),
+                // Smaller gradient overlay for swipe buttons background
                 Positioned(
-                  bottom: 60,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 180, // smaller height
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
+                        ),
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: <Color>[Colors.black, Colors.transparent],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 24, // move buttons closer to the bottom
                   left: 0,
                   right: 0,
                   child: Padding(
@@ -137,7 +156,7 @@ class _MatchWidgetState extends State<MatchWidget> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(

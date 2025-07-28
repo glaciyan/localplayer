@@ -35,7 +35,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _onLoadMapProfiles(final LoadMapProfiles event, final Emitter<MapState> emit) async {
     emit(MapLoading());
-
     try {
       const double initLatitude = 52.52;
       const double initLongitude = 13.405;

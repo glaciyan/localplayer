@@ -14,7 +14,7 @@ import 'package:localplayer/core/widgets/profile_card.dart';
 class MapWidget extends StatelessWidget {
   const MapWidget({super.key});
 
-  static const int maxOnScreen = 10;
+  static const int maxOnScreen = 20;
 
   @override
   Widget build(final BuildContext context) {
@@ -157,37 +157,62 @@ class MapWidget extends StatelessWidget {
                               ),
                             ),
 
-                            Padding(
-                              padding: const EdgeInsets.all(60.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            minimumSize: const Size(10, 60),
-                                            backgroundColor: Colors.green,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(20),
+                            if (state.selectedUser.user.sessionStatus == 'OPEN') ...<Widget>[
+                              // Gradient overlay for button background
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                height: 300,
+                                child: IgnorePointer(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(16),
+                                        bottomRight: Radius.circular(16),
+                                      ),
+                                      gradient: LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: <Color>[Colors.black, Colors.transparent],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Button
+                              Padding(
+                                padding: const EdgeInsets.all(60.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: const Size(10, 60),
+                                              backgroundColor: Colors.green,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              mapController.requestJoinSession(state.selectedUser);
+                                            },
+                                            child: Text(
+                                              'Request to join Session',
+                                              style: Theme.of(context).textTheme.bodyMedium,
                                             ),
                                           ),
-                                          onPressed: () {
-                                            mapController.requestJoinSession(state.selectedUser);
-                                          },
-                                          child: Text(
-                                            'Request to join Session',
-                                            style: Theme.of(context).textTheme.bodyMedium,
-                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),
