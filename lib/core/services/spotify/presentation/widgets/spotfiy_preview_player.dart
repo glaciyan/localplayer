@@ -42,44 +42,56 @@ class _SpotifyPreviewPlayerState extends State<SpotifyPreviewPlayer> {
       if (mounted) setState(() => _isPlaying = true);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Playback failed: $e")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Playback failed: $e")));
       }
     }
   }
 
   @override
-  Widget build(final BuildContext context) => BlocConsumer<SpotifyPreviewCubit, SpotifyPreviewState>(
-      listener: (final BuildContext context, final SpotifyPreviewState state) {
-        if (state is SpotifyPreviewLoaded) {
-          _startPlayback(state.filePath);
-        }
-      },
-      builder: (final BuildContext context, final SpotifyPreviewState state) {
-        if (state is SpotifyPreviewLoading) {
-          return const SizedBox(
-            width: 32,
-            height: 32,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          );
-        }
+  Widget build(final BuildContext context) =>
+      BlocConsumer<SpotifyPreviewCubit, SpotifyPreviewState>(
+        listener: (
+          final BuildContext context,
+          final SpotifyPreviewState state,
+        ) {
+          if (state is SpotifyPreviewLoaded) {
+            _startPlayback(state.filePath);
+          }
 
-        return IconButton(
-          icon: Icon(
-            _isPlaying ? Icons.pause : Icons.play_arrow,
-            color: const Color.fromRGBO(30, 215, 69, 1),
-            size: 32,
-          ),
-          onPressed: () {
-            if (_isPlaying) {
-              _audioService.pause();
-              setState(() => _isPlaying = false);
-            } else {
-              context.read<SpotifyPreviewCubit>().loadAndPlayPreview(widget.trackId);
-            }
-          },
-        );
-      },
-    );
+          if (state is SpotifyPreviewError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (final BuildContext context, final SpotifyPreviewState state) {
+          if (state is SpotifyPreviewLoading) {
+            return const SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            );
+          }
+
+          return IconButton(
+            icon: Icon(
+              _isPlaying ? Icons.pause : Icons.play_arrow,
+              color: const Color.fromRGBO(30, 215, 69, 1),
+              size: 32,
+            ),
+            onPressed: () {
+              if (_isPlaying) {
+                _audioService.pause();
+                setState(() => _isPlaying = false);
+              } else {
+                context.read<SpotifyPreviewCubit>().loadAndPlayPreview(
+                  widget.trackId,
+                );
+              }
+            },
+          );
+        },
+      );
 }

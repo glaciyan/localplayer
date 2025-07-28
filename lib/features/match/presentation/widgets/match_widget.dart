@@ -35,17 +35,42 @@ class _MatchWidgetState extends State<MatchWidget> {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocBuilder<MatchBloc, MatchState>(
-      builder: (final BuildContext context, final MatchState state) => switch (state) {
-          final MatchLoading _ => const Center(child: CircularProgressIndicator()),
-          final MatchInitial _ => const Center(child: Text('Swipe to find matches!')),
-          MatchError(:final String message) => Center(child: Text('Error: $message')),
-          MatchLoaded(:final List<ProfileWithSpotify> profiles) => _buildLoadedState(context, profiles),
-          _ => const Center(child: Text('No profiles found.')),
+  Widget build(final BuildContext context) =>
+      BlocListener<MatchBloc, MatchState>(
+        listener: (final BuildContext context, final MatchState state) {
+          if (state is ToastedMatchError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
         },
+        child: BlocBuilder<MatchBloc, MatchState>(
+          builder:
+              (final BuildContext context, final MatchState state) =>
+                  switch (state) {
+                    final MatchLoading _ => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    final MatchInitial _ => const Center(
+                      child: Text('Swipe to find matches!'),
+                    ),
+                    MatchError(:final String message) => Center(
+                      child: Text(
+                        message,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    MatchLoaded(:final List<ProfileWithSpotify> profiles) =>
+                      _buildLoadedState(context, profiles),
+                    _ => const Center(child: Text('No profiles found.', style: TextStyle(color: Colors.black),)),
+                  },
+        ),
       );
 
-  Widget _buildLoadedState(final BuildContext context, final List<ProfileWithSpotify> profiles) {
+  Widget _buildLoadedState(
+    final BuildContext context,
+    final List<ProfileWithSpotify> profiles,
+  ) {
     if (_currentIndex >= profiles.length) {
       _currentIndex = 0;
     }
@@ -55,101 +80,108 @@ class _MatchWidgetState extends State<MatchWidget> {
     if (kDebugMode) {
       print("Loaded profiles: ${profiles.length}");
     }
-    return SafeArea(
-      child: _buildCardSwiper(profiles),
-    );
+    return SafeArea(child: _buildCardSwiper(profiles));
   }
 
-  Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) => CardSwiper(
-      controller: _swiperController,
-      padding: EdgeInsets.zero,
-      numberOfCardsDisplayed: 2,
-      backCardOffset: const Offset(0, 20),
-      maxAngle: 30,
-      threshold: 60,
-      isLoop: false,
-      allowedSwipeDirection: const AllowedSwipeDirection.symmetric(
-        horizontal: true,
-        vertical: false,
-      ),
-      cardsCount: profiles.length + 1,
-      cardBuilder: (final BuildContext context, final int index, final int percentX, final int percentY) {
-        if (index == profiles.length) {
-          return _buildNoMoreProfilesMessage(context);
-        }
-        final ProfileWithSpotify profile = profiles[index];
-        return BlocProvider<SpotifyProfileCubit>.value(
-          value: context.read<SpotifyProfileCubit>(),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: ProfileCard(profile: profile),
-                ),
-                Positioned(
-                  bottom: 60,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    child: Center(
-                      child: _buildSwipeButtons(context, profiles),
+  Widget _buildCardSwiper(final List<ProfileWithSpotify> profiles) =>
+      CardSwiper(
+        controller: _swiperController,
+        padding: EdgeInsets.zero,
+        numberOfCardsDisplayed: 2,
+        backCardOffset: const Offset(0, 20),
+        maxAngle: 30,
+        threshold: 60,
+        isLoop: false,
+        allowedSwipeDirection: const AllowedSwipeDirection.symmetric(
+          horizontal: true,
+          vertical: false,
+        ),
+        cardsCount: profiles.length + 1,
+        cardBuilder: (
+          final BuildContext context,
+          final int index,
+          final int percentX,
+          final int percentY,
+        ) {
+          if (index == profiles.length) {
+            return _buildNoMoreProfilesMessage(context);
+          }
+          final ProfileWithSpotify profile = profiles[index];
+          return BlocProvider<SpotifyProfileCubit>.value(
+            value: context.read<SpotifyProfileCubit>(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(child: ProfileCard(profile: profile)),
+                  Positioned(
+                    bottom: 60,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      child: Center(
+                        child: _buildSwipeButtons(context, profiles),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          );
+        },
+        onSwipe: (
+          final int? previousIndex,
+          final int? currentIndex,
+          final CardSwiperDirection direction,
+        ) {
+          SpotifyAudioService().stop();
 
-        );
-      },
-      onSwipe: (final int? previousIndex, final int? currentIndex, final CardSwiperDirection direction) {
-        SpotifyAudioService().stop();
+          if (previousIndex == null || previousIndex >= profiles.length) {
+            return true;
+          }
 
-        if (previousIndex == null || previousIndex >= profiles.length) {
+          final ProfileWithSpotify swipedProfile = profiles[previousIndex];
+          switch (direction) {
+            case CardSwiperDirection.right:
+              _matchController.like(swipedProfile);
+              break;
+            case CardSwiperDirection.left:
+              _matchController.dislike(swipedProfile);
+              break;
+            default:
+              break;
+          }
+
+          if (currentIndex != null && currentIndex < profiles.length) {
+            setState(() => _currentIndex = currentIndex);
+          } else {
+            setState(() => _currentIndex = profiles.length);
+          }
+
           return true;
-        }
-
-        final ProfileWithSpotify swipedProfile = profiles[previousIndex];
-        switch (direction) {
-          case CardSwiperDirection.right:
-            _matchController.like(swipedProfile);
-            break;
-          case CardSwiperDirection.left:
-            _matchController.dislike(swipedProfile);
-            break;
-          default:
-            break;
-        }
-
-        if (currentIndex != null && currentIndex < profiles.length) {
-          setState(() => _currentIndex = currentIndex);
-        } else {
-          setState(() => _currentIndex = profiles.length);
-        }
-
-        return true;
-      },
-    );
-
-  Widget _buildNoMoreProfilesMessage(final BuildContext context) => Center(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.6),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            'No more profiles',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-        ),
+        },
       );
 
+  Widget _buildNoMoreProfilesMessage(final BuildContext context) => Center(
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        'No more profiles',
+        style: Theme.of(context).textTheme.bodyMedium,
+        textAlign: TextAlign.center,
+      ),
+    ),
+  );
 
-  Widget _buildSwipeButtons(final BuildContext context, final List<ProfileWithSpotify> profiles) {
+  Widget _buildSwipeButtons(
+    final BuildContext context,
+    final List<ProfileWithSpotify> profiles,
+  ) {
     void handleSwipe(final CardSwiperDirection direction) {
       if (_currentIndex >= profiles.length) return;
       _swiperController.swipe(direction);
@@ -157,7 +189,7 @@ class _MatchWidgetState extends State<MatchWidget> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget> [
+      children: <Widget>[
         _buildSwipeButton(
           icon: IconParkSolid.dislike_two,
           color: Theme.of(context).highlightColor,
@@ -174,29 +206,23 @@ class _MatchWidgetState extends State<MatchWidget> {
   }
 
   Widget _buildSwipeButton({
-          required final String icon,
-          required final Color color,
-          required final VoidCallback onPressed,
-        }) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: GestureDetector(
-            onTap: onPressed,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-                border: Border.all(color: color, width: 2),
-              ),
-              child: Center(
-                child: Iconify(
-                  icon,
-                  size: 36,
-                  color: color,
-                ),
-              ),
-            ),
-          ),
-        );
-  }
+    required final String icon,
+    required final Color color,
+    required final VoidCallback onPressed,
+  }) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 10),
+    child: GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.15),
+          shape: BoxShape.circle,
+          border: Border.all(color: color, width: 2),
+        ),
+        child: Center(child: Iconify(icon, size: 36, color: color)),
+      ),
+    ),
+  );
+}
