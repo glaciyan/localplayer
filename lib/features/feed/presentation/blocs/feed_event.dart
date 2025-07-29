@@ -23,3 +23,11 @@ class PingUser extends FeedEvent {
 
   PingUser(this.userId);
 }
+
+class RespondToRequest extends FeedEvent {
+  final int participantId;
+  final int sessionId;
+  final bool accept;
+
+  RespondToRequest(this.participantId, this.sessionId, this.accept);
+}

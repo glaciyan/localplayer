@@ -5,6 +5,7 @@ import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_event.dart';
 import 'package:localplayer/features/feed/presentation/widgets/feed_widget.dart';
+import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -13,6 +14,7 @@ class FeedScreen extends StatelessWidget {
   Widget build(final BuildContext context) => BlocProvider<FeedBloc>(
     create: (_) => FeedBloc(
       feedRepository: context.read<IFeedRepository>(),
+      sessionBloc: context.read<SessionBloc>(),
     )..add(RefreshFeed()),
     child: WithNavBar(
       selectedIndex: 2,

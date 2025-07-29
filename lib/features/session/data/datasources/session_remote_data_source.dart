@@ -41,8 +41,23 @@ class SessionRemoteDataSource {
   }
 
   Future<Map<String, dynamic>> joinSession(final int sessionId) async {
-    print('Joining session: $sessionId');
     final Response<dynamic> response = await apiClient.post('/session/$sessionId/join');
+    print('Joining session: $sessionId');
+    print('Response: ${response.data}');
     return response.data as Map<String, dynamic>;
+  }
+
+  Future<void> respondToRequest(
+    final int participantId,
+    final int sessionId,
+    final bool accept,
+  ) async {
+    final Map<String, dynamic> body = <String, dynamic>{
+      'participantId': participantId,
+      'sessionId': sessionId,
+      'accept': accept,
+    };
+    
+    await apiClient.post('/session/requests/respond', data: body);
   }
 }

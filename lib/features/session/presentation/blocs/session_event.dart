@@ -22,3 +22,11 @@ class JoinSession extends SessionEvent {
 
   JoinSession(this.sessionId);
 }
+
+class RespondToRequest extends SessionEvent {
+  final int participantId;
+  final int sessionId;
+  final bool accept;
+
+  RespondToRequest(this.participantId, this.sessionId, this.accept);
+}
