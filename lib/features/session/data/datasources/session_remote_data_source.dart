@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:localplayer/core/network/api_client.dart';
+import 'package:localplayer/main.dart';
 
 class SessionRemoteDataSource {
   final ApiClient apiClient;
@@ -42,8 +43,8 @@ class SessionRemoteDataSource {
 
   Future<Map<String, dynamic>> joinSession(final int sessionId) async {
     final Response<dynamic> response = await apiClient.post('/session/$sessionId/join');
-    print('Joining session: $sessionId');
-    print('Response: ${response.data}');
+    log.i('Joining session: $sessionId');
+    log.i('Response: ${response.data}');
     return response.data as Map<String, dynamic>;
   }
 

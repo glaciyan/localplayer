@@ -84,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 body: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
+                    children: <Widget>[
                       const Text(
                         "Failed to load profile",
                         style: TextStyle(color: Colors.red, fontSize: 16),

@@ -36,8 +36,8 @@ class ApiClient {
   }
 
   Future<void> _checkConnection() async {
-    final ConnectivityResult result = await _connectivity.checkConnectivity();
-    if (result == ConnectivityResult.none) {
+    final List<ConnectivityResult> result = await _connectivity.checkConnectivity();
+    if (result.contains(ConnectivityResult.none)) {
       throw NoConnectionException();
     }
   }

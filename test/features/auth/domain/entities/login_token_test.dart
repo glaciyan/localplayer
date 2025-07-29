@@ -8,7 +8,7 @@ void main() {
       const String token = 'test_token_123';
 
       // Act
-      final loginToken = LoginToken(token: token);
+      final LoginToken loginToken = LoginToken(token: token);
 
       // Assert
       expect(loginToken.token, equals(token));
@@ -22,7 +22,7 @@ void main() {
       };
 
       // Act
-      final loginToken = LoginToken.fromJson(json);
+      final LoginToken loginToken = LoginToken.fromJson(json);
 
       // Assert
       expect(loginToken.token, equals(token));
@@ -60,7 +60,7 @@ void main() {
       };
 
       // Act
-      final loginToken = LoginToken.fromJson(json);
+      final LoginToken loginToken = LoginToken.fromJson(json);
 
       // Assert
       expect(loginToken.token, equals(token));
@@ -68,7 +68,7 @@ void main() {
 
     test('should be immutable', () {
       // Arrange
-      final loginToken = LoginToken(token: 'test_token');
+      final LoginToken loginToken = LoginToken(token: 'test_token');
 
       // Act & Assert
       // Since the field is final, the object is immutable

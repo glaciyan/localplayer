@@ -8,6 +8,8 @@ import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
 import 'dart:async';
 
+import 'package:localplayer/main.dart';
+
 
 class MapController implements IMapController {
   final BuildContext context;
@@ -28,6 +30,9 @@ class MapController implements IMapController {
 
   @override
   void requestJoinSession(final ProfileWithSpotify profile) {
+    log.i('Request to join Session for user: ${profile.user.displayName}');
+    final int sessionId = profile.user.id; // This is just a placeholder
+    log.i('Attempting to join session: $sessionId');
     addEvent(map_event.RequestJoinSession(profile.user));
   }
 

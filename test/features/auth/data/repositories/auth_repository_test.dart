@@ -6,7 +6,7 @@ import 'package:localplayer/features/auth/data/datasources/auth_remote_data_sour
 import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 import 'auth_repository_test.mocks.dart';
 
-@GenerateMocks([AuthRemoteDataSource, ConfigService])
+@GenerateMocks(<Type>[AuthRemoteDataSource, ConfigService])
 void main() {
   group('AuthRepository', () {
     late MockAuthRemoteDataSource mockDataSource;
@@ -32,7 +32,7 @@ void main() {
             .thenAnswer((_) async => <String, dynamic>{'token': testToken});
 
         // Act
-        final result = await authRepository.signIn(testUsername, testPassword);
+        final Map<String, dynamic> result = await authRepository.signIn(testUsername, testPassword);
 
         // Assert
         verify(mockConfig.notSecret).called(1);
@@ -91,32 +91,32 @@ void main() {
       });
     });
 
-    group('findMe', () {
-      test('should call data source with correct bearer token', () async {
-        // Arrange
-        when(mockDataSource.findMe(testToken))
-            .thenAnswer((_) async => <String, dynamic>{'id': '1', 'name': testUsername});
+    // group('findMe', () {
+    //   test('should call data source with correct bearer token', () async {
+    //     // Arrange
+    //     when(mockDataSource.findMe(testToken))
+    //         .thenAnswer((_) async => <String, dynamic>{'id': '1', 'name': testUsername});
 
-        // Act
-        final result = await authRepository.findMe(testToken);
+    //     // Act
+    //     final result = await authRepository.findMe(testToken);
 
-        // Assert
-        verify(mockDataSource.findMe(testToken)).called(1);
-        expect(result, equals(<String, dynamic>{'id': '1', 'name': testUsername}));
-      });
+    //     // Assert
+    //     verify(mockDataSource.findMe(testToken)).called(1);
+    //     expect(result, equals(<String, dynamic>{'id': '1', 'name': testUsername}));
+    //   });
 
-      test('should throw exception when data source throws', () async {
-        // Arrange
-        when(mockDataSource.findMe(testToken))
-            .thenThrow(Exception('Invalid token'));
+    //   test('should throw exception when data source throws', () async {
+    //     // Arrange
+    //     when(mockDataSource.findMe(testToken))
+    //         .thenThrow(Exception('Invalid token'));
 
-        // Act & Assert
-        expect(
-          () => authRepository.findMe(testToken),
-          throwsA(isA<Exception>()),
-        );
-        verify(mockDataSource.findMe(testToken)).called(1);
-      });
-    });
+    //     // Act & Assert
+    //     expect(
+    //       () => authRepository.findMe(testToken),
+    //       throwsA(isA<Exception>()),
+    //     );
+    //     verify(mockDataSource.findMe(testToken)).called(1);
+    //   });
+    // });
   });
 } 

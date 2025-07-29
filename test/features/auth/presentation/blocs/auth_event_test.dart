@@ -11,7 +11,7 @@ void main() {
         const String password = 'testpassword';
 
         // Act
-        final event = SignInRequested(name, password);
+        final SignInRequested event = SignInRequested(name, password);
 
         // Assert
         expect(event.name, equals(name));
@@ -20,8 +20,8 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        final event1 = SignInRequested('user1', 'pass1');
-        final event2 = SignInRequested('user1', 'pass1');
+        final SignInRequested event1 = SignInRequested('user1', 'pass1');
+        final SignInRequested event2 = SignInRequested('user1', 'pass1');
 
         // Assert
         expect(event1.name, equals(event2.name));
@@ -36,7 +36,7 @@ void main() {
         const String password = 'testpassword';
 
         // Act
-        final event = SignUpRequested(name, password);
+        final SignUpRequested event = SignUpRequested(name, password);
 
         // Assert
         expect(event.name, equals(name));
@@ -45,8 +45,8 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        final event1 = SignUpRequested('user1', 'pass1');
-        final event2 = SignUpRequested('user1', 'pass1');
+        final SignUpRequested event1 = SignUpRequested('user1', 'pass1');
+        final SignUpRequested event2 = SignUpRequested('user1', 'pass1');
 
         // Assert
         expect(event1.name, equals(event2.name));
@@ -57,7 +57,7 @@ void main() {
     group('SignOutRequested', () {
       test('should create SignOutRequested', () {
         // Act
-        final event = SignOutRequested();
+        final SignOutRequested event = SignOutRequested();
 
         // Assert
         expect(event, isA<SignOutRequested>());
@@ -67,7 +67,7 @@ void main() {
     group('FindMeRequested', () {
       test('should create FindMeRequested', () {
         // Act
-        final event = FindMeRequested();
+        final FindMeRequested event = FindMeRequested();
 
         // Assert
         expect(event, isA<FindMeRequested>());
@@ -77,7 +77,7 @@ void main() {
     group('FoundYouEvent', () {
       test('should create FoundYouEvent', () {
         // Act
-        final event = FoundYouEvent();
+        final FoundYouEvent event = FoundYouEvent();
 
         // Assert
         expect(event, isA<FoundYouEvent>());
@@ -87,7 +87,7 @@ void main() {
     group('AuthLoadingEvent', () {
       test('should create AuthLoadingEvent', () {
         // Act
-        final event = AuthLoadingEvent();
+        final AuthLoadingEvent event = AuthLoadingEvent();
 
         // Assert
         expect(event, isA<AuthLoadingEvent>());
@@ -97,7 +97,7 @@ void main() {
     group('AuthRegisteredEvent', () {
       test('should create AuthRegisteredEvent', () {
         // Act
-        final event = AuthRegisteredEvent();
+        final AuthRegisteredEvent event = AuthRegisteredEvent();
 
         // Assert
         expect(event, isA<AuthRegisteredEvent>());
@@ -107,10 +107,10 @@ void main() {
     group('AuthSuccessEvent', () {
       test('should create AuthSuccessEvent with correct user', () {
         // Arrange
-        const user = UserAuth(id: '1', name: 'testuser', token: 'token123');
+        const UserAuth user = UserAuth(id: '1', name: 'testuser', token: 'token123');
 
         // Act
-        final event = AuthSuccessEvent(user);
+        final AuthSuccessEvent event = AuthSuccessEvent(user);
 
         // Assert
         expect(event.user, equals(user));
@@ -118,9 +118,9 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        const user = UserAuth(id: '1', name: 'testuser', token: 'token123');
-        final event1 = AuthSuccessEvent(user);
-        final event2 = AuthSuccessEvent(user);
+        const UserAuth user = UserAuth(id: '1', name: 'testuser', token: 'token123');
+        final AuthSuccessEvent event1 = AuthSuccessEvent(user);
+        final AuthSuccessEvent event2 = AuthSuccessEvent(user);
 
         // Assert
         expect(event1.user, equals(event2.user));
@@ -133,7 +133,7 @@ void main() {
         const String message = 'Authentication failed';
 
         // Act
-        final event = AuthFailureEvent(message);
+        final AuthFailureEvent event = AuthFailureEvent(message, null);
 
         // Assert
         expect(event.message, equals(message));
@@ -141,8 +141,8 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        final event1 = AuthFailureEvent('Error 1');
-        final event2 = AuthFailureEvent('Error 1');
+        final AuthFailureEvent event1 = AuthFailureEvent('Error 1', null);
+        final AuthFailureEvent event2 = AuthFailureEvent('Error 1', null);
 
         // Assert
         expect(event1.message, equals(event2.message));
@@ -153,7 +153,7 @@ void main() {
         const String message = '';
 
         // Act
-        final event = AuthFailureEvent(message);
+        final AuthFailureEvent event = AuthFailureEvent(message, null);
 
         // Assert
         expect(event.message, equals(message));
