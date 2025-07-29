@@ -78,9 +78,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               );
+            } else if (state is ProfileError) {
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Failed to load profile",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          context.read<ProfileBloc>().add(LoadProfile());
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Retry"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             } else {
               return const Scaffold(
-                body: Center(child: Text("Failed to load profile", style: TextStyle(color: Colors.red))),
+                body: Center(child: Text("Unknown error")),
               );
             }
           },
