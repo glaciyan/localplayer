@@ -30,114 +30,127 @@ class _FeedWidgetState extends State<FeedWidget> {
       (final FeedEvent event) => context.read<FeedBloc>().add(event),
     );
 
-    return BlocBuilder<FeedBloc, FeedState>(
-      builder: (final BuildContext context, final FeedState state) {
-        if (state is FeedLoaded || state is PingUserSuccess) {
-          final List<NotificationModel> notifications = state is FeedLoaded
-              ? state.notifications
-              : (state as PingUserSuccess).notifications;
-
-          return RefreshIndicator(
-            color: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            onRefresh: () async {
-              _feedController.refreshFeed();
-            },
-            child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              slivers: <Widget>[
-                if (notifications.isEmpty)
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              "No notifications",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Center(
-                            child: Text(
-                              "Pull down to refresh",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  SliverPadding(
-                    padding: EdgeInsets.all(16),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (final BuildContext context, final int index) => SizedBox(
-                          width: double.infinity,
-                          child: FeedPost(
-                            post: notifications[index],
-                            feedController: _feedController,
-                          ),
-                        ),
-                        childCount: notifications.length,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+    return BlocListener<FeedBloc, FeedState>(
+      listener: (final BuildContext context, final FeedState state) {
+        if (state is FeedError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
           );
-        } else if (state is FeedLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is FeedError) {
-          return RefreshIndicator(
-            color: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            onRefresh: () async {
-              _feedController.refreshFeed();
-            },
-            child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Center(
-                    child: Text(
-                      state.message,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.red),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        } else if (state is PingUserError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
           );
         }
+      },
+      child: BlocBuilder<FeedBloc, FeedState>(
+        builder: (final BuildContext context, final FeedState state) {
+          if (state is FeedLoaded || state is PingUserSuccess) {
+            final List<NotificationModel> notifications = state is FeedLoaded
+                ? state.notifications
+                : (state as PingUserSuccess).notifications;
 
-        return Scaffold(
-          body: SingleChildScrollView(
-            controller: _scrollController,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(children: <Widget> [
+            return RefreshIndicator(
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              onRefresh: () async {
+                _feedController.refreshFeed();
+              },
+              child: CustomScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                slivers: <Widget>[
+                  if (notifications.isEmpty)
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                "No notifications",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Center(
+                              child: Text(
+                                "Pull down to refresh",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding: EdgeInsets.all(16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (final BuildContext context, final int index) => SizedBox(
+                            width: double.infinity,
+                            child: FeedPost(
+                              post: notifications[index],
+                              feedController: _feedController,
+                            ),
+                          ),
+                          childCount: notifications.length,
+                        ),
+                      ),
+                    ),
                 ],
               ),
+            );
+          } else if (state is FeedLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is FeedError) {
+            return RefreshIndicator(
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              onRefresh: () async {
+                _feedController.refreshFeed();
+              },
+              child: CustomScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                slivers: <Widget>[
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        state.message,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Scaffold(
+            body: SingleChildScrollView(
+              controller: _scrollController,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(children: <Widget> [
+                  ],
+                ),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
