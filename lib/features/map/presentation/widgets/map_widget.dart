@@ -35,6 +35,12 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   @override
+  void dispose() {
+    SpotifyAudioService().stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(final BuildContext context) {
     final IMapController mapController =
         MapModule.provideController(context, context.read<MapBloc>());
