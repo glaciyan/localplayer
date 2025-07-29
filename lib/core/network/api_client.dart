@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:localplayer/core/network/api_error_exception.dart';
+import 'package:localplayer/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'no_connection_exception.dart';
 
@@ -52,15 +53,22 @@ class ApiClient {
   ) async {
     try {
       await _checkConnection();
+      log.i("Sending request");
       return await requestFn();
     } on NoConnectionException {
       rethrow;
-    } on DioException catch (e) {
+    } on DioException catch (e, st) {
+      log.e("DioException", error: e, stackTrace: st);
       if (e.type == DioExceptionType.connectionError) {
         throw NoConnectionException();
       }
+
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw new ApiErrorException("You timed out, please try again");
+      }
       throw _handleApiError(e);
-    } catch (_) {
+    } catch (e, st) {
+      log.e("Failed api request", error: e, stackTrace: st);
       throw ApiErrorException();
     }
   }
@@ -130,6 +138,7 @@ class ApiClient {
           ecode = code;
         }
       }
+      log.e("ApiError", error: message);
       return new ApiErrorException(message, ecode);
     }
 

@@ -41,11 +41,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final Position position = await geolocatorService.getCurrentLocation();
 
       // Sign in FIRST
-      final Map<String, dynamic> result = await authRepository.signIn(event.name, event.password);
+      final Map<String, dynamic> result = await authRepository.signIn(
+        event.name,
+        event.password,
+      );
       final LoginToken loginToken = LoginToken.fromJson(result);
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString("token", loginToken.token);
-      
+
       // THEN update presence (now we have the token)
       await presenceService.updateLocation(
         latitude: position.latitude,
@@ -59,10 +62,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       add(AuthSuccessEvent(UserAuth(id: '', name: event.name, token: '')));
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
-      };
+        add(AuthFailureEvent(e.toString(), e));
+      }
+      ;
     }
   }
 
@@ -75,12 +79,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await authRepository.signUp(event.name, event.password);
       add(AuthRegisteredEvent());
     } on NoConnectionException {
-      add(AuthFailureEvent('No internet connection, please check again later'));
+      add(
+        AuthFailureEvent(
+          'No internet connection, please check again later',
+          null,
+        ),
+      );
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
+        add(AuthFailureEvent(e.toString(), e));
       }
     }
   }
@@ -91,21 +100,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     add(AuthLoadingEvent());
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final Object? token = prefs.get("token");
-      if (token == null && !(token is String)) {
-        add(AuthFailureEvent("You are not logged in."));
-      } else {
-        await authRepository.findMe(token as String);
-        add(FoundYouEvent());
-      }
+      await authRepository.findMe();
+      add(FoundYouEvent());
     } on NoConnectionException {
-      add(AuthFailureEvent('No internet connection'));
+      add(AuthFailureEvent('No internet connection', null));
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
+        add(AuthFailureEvent(e.toString(), e));
       }
     }
   }

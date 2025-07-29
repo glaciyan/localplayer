@@ -31,5 +31,6 @@ class AuthSuccessEvent extends AuthEvent {
 
 class AuthFailureEvent extends AuthEvent {
   final String message;
-  AuthFailureEvent(this.message);
+  final Object? cause;
+  AuthFailureEvent(this.message, this.cause);
 }
