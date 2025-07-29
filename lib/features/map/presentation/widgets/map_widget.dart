@@ -53,6 +53,10 @@ class _MapWidgetState extends State<MapWidget> {
             LatLng(state.latitude, state.longitude),
             state.zoom,
           );
+        } else if (state is MapError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
         }
       },
       child: BlocBuilder<MapBloc, MapState>(
