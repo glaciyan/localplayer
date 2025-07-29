@@ -34,6 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<SelectPlayer>(_onSelectPlayer);
     on<DeselectPlayer>(_onDeselectPlayer);
     on<RequestJoinSession>(_onRequestJoinSession);
+    on<LeaveSession>(_onLeaveSession);
   }
 
 
@@ -47,7 +48,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final double initLatitude = userLat ?? 47.6596;
     final double initLongitude = userLng ?? 9.1753;
 
-    const double initZoom = 10.5;
+    const double initZoom = 12;
     
     add(UpdateCameraPosition(
       initLatitude,
@@ -66,7 +67,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final Emitter<MapState> emit,
   ) async {
     final double radius = calculateRadiusFromBounds(event.visibleBounds);
-
+    final UserProfile me = await mapRepository.fetchMe();
     try {
       final List<UserProfile> profilesInRadius =
           await mapRepository.fetchProfiles(
@@ -75,7 +76,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         radius,
       );
 
-      emit(MapReady(
+      emit(MapReady(  
+        me: me,
         latitude: event.latitude,
         longitude: event.longitude,
         visiblePeople: profilesInRadius,
@@ -90,6 +92,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<void> _onSelectPlayer(final SelectPlayer event, final Emitter<MapState> emit) async {
+    final UserProfile me = await mapRepository.fetchMe();
+
     final LatLng pos = event.selectedUser.position;
     final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
@@ -98,6 +102,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     try {
       emit(MapProfileSelected(
+        me: me,
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
@@ -124,6 +129,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
 
       emit(MapProfileSelected(
+        me: me,
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
@@ -136,7 +142,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _onDeselectPlayer(final DeselectPlayer event, final Emitter<MapState> emit) async {
     final double radius = calculateRadiusFromBounds(event.visibleBounds);
-
+    final UserProfile me = await mapRepository.fetchMe();
     try {
       final List<UserProfile> profilesInRadius = await mapRepository.fetchProfiles(
         event.latitude,
@@ -145,6 +151,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
 
       emit(MapReady(
+        me: me,
         latitude: event.latitude,
         longitude: event.longitude,
         visiblePeople: profilesInRadius,
@@ -162,6 +169,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final RequestJoinSession event,
     final Emitter<MapState> emit,
   ) async {
+    final UserProfile me = await mapRepository.fetchMe();
     final LatLng pos = event.selectedUser.position;
     final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
       LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
@@ -177,7 +185,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
 
     try {
-      // First, try to join the session
+      // Then, try to join the session
       log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
       final int? sessionId = event.selectedUser.session?.id;
       if (sessionId != null) {
@@ -202,6 +210,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
 
       emit(MapProfileSelected(
+        me: me,
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
@@ -227,6 +236,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
 
       emit(MapProfileSelected(
+        me: me,
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
@@ -234,6 +244,47 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         zoom: 12,
         selectedUser: enriched,
       ));
+    }
+  }
+
+  Future<void> _onLeaveSession(
+    final LeaveSession event,
+    final Emitter<MapState> emit,
+  ) async {
+    final UserProfile me = await mapRepository.fetchMe();
+    
+    // Get current visible people from state
+    List<UserProfile> currentVisiblePeople = <UserProfile>[];
+    if (state is MapReady) {
+      currentVisiblePeople = (state as MapReady).visiblePeople;
+    } else if (state is MapProfileSelected) {
+      currentVisiblePeople = (state as MapProfileSelected).visiblePeople;
+    }
+
+    try {
+      log.i('🚪 Leaving current session from map');
+      sessionController.leaveSession();
+      log.i('✅ Successfully left session from map');
+      
+      // Return to the current map state with the same selected user
+      if (state is MapProfileSelected) {
+        final MapProfileSelected currentState = state as MapProfileSelected;
+        emit(MapProfileSelected(
+          me: me,
+          latitude: currentState.latitude,
+          longitude: currentState.longitude,
+          visibleBounds: currentState.visibleBounds,
+          visiblePeople: currentVisiblePeople,
+          zoom: currentState.zoom,
+          selectedUser: currentState.selectedUser,
+        ));
+      } else {
+        // If not in a profile selected state, just emit the current state
+        emit(state);
+      }
+    } catch (e) {
+      log.e('❌ Error leaving session from map: $e');
+      emit(MapError('Failed to leave session: $e'));
     }
   }
 

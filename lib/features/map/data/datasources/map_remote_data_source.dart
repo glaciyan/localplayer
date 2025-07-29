@@ -1,4 +1,5 @@
 import 'package:localplayer/core/network/api_client.dart';
+import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:dio/dio.dart';
 
 class MapRemoteDataSource {
@@ -16,5 +17,10 @@ class MapRemoteDataSource {
       },
     );
     return response.data as Map<String, dynamic>;
+  }
+
+  Future<UserProfile> fetchMe() async {
+    final Response<dynamic> response = await apiClient.get('/profile/me');
+    return UserProfile.fromJson(response.data as Map<String, dynamic>);
   }
 }

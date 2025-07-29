@@ -43,3 +43,5 @@ class RequestJoinSession extends MapEvent {
 
   RequestJoinSession(this.selectedUser);
 }
+
+class LeaveSession extends MapEvent {}

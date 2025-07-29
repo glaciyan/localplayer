@@ -21,6 +21,8 @@ class UserProfile {
   final String? sessionStatus;
   final DateTime? createdAt;
   final SessionModel? session;
+  final int? participating;
+  final String? sessionId;
 
   const UserProfile({
     required this.id,
@@ -40,6 +42,8 @@ class UserProfile {
     this.sessionStatus,
     this.createdAt,
     this.session,
+    this.participating,
+    this.sessionId,
   });
 
   factory UserProfile.fromJson(final Map<String, dynamic> json) => UserProfile(
@@ -60,6 +64,8 @@ class UserProfile {
       sessionStatus: json['sessionStatus'],
       createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
       session: json['session'] != null ? SessionModel.fromJson(json['session'] as Map<String, dynamic>) : null,
+      participating: json['participating'],
+      sessionId: json['sessionId']?.toString(),
     );
 
   static LatLng _parsePosition(final Map<String, dynamic> json) {
@@ -114,6 +120,8 @@ class UserProfile {
     'popularity': popularity,
     'sessionStatus': sessionStatus,
     'createdAt': createdAt?.toIso8601String(),
+    'participating': participating,
+    'sessionId': sessionId,
   };
 
   UserProfile copyWith({
@@ -133,6 +141,8 @@ class UserProfile {
     final int? popularity,
     final String? sessionStatus,
     final DateTime? createdAt,
+    final int? participating,
+    final String? sessionId,
   }) => UserProfile(
       id: id ?? this.id,
       handle: handle ?? this.handle,
@@ -150,5 +160,7 @@ class UserProfile {
       popularity: popularity ?? this.popularity,
       sessionStatus: sessionStatus ?? this.sessionStatus,
       createdAt: createdAt ?? this.createdAt,
+      participating: participating ?? this.participating,
+      sessionId: sessionId ?? this.sessionId,
     );
 }

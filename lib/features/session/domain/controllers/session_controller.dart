@@ -31,4 +31,7 @@ class SessionController implements ISessionController {
     final int sessionId,
     final bool accept,
   ) => addEvent(RespondToRequest(participantId, sessionId, accept));
+
+  @override
+  void leaveSession() => addEvent(LeaveSession());
 }
