@@ -53,12 +53,18 @@ class ApiClient {
   ) async {
     try {
       await _checkConnection();
+      log.i("Sending request");
       return await requestFn();
     } on NoConnectionException {
       rethrow;
-    } on DioException catch (e) {
+    } on DioException catch (e, st) {
+      log.e("DioException", error: e, stackTrace: st);
       if (e.type == DioExceptionType.connectionError) {
         throw NoConnectionException();
+      }
+
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw new ApiErrorException("You timed out, please try again");
       }
       throw _handleApiError(e);
     } catch (e, st) {
@@ -132,6 +138,7 @@ class ApiClient {
           ecode = code;
         }
       }
+      log.e("ApiError", error: message);
       return new ApiErrorException(message, ecode);
     }
 

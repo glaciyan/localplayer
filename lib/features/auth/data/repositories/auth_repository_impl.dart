@@ -19,5 +19,5 @@ class AuthRepository implements IAuthRepository {
       await _dataSource.signUp(name, password, config.notSecret);
 
   @override
-  Future<dynamic> findMe(final String bearer) async => await _dataSource.findMe(bearer);
+  Future<dynamic> findMe() async => await _dataSource.findMe();
 }
