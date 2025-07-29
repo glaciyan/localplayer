@@ -35,6 +35,18 @@ class SessionRepository implements ISessionRepository {
   @override
   Future<Map<String, dynamic>> joinSession(final int sessionId) async {
     final Map<String, dynamic> json = await dataSource.joinSession(sessionId);
+    print('Repository: $json');
     return json;
+  }
+
+  @override
+  Future<void> respondToRequest(
+    final int participantId,
+    final int sessionId,
+    final bool accept,
+  ) async {
+    print('Repository: $participantId, $sessionId, $accept');
+    await dataSource.respondToRequest(participantId, sessionId, accept);
+    print('Repository: done');
   }
 }
