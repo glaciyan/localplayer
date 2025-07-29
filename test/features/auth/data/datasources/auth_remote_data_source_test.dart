@@ -6,7 +6,7 @@ import 'package:localplayer/features/auth/data/datasources/auth_remote_data_sour
 import 'package:localplayer/core/network/api_client.dart';
 import 'auth_remote_data_source_test.mocks.dart';
 
-@GenerateMocks([ApiClient])
+@GenerateMocks(<Type>[ApiClient])
 void main() {
   group('AuthRemoteDataSource', () {
     late MockApiClient mockApiClient;
@@ -25,14 +25,14 @@ void main() {
     group('signIn', () {
       test('should make POST request to /user/login with correct data', () async {
         // Arrange
-        final expectedData = <String, String>{
+        final Map<String, String> expectedData = <String, String>{
           'name': testUsername,
           'password': testPassword,
         };
-        final expectedOptions = Options(
+        final Options expectedOptions = Options(
           headers: <String, String>{'not_secret': testNotSecret},
         );
-        final expectedResponse = Response<dynamic>(
+        final Response expectedResponse = Response<dynamic>(
           data: <String, dynamic>{'token': testToken},
           statusCode: 200,
           requestOptions: RequestOptions(path: '/user/login'),
@@ -46,7 +46,7 @@ void main() {
         )).thenAnswer((_) async => expectedResponse);
 
         // Act
-        final result = await authDataSource.signIn(testUsername, testPassword, testNotSecret);
+        final Map<String, dynamic> result = await authDataSource.signIn(testUsername, testPassword, testNotSecret);
 
         // Assert
         verify(mockApiClient.post(
@@ -83,14 +83,14 @@ void main() {
     group('signUp', () {
       test('should make POST request to /user/signup with correct data', () async {
         // Arrange
-        final expectedData = <String, String>{
+        final Map<String, String> expectedData = <String, String>{
           'name': testUsername,
           'password': testPassword,
         };
-        final expectedOptions = Options(
+        final Options expectedOptions = Options(
           headers: <String, String>{'not_secret': testNotSecret},
         );
-        final expectedResponse = Response<dynamic>(
+        final Response expectedResponse = Response<dynamic>(
           data: null,
           statusCode: 201,
           requestOptions: RequestOptions(path: '/user/signup'),

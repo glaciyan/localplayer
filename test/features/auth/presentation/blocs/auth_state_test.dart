@@ -7,7 +7,7 @@ void main() {
     group('AuthSignIn', () {
       test('should create AuthSignIn', () {
         // Act
-        final state = AuthSignIn();
+        final AuthSignIn state = AuthSignIn();
 
         // Assert
         expect(state, isA<AuthSignIn>());
@@ -17,7 +17,7 @@ void main() {
     group('AuthSignUp', () {
       test('should create AuthSignUp', () {
         // Act
-        final state = AuthSignUp();
+        final AuthSignUp state = AuthSignUp();
 
         // Assert
         expect(state, isA<AuthSignUp>());
@@ -27,7 +27,7 @@ void main() {
     group('AuthInitial', () {
       test('should create AuthInitial', () {
         // Act
-        final state = AuthInitial();
+        final AuthInitial state = AuthInitial();
 
         // Assert
         expect(state, isA<AuthInitial>());
@@ -37,7 +37,7 @@ void main() {
     group('AuthLoading', () {
       test('should create AuthLoading', () {
         // Act
-        final state = AuthLoading();
+        final AuthLoading state = AuthLoading();
 
         // Assert
         expect(state, isA<AuthLoading>());
@@ -47,7 +47,7 @@ void main() {
     group('Registered', () {
       test('should create Registered', () {
         // Act
-        final state = Registered();
+        final Registered state = Registered();
 
         // Assert
         expect(state, isA<Registered>());
@@ -57,7 +57,7 @@ void main() {
     group('FoundYou', () {
       test('should create FoundYou', () {
         // Act
-        final state = FoundYou();
+        final FoundYou state = FoundYou();
 
         // Assert
         expect(state, isA<FoundYou>());
@@ -67,10 +67,10 @@ void main() {
     group('Authenticated', () {
       test('should create Authenticated with correct user', () {
         // Arrange
-        const user = UserAuth(id: '1', name: 'testuser', token: 'token123');
+        const UserAuth user = UserAuth(id: '1', name: 'testuser', token: 'token123');
 
         // Act
-        final state = Authenticated(user);
+        final Authenticated state = Authenticated(user);
 
         // Assert
         expect(state.user, equals(user));
@@ -78,9 +78,9 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        const user = UserAuth(id: '1', name: 'testuser', token: 'token123');
-        final state1 = Authenticated(user);
-        final state2 = Authenticated(user);
+        const UserAuth user = UserAuth(id: '1', name: 'testuser', token: 'token123');
+        final Authenticated state1 = Authenticated(user);
+        final Authenticated state2 = Authenticated(user);
 
         // Assert
         expect(state1.user, equals(state2.user));
@@ -90,7 +90,7 @@ void main() {
     group('Unauthenticated', () {
       test('should create Unauthenticated', () {
         // Act
-        final state = Unauthenticated();
+        final Unauthenticated state = Unauthenticated();
 
         // Assert
         expect(state, isA<Unauthenticated>());
@@ -103,7 +103,7 @@ void main() {
         const String message = 'Authentication failed';
 
         // Act
-        final state = AuthError(message);
+        final AuthError state = AuthError(message);
 
         // Assert
         expect(state.message, equals(message));
@@ -111,8 +111,8 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        final state1 = AuthError('Error 1');
-        final state2 = AuthError('Error 1');
+        final AuthError state1 = AuthError('Error 1');
+        final AuthError state2 = AuthError('Error 1');
 
         // Assert
         expect(state1.message, equals(state2.message));
@@ -123,7 +123,7 @@ void main() {
         const String message = '';
 
         // Act
-        final state = AuthError(message);
+        final AuthError state = AuthError(message);
 
         // Assert
         expect(state.message, equals(message));
@@ -134,7 +134,7 @@ void main() {
         const String message = 'This is a very long error message that contains multiple words and should be handled properly by the AuthError state';
 
         // Act
-        final state = AuthError(message);
+        final AuthError state = AuthError(message);
 
         // Assert
         expect(state.message, equals(message));

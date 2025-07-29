@@ -8,14 +8,12 @@ import 'package:localplayer/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:localplayer/features/auth/presentation/blocs/auth_event.dart';
 import 'package:localplayer/features/auth/presentation/blocs/auth_state.dart';
 import 'package:localplayer/features/auth/data/IAuthRepository.dart';
-import 'package:localplayer/features/auth/domain/entities/user_auth.dart';
-import 'package:localplayer/features/auth/domain/entities/login_token.dart';
 import 'package:localplayer/core/services/geolocator/geolocator_interface.dart';
 import 'package:localplayer/core/services/presence/presence_interface.dart';
 import 'package:localplayer/core/network/no_connection_exception.dart';
 import 'auth_bloc_test.mocks.dart';
 
-@GenerateMocks([
+@GenerateMocks(<Type>[
   IAuthRepository,
   IGeolocatorService,
   IPresenceService,
@@ -89,11 +87,11 @@ void main() {
           when(mockSharedPreferences.setDouble('user_longitude', testLongitude))
               .thenAnswer((_) async => true);
           // Mock SharedPreferences.getInstance()
-          SharedPreferences.setMockInitialValues({});
+          SharedPreferences.setMockInitialValues(<String, Object>{});
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<Authenticated>(),
         ],
@@ -117,8 +115,8 @@ void main() {
 
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<AuthError>(),
         ],
@@ -156,8 +154,8 @@ void main() {
 
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<AuthError>(),
         ],
@@ -201,8 +199,8 @@ void main() {
               .thenAnswer((_) async => true);
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignInRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<AuthError>(),
         ],
@@ -228,8 +226,8 @@ void main() {
 
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<Registered>(),
         ],
@@ -246,8 +244,8 @@ void main() {
 
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<AuthError>(),
         ],
@@ -264,8 +262,8 @@ void main() {
 
           return authBloc;
         },
-        act: (bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
-        expect: () => [
+        act: (final AuthBloc bloc) => bloc.add(SignUpRequested(testUsername, testPassword)),
+        expect: () => <TypeMatcher<AuthState>>[
           isA<AuthLoading>(),
           isA<AuthError>(),
         ],

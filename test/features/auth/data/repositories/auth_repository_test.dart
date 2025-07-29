@@ -6,7 +6,7 @@ import 'package:localplayer/features/auth/data/datasources/auth_remote_data_sour
 import 'package:localplayer/core/services/spotify/data/services/config_service.dart';
 import 'auth_repository_test.mocks.dart';
 
-@GenerateMocks([AuthRemoteDataSource, ConfigService])
+@GenerateMocks(<Type>[AuthRemoteDataSource, ConfigService])
 void main() {
   group('AuthRepository', () {
     late MockAuthRemoteDataSource mockDataSource;
@@ -32,7 +32,7 @@ void main() {
             .thenAnswer((_) async => <String, dynamic>{'token': testToken});
 
         // Act
-        final result = await authRepository.signIn(testUsername, testPassword);
+        final Map<String, dynamic> result = await authRepository.signIn(testUsername, testPassword);
 
         // Assert
         verify(mockConfig.notSecret).called(1);

@@ -10,7 +10,7 @@ void main() {
       const String token = 'test_token_123';
 
       // Act
-      const userAuth = UserAuth(id: id, name: name, token: token);
+      const UserAuth userAuth = UserAuth(id: id, name: name, token: token);
 
       // Assert
       expect(userAuth.id, equals(id));
@@ -20,8 +20,8 @@ void main() {
 
     test('should have const constructor', () {
       // Arrange & Act
-      const userAuth1 = UserAuth(id: '1', name: 'user1', token: 'token1');
-      const userAuth2 = UserAuth(id: '1', name: 'user1', token: 'token1');
+      const UserAuth userAuth1 = UserAuth(id: '1', name: 'user1', token: 'token1');
+      const UserAuth userAuth2 = UserAuth(id: '1', name: 'user1', token: 'token1');
 
       // Assert
       expect(userAuth1, equals(userAuth2));
@@ -35,7 +35,7 @@ void main() {
 
     test('should be immutable', () {
       // Arrange
-      const userAuth = UserAuth(id: '1', name: 'user', token: 'token');
+      const UserAuth userAuth = UserAuth(id: '1', name: 'user', token: 'token');
 
       // Act & Assert
       // Since all fields are final, the object is immutable
