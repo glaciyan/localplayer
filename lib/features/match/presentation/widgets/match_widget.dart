@@ -109,12 +109,11 @@ class _MatchWidgetState extends State<MatchWidget> {
                 Positioned.fill(
                   child: ProfileCard(profile: profile),
                 ),
-                // Smaller gradient overlay for swipe buttons background
                 Positioned(
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  height: 180, // smaller height
+                  height: 180,
                   child: IgnorePointer(
                     child: Container(
                       decoration: const BoxDecoration(
@@ -132,7 +131,7 @@ class _MatchWidgetState extends State<MatchWidget> {
                   ),
                 ),
                 Positioned(
-                  bottom: 24, // move buttons closer to the bottom
+                  bottom: 24,
                   left: 0,
                   right: 0,
                   child: Padding(
