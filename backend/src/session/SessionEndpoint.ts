@@ -97,13 +97,13 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
     )
     .get(
         "/:id",
-        async ({ params: { id } }) => {
+        async ({ params: { id }, profile }) => {
             const session = await lpsessionController.getSession(id);
             if (session === null) {
                 throw new ApiError(ErrorTemplates.SESSION_NOT_FOUND);
             }
 
-            return await SessionDTOMap(session);
+            return {...(await SessionDTOMap(session)), "participating": session.participants.findIndex(p => p.participant.id === profile.id) !== -1};
         },
         {
             requireProfile: true,
@@ -129,6 +129,20 @@ export const SessionEndpoint = new Elysia({ prefix: "session" }) //
             detail: {
                 description:
                     "Join a Session. If it's an open session you are automatically in, otherwise you send a request to join.",
+            },
+        }
+    )
+    .post(
+        "/leave",
+        async ({ profile }) => {
+            const request = await lpsessionController.leaveSession(profile);
+            return request;
+        },
+        {
+            requireProfile: true,
+            detail: {
+                description:
+                    "Leave a session that you are currently part of.",
             },
         }
     )

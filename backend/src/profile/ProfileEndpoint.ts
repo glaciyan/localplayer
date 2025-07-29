@@ -24,6 +24,7 @@ export const ProfileDTOMap = async (p: any) => {
     let color = "#C4C4C4";
     let sessionStatus = null;
     let sessionId = null;
+    let participating = null;
 
     try {
         const session = await lpsessionController.findRunningSession(p.id);
@@ -32,6 +33,9 @@ export const ProfileDTOMap = async (p: any) => {
             sessionStatus = session.status;
             sessionId = session.id;
         }
+
+        const psession = await lpsessionController.getCurrentParticipatingSession(p);
+        participating = psession?.sessionId ?? null;
     } catch (e) {
         log.error(
             "could not get currenct session for user, using default color"
@@ -58,6 +62,7 @@ export const ProfileDTOMap = async (p: any) => {
         popularity: p.popularity,
         sessionStatus: sessionStatus,
         sessionId: sessionId,
+        participating: participating,
         presence: p.fakePresence
             ? {
                   latitude: p.fakePresence?.latitude,
