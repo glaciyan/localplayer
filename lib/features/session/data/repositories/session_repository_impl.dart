@@ -50,4 +50,7 @@ class SessionRepository implements ISessionRepository {
     await dataSource.respondToRequest(participantId, sessionId, accept);
     log.i('Repository: done');
   }
+
+  @override
+  Future<void> leaveSession() => dataSource.leaveSession();
 }

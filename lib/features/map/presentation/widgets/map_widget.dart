@@ -217,6 +217,8 @@ class _MapWidgetState extends State<MapWidget> {
                                 ),
                               ),
                               // Button
+                              if (state.me.participating == state.selectedUser.user.sessionId) ...<Widget>[
+
                               Padding(
                                 padding: const EdgeInsets.all(60.0),
                                 child: Column(
@@ -227,18 +229,16 @@ class _MapWidgetState extends State<MapWidget> {
                                       children: <Widget>[
                                         Expanded(
                                           child: ElevatedButton(
+                                            onPressed: null,
                                             style: ElevatedButton.styleFrom(
                                               minimumSize: const Size(10, 60),
-                                              backgroundColor: Colors.green,
+                                              backgroundColor: Colors.grey,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                               ),
                                             ),
-                                            onPressed: () {
-                                              mapController.requestJoinSession(state.selectedUser);
-                                            },
                                             child: Text(
-                                              'Request to join Session',
+                                              '${state.selectedUser.user.session?.id} Already in Session ${state.me.participating}',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                             ),
                                           ),
@@ -248,6 +248,40 @@ class _MapWidgetState extends State<MapWidget> {
                                   ],
                                 ),
                               ),
+                              ] else ...<Widget>[
+                                Padding(
+                                padding: const EdgeInsets.all(60.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              mapController.requestJoinSession(state.selectedUser);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              minimumSize: const Size(10, 60),
+                                              backgroundColor: state.me.participating == null ? Colors.green : Colors.grey,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Leave Session',
+                                              //state.me.participating == null ? 'Request to join Session' : 'Leave Current Session and join new one',
+                                              style: Theme.of(context).textTheme.bodyMedium,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ]
                             ],
                           ],
                         ),

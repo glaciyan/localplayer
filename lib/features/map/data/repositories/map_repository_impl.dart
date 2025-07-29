@@ -97,4 +97,7 @@ class MapRepository implements IMapRepository {
     ).toList();
     return filteredProfiles;
   }
+
+  @override
+  Future<UserProfile> fetchMe() async => mapRemoteDataSource.fetchMe();
 }

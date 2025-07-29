@@ -15,4 +15,5 @@ abstract class ISessionRepository {
     final int sessionId,
     final bool accept,
   );
+  Future<void> leaveSession();
 }

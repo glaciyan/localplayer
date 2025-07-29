@@ -14,6 +14,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<CloseSession>(_onCloseSession);
     on<JoinSession>(_onJoinSession);
     on<RespondToRequest>(_onRespondToRequest);
+    on<LeaveSession>(_onLeaveSession);
   }
 
   Future<void> _onLoadSession(
@@ -109,6 +110,21 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     } catch (e) {
       log.e('❌ Failed to respond to request: $e');
       emit(SessionError('Failed to respond to request: $e'));
+    }
+  }
+
+  Future<void> _onLeaveSession(
+    final LeaveSession event,
+    final Emitter<SessionState> emit,
+  ) async {
+    emit(SessionLoading());
+    try {
+      await repository.leaveSession();
+      log.i('✅ Successfully left session');
+      emit(SessionInactive());
+    } catch (e) {
+      log.e('❌ Failed to leave session: $e');
+      emit(SessionError('Failed to leave session: $e'));
     }
   }
 }

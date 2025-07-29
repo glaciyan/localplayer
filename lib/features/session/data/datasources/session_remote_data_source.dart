@@ -61,4 +61,8 @@ class SessionRemoteDataSource {
     
     await apiClient.post('/session/requests/respond', data: body);
   }
+
+  Future<void> leaveSession() async {
+    await apiClient.post('/session/leave');
+  }
 }
