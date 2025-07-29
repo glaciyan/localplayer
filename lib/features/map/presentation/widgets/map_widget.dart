@@ -232,26 +232,21 @@ class _MapWidgetState extends State<MapWidget> {
                                               setState(() {
                                                 _isLoadingRequest = true;  // Start loading
                                               });
-                                              
-                                              print('DEBUG: participating=${state.me.participating}, sessionId=${state.selectedUser.user.sessionId}');
-                                              
+                                                                                            
                                               try {
                                                 if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
                                                   // Requested state - leave/cancel the request
-                                                  print('DEBUG: Leaving requested session');
                                                   context.read<MapBloc>().add(LeaveSession());
                                                 } else if (state.me.participating != null) {
                                                   // In different session - leave current session
-                                                  print('DEBUG: Leaving different session');
                                                   context.read<MapBloc>().add(LeaveSession());
                                                 } else {
                                                   // Can request to join
-                                                  print('DEBUG: Requesting to join session');
                                                   mapController.requestJoinSession(state.selectedUser);
                                                 }
                                               } finally {
                                                 // Stop loading after a delay to allow the request to complete
-                                                await Future.delayed(const Duration(milliseconds: 1500));
+                                                await Future<dynamic>.delayed(const Duration(milliseconds: 1500));
                                                 setState(() {
                                                   _isLoadingRequest = false;  // Stop loading
                                                 });
@@ -305,9 +300,7 @@ class _MapWidgetState extends State<MapWidget> {
 
   Color _getButtonColor(final MapState state) {
     if (state is! MapProfileSelected) return Colors.green;
-    
-    print('DEBUG: Button color - participating=${state.me.participating}, sessionId=${state.selectedUser.user.sessionId}');
-    
+        
     if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
       return Colors.blue; // Request sent
     } else if (state.me.participating != null) {
