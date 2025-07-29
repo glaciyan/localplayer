@@ -169,14 +169,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final RequestJoinSession event,
     final Emitter<MapState> emit,
   ) async {
-    final UserProfile me = await mapRepository.fetchMe();
-    final LatLng pos = event.selectedUser.position;
-    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
-      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
-      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
-    );
-
-    // Get current visible people from state
+    // Get current state info
     List<UserProfile> currentVisiblePeople = <UserProfile>[];
     if (state is MapReady) {
       currentVisiblePeople = (state as MapReady).visiblePeople;
@@ -184,7 +177,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       currentVisiblePeople = (state as MapProfileSelected).visiblePeople;
     }
 
+    final LatLng pos = event.selectedUser.position;
+    final flutter_map.LatLngBounds bounds = flutter_map.LatLngBounds(
+      LatLng(pos.latitude - 0.01, pos.longitude - 0.01),
+      LatLng(pos.latitude + 0.01, pos.longitude + 0.01),
+    );
+
     try {
+      // First, leave current session if we're in one
+      log.i('🚪 Leaving current session before joining new one');
+      sessionController.leaveSession();
+      
       // Then, try to join the session
       log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
       final int? sessionId = event.selectedUser.session?.id;
@@ -196,21 +199,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         return;
       }
       
-      // We need to access the session repository here
-      // For now, we'll just print the attempt
-      log.i('📡 Would call session join API for session ID: $sessionId');
+      // Refresh current user profile to get updated participating status
+      final UserProfile updatedMe = await mapRepository.fetchMe();
       
-      final SpotifyArtistData artistData =
-          await spotifyRepository.fetchArtistData(
+      final SpotifyArtistData artistData = await spotifyRepository.fetchArtistData(
         event.selectedUser.spotifyId,
       );
+      
       final ProfileWithSpotify enriched = ProfileWithSpotify(
         user: event.selectedUser,
         artist: artistData,
       );
 
       emit(MapProfileSelected(
-        me: me,
+        me: updatedMe,  // Use updated user profile
         latitude: pos.latitude,
         longitude: pos.longitude,
         visibleBounds: bounds,
@@ -222,6 +224,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       emit(MapError('No internet connection'));
     } catch (e) {
       log.e('❌ Error joining session: $e');
+      final UserProfile me = await mapRepository.fetchMe();  // Add this line
       final ProfileWithSpotify enriched = ProfileWithSpotify(
         user: event.selectedUser,
         artist: SpotifyArtistData(
@@ -251,9 +254,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final LeaveSession event,
     final Emitter<MapState> emit,
   ) async {
-    final UserProfile me = await mapRepository.fetchMe();
-    
-    // Get current visible people from state
+    // Get current state info
     List<UserProfile> currentVisiblePeople = <UserProfile>[];
     if (state is MapReady) {
       currentVisiblePeople = (state as MapReady).visiblePeople;
@@ -266,11 +267,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       sessionController.leaveSession();
       log.i('✅ Successfully left session from map');
       
-      // Return to the current map state with the same selected user
+      // Refresh current user profile to get updated participating status
+      final UserProfile updatedMe = await mapRepository.fetchMe();
+      
+      // Return to the current map state with updated user profile
       if (state is MapProfileSelected) {
         final MapProfileSelected currentState = state as MapProfileSelected;
         emit(MapProfileSelected(
-          me: me,
+          me: updatedMe,  // Use updated user profile
           latitude: currentState.latitude,
           longitude: currentState.longitude,
           visibleBounds: currentState.visibleBounds,
@@ -279,8 +283,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           selectedUser: currentState.selectedUser,
         ));
       } else {
-        // If not in a profile selected state, just emit the current state
-        emit(state);
+        // If not in a profile selected state, just emit the current state with updated me
+        if (state is MapReady) {
+          final MapReady currentState = state as MapReady;
+          emit(MapReady(
+            me: updatedMe,  // Use updated user profile
+            latitude: currentState.latitude,
+            longitude: currentState.longitude,
+            visiblePeople: currentState.visiblePeople,
+            visibleBounds: currentState.visibleBounds,
+            zoom: currentState.zoom,
+          ));
+        } else {
+          emit(state);
+        }
       }
     } catch (e) {
       log.e('❌ Error leaving session from map: $e');

@@ -27,11 +27,13 @@ class SessionModel {
     }
 
     return SessionModel(
-      id: json['id'] as int,
+      id: json['id'] as int? ?? 0,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updateAt: DateTime.parse(json['updateAt'] as String),
+      updateAt: json['updateAt'] != null 
+        ? DateTime.parse(json['updateAt'] as String)
+        : DateTime.now(),
       status: json['status'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String? ?? 'Session',
       position: sessionPosition,
     );
   }
