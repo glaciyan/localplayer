@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_audio_service.dart';
 import 'package:localplayer/core/widgets/profile_avatar.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
@@ -94,7 +95,7 @@ class _MapWidgetState extends State<MapWidget> {
                     rotationThreshold: 360,
                     flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
-                  initialCenter: LatLng(52.52, 13.405), // Will be overridden
+                  initialCenter: LatLng(52.52, 13.405),
                   initialZoom: 10.5,
                   maxZoom: 20,
                   onPositionChanged: (final MapCamera position, final bool hasGesture) {
@@ -172,7 +173,10 @@ class _MapWidgetState extends State<MapWidget> {
                               top: 12,
                               right: 12,
                               child: GestureDetector(
-                                onTap: () => mapController.deselectProfile(state.selectedUser),
+                                onTap: () {
+                                  SpotifyAudioService().stop();
+                                  mapController.deselectProfile(state.selectedUser);
+                                  },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.black.withValues(alpha: 0.6),
@@ -185,7 +189,6 @@ class _MapWidgetState extends State<MapWidget> {
                             ),
 
                             if (state.selectedUser.user.sessionStatus == 'OPEN' || state.selectedUser.user.sessionStatus == 'CLOSED') ...<Widget>[
-                              // Gradient overlay for button background
                               Positioned(
                                 left: 0,
                                 right: 0,
