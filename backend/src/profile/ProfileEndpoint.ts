@@ -23,12 +23,14 @@ export const ProfileDTOMap = async (p: any) => {
     if (!p) return null;
     let color = "#C4C4C4";
     let sessionStatus = null;
+    let sessionId = null;
 
     try {
         const session = await lpsessionController.findRunningSession(p.id);
         if (session) {
             color = getColorForSessionStatus(session.status);
             sessionStatus = session.status;
+            sessionId = session.id;
         }
     } catch (e) {
         log.error(
@@ -55,6 +57,7 @@ export const ProfileDTOMap = async (p: any) => {
         followers: p.followers,
         popularity: p.popularity,
         sessionStatus: sessionStatus,
+        sessionId: sessionId,
         presence: p.fakePresence
             ? {
                   latitude: p.fakePresence?.latitude,

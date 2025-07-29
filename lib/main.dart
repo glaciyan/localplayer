@@ -1,3 +1,5 @@
+import 'dart:io' as io;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,9 +40,14 @@ import 'package:localplayer/features/match/data/match_repository_interface.dart'
 import 'package:localplayer/core/services/geolocator/geolocator_impl.dart';
 import 'package:localplayer/core/services/presence/presence_impl.dart';
 import 'package:localplayer/core/network/api_client.dart';
+import 'package:logger/logger.dart';
+
+final Logger log = Logger(printer: PrettyPrinter());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  io.HttpClient.enableTimelineLogging = true;
 
   final ConfigService config = ConfigService();
   await config.load();
@@ -118,7 +125,7 @@ class MyApp extends StatelessWidget {
             create: (final BuildContext context) => ProfileModule.provideBloc(
               profileRepository: context.read<IProfileRepository>(),
               spotifyRepository: context.read<ISpotifyRepository>(),
-            )..add(LoadProfile()),
+            ),
           ),
           BlocProvider<FeedBloc>(
             create: (final BuildContext context) => FeedModule.provideBloc( 

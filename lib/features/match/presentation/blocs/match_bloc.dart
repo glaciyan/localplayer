@@ -1,6 +1,8 @@
 // features/match/presentation/blocs/match/match_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/network/api_error_exception.dart';
+import 'package:localplayer/core/network/no_connection_exception.dart';
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/match/data/match_repository_interface.dart';
 import 'match_event.dart';
@@ -10,27 +12,34 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
   final IMatchRepository repository;
   final ISpotifyRepository spotifyRepository;
 
-  MatchBloc({
-    required this.repository,
-    required this.spotifyRepository,
-  }) : super(MatchInitial()) {
+  MatchBloc({required this.repository, required this.spotifyRepository})
+    : super(MatchInitial()) {
     on<LoadProfiles>(_onLoadProfiles);
     on<MatchNextProfile>(_onMatchNextProfile);
     on<LikePressed>(_onLikePressed);
     on<DislikePressed>(_onDislikePressed);
   }
 
-  Future<void> _onLoadProfiles(final LoadProfiles event, final Emitter<MatchState> emit) async {
+  Future<void> _onLoadProfiles(
+    final LoadProfiles event,
+    final Emitter<MatchState> emit,
+  ) async {
     emit(MatchLoading());
     try {
-      final List<ProfileWithSpotify> profiles = await repository.fetchProfilesWithSpotify(0, 0, 1000000);
+      final List<ProfileWithSpotify> profiles = await repository
+          .fetchProfilesWithSpotify(0, 0, 1000000);
       emit(MatchLoaded(profiles));
+    } on NoConnectionException {
+      emit(MatchError("You have no internet connection"));
     } catch (e) {
       emit(MatchError('Failed to load profiles.'));
     }
   }
 
-  void _onMatchNextProfile(final MatchNextProfile event, final Emitter<MatchState> emit) async {
+  void _onMatchNextProfile(
+    final MatchNextProfile event,
+    final Emitter<MatchState> emit,
+  ) async {
     final MatchState state = this.state;
     if (state is! MatchLoaded) return;
 
@@ -50,22 +59,36 @@ class MatchBloc extends Bloc<MatchEvent, MatchState> {
     }
   }
 
-  void _onLikePressed(final LikePressed event, final Emitter<MatchState> emit) async {
+  void _onLikePressed(
+    final LikePressed event,
+    final Emitter<MatchState> emit,
+  ) async {
     if (state is MatchLoaded) {
       try {
         await repository.like(event.profile.id);
-      } catch (_) {
-        // ignore errors silently
+      } on NoConnectionException {
+        emit(ToastedMatchError("Unable to swipe, no internet"));
+      } catch (e) {
+        if (e is ApiErrorException) {
+          emit(ToastedMatchError(e.message));
+        }
       }
     }
   }
 
-  void _onDislikePressed(final DislikePressed event, final Emitter<MatchState> emit) async {
+  void _onDislikePressed(
+    final DislikePressed event,
+    final Emitter<MatchState> emit,
+  ) async {
     if (state is MatchLoaded) {
       try {
         await repository.dislike(event.profile.id);
-      } catch (_) {
-        // ignore errors silently
+      } on NoConnectionException {
+        emit(ToastedMatchError("Unable to swipe, no internet"));
+      } catch (e) {
+        if (e is ApiErrorException) {
+          emit(ToastedMatchError(e.message));
+        }
       }
     }
   }

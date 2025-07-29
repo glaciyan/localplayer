@@ -42,10 +42,11 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
     super.initState();
     _loadBackgroundLink();
   }
-
   Future<void> _loadBackgroundLink() async {
     final String spotifyId = widget.post.sender.spotifyId;
+
     if (spotifyId.isEmpty) {
+      if (!mounted) return;
       setState(() => _backgroundLink = widget.post.sender.avatarLink);
       return;
     }
@@ -54,11 +55,15 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
       final GetSpotifyArtistDataUseCase getArtist =
           context.read<GetSpotifyArtistDataUseCase>();
       final SpotifyArtistData artist = await getArtist(spotifyId);
+
+      if (!mounted) return;
       setState(() => _backgroundLink = artist.imageUrl);
     } catch (_) {
+      if (!mounted) return;
       setState(() => _backgroundLink = widget.post.sender.avatarLink);
     }
   }
+
 
   @override
   void debugFillProperties(final DiagnosticPropertiesBuilder properties) {
@@ -67,18 +72,16 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
     properties.add(DiagnosticsProperty<IFeedController>('feedController', widget.feedController));
   }
 
-  // Helper method to determine if this post should show a map
   bool get _shouldShowMap => widget.post.type == NotificationType.sessionAccepted;
   bool get _sessionInvite => widget.post.type == NotificationType.sessionInvite;
 
-  // Helper method to get the expanded height based on content type
   double get _expandedHeight {
     if (_shouldShowMap) {
-      return 500.0; // Taller for map posts
+      return 500.0;
     } else if (_sessionInvite) {
-      return 200.0; // Taller for session invite posts
+      return 200.0;
     } else {
-      return 115.0; // Standard height for other posts
+      return 115.0;
     }
   }
 

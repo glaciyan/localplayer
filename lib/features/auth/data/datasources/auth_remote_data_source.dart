@@ -24,5 +24,5 @@ class AuthRemoteDataSource {
     );
   }
 
-  Future<dynamic> findMe(final String bearer) async => await apiClient.get("/profile/me", options: Options(headers: <String, String>{"Authorization": "Bearer $bearer"}));
+  Future<dynamic> findMe() async => await apiClient.get("/profile/me");
 }

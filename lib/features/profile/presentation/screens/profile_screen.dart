@@ -23,7 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger profile reload when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(LoadProfile());
     });
@@ -70,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               pos.latitude,
                               pos.longitude,
                               "${state.profile.user.displayName}'s Session",
-                              false,
+                              true,
                             );
                           }
                         },
@@ -79,9 +78,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               );
+            } else if (state is ProfileError) {
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Failed to load profile",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          context.read<ProfileBloc>().add(LoadProfile());
+                        },
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Retry"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             } else {
               return const Scaffold(
-                body: Center(child: Text("Failed to load profile", style: TextStyle(color: Colors.red))),
+                body: Center(child: Text("Unknown error")),
               );
             }
           },

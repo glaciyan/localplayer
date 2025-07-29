@@ -45,7 +45,7 @@ class EditProfileScreen extends StatelessWidget {
               },
             );
           } else {
-            return const Center(child: Text('Failed to load profile.'));
+            return const Center(child: Text('Failed to load profile. No connection.', style: TextStyle(color: Colors.red)));
           }
         },
       ),

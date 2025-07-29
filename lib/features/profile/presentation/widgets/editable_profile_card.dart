@@ -136,8 +136,6 @@ class EditableProfileCardState extends State<EditableProfileCard> {
                   ],
                 ),
               ),
-              // gradient at bottom
-              // Bottom gradient
               Positioned(
                 left: 0,
                 right: 0,
