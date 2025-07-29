@@ -7,4 +7,5 @@ abstract class ISessionController {
     final bool open,
   );
   void closeSession(final int id);
+  void joinSession(final int sessionId);
 }

@@ -39,4 +39,9 @@ class SessionRemoteDataSource {
   Future<void> closeSession(final int id) async {
     await apiClient.post('/session/close/$id');
   }
+
+  Future<Map<String, dynamic>> joinSession(final int sessionId) async {
+    final Response<dynamic> response = await apiClient.post('/session/$sessionId/join');
+    return response.data as Map<String, dynamic>;
+  }
 }

@@ -31,4 +31,10 @@ class SessionRepository implements ISessionRepository {
 
   @override
   Future<void> closeSession(final int id) => dataSource.closeSession(id);
+
+  @override
+  Future<Map<String, dynamic>> joinSession(final int sessionId) async {
+    final Map<String, dynamic> json = await dataSource.joinSession(sessionId);
+    return json;
+  }
 }

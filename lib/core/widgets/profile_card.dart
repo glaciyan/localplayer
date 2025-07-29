@@ -105,25 +105,6 @@ class ProfileCard extends StatelessWidget {
             ),
           ),
         ),
-
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 300,
-          child: IgnorePointer(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: <Color>[Colors.black87, Colors.transparent],
-                ),
-              ),
-            ),
-          ),
-        ),
-
       ],
     ),
   );
