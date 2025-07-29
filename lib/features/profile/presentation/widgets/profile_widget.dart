@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
+import 'package:localplayer/core/services/spotify/data/services/spotify_audio_service.dart';
 import 'package:localplayer/core/widgets/profile_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localplayer/features/profile/domain/controllers/profile_controller.dart';
@@ -48,7 +49,10 @@ class ProfileWidget extends StatelessWidget {
                       icon: const Icon(Icons.logout),
                       color: Colors.white,
                       tooltip: 'Logout',
-                      onPressed: _profileController.signOut,
+                      onPressed: () { 
+                        SpotifyAudioService().stop();  
+                        _profileController.signOut();
+                       },
                     ),
                   ],
                 ),
