@@ -8,6 +8,8 @@ import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart' as map_event;
 import 'dart:async';
 
+import 'package:localplayer/main.dart';
+
 
 class MapController implements IMapController {
   final BuildContext context;
@@ -28,12 +30,12 @@ class MapController implements IMapController {
 
   @override
   void requestJoinSession(final ProfileWithSpotify profile) {
-    print('Request to join Session for user: ${profile.user.displayName}');
+    log.i('Request to join Session for user: ${profile.user.displayName}');
     // Extract session ID from the profile or use a default
     // For now, we'll need to get the session ID from somewhere
     // This might need to be passed as a parameter or stored in the profile
     final int sessionId = profile.user.id; // This is just a placeholder
-    print('Attempting to join session: $sessionId');
+    log.i('Attempting to join session: $sessionId');
     
     // Call the session controller to join the session
     // We need to get the session controller from the context

@@ -34,7 +34,6 @@ import 'package:localplayer/features/session/presentation/blocs/session_event.da
 import 'package:localplayer/features/session/session_module.dart';
 import 'package:localplayer/features/profile/data/profile_repository_interface.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 import 'package:localplayer/features/profile/profile_module.dart';
 import 'package:localplayer/features/match/data/match_repository_interface.dart';
 import 'package:localplayer/core/services/geolocator/geolocator_impl.dart';

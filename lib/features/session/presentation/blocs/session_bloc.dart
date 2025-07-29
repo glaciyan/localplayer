@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/features/session/data/session_repository_interface.dart';
 import 'package:localplayer/features/session/domain/models/session_model.dart';
+import 'package:localplayer/main.dart';
 import 'session_event.dart';
 import 'session_state.dart';
 
@@ -69,7 +70,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     emit(SessionLoading());
     try {
       final Map<String, dynamic> result = await repository.joinSession(event.sessionId);
-      print('✅ Successfully joined session: $result');
+      log.i('✅ Successfully joined session: $result');
       // Reload current session to reflect the join
       final SessionModel? session = await repository.getCurrentSession();
       if (session == null) {
@@ -78,7 +79,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         emit(SessionActive(session));
       }
     } catch (e) {
-      print('❌ Failed to join session: $e');
+      log.e('❌ Failed to join session: $e');
       emit(SessionError('Failed to join session: $e'));
     }
   }

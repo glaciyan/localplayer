@@ -8,6 +8,7 @@ import 'package:localplayer/core/services/spotify/domain/entities/track_entity.d
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
 import 'package:localplayer/core/network/no_connection_exception.dart';
+import 'package:localplayer/main.dart';
 import 'map_event.dart';
 import 'map_state.dart';
 import 'dart:async';
@@ -174,14 +175,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     try {
       // First, try to join the session
-      print('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
+      log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
       // For now, we'll use the user's ID as the session ID
       // In a real implementation, you'd need to get the actual session ID
       final int sessionId = event.selectedUser.id;
       
       // We need to access the session repository here
       // For now, we'll just print the attempt
-      print('📡 Would call session join API for session ID: $sessionId');
+      log.i('📡 Would call session join API for session ID: $sessionId');
       
       final SpotifyArtistData artistData =
           await spotifyRepository.fetchArtistData(
@@ -203,7 +204,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     } on NoConnectionException {
       emit(MapError('No internet connection'));
     } catch (e) {
-      print('❌ Error joining session: $e');
+      log.e('❌ Error joining session: $e');
       final ProfileWithSpotify enriched = ProfileWithSpotify(
         user: event.selectedUser,
         artist: SpotifyArtistData(
