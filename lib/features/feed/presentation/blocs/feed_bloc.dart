@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/network/api_error_exception.dart';
 import 'package:localplayer/core/network/no_connection_exception.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
+import 'package:localplayer/main.dart';
 import 'feed_event.dart';
 import 'feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
@@ -49,7 +50,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           event.sessionId,
           true,
         ));
-        print('Accepted session');
+        log.i('Accepted session');
         
         // Keep the current feed state
         if (state is FeedLoaded) {
@@ -68,7 +69,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           event.sessionId,
           false,
         ));
-        print('Rejected session');
+        log.i('Rejected session');
 
         // Keep the current feed state
         if (state is FeedLoaded) {

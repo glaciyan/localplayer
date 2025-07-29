@@ -1,6 +1,7 @@
 import 'package:localplayer/features/session/data/session_repository_interface.dart';
 import 'package:localplayer/features/session/data/datasources/session_remote_data_source.dart';
 import 'package:localplayer/features/session/domain/models/session_model.dart';
+import 'package:localplayer/main.dart';
 
 class SessionRepository implements ISessionRepository {
   final SessionRemoteDataSource dataSource;
@@ -35,7 +36,7 @@ class SessionRepository implements ISessionRepository {
   @override
   Future<Map<String, dynamic>> joinSession(final int sessionId) async {
     final Map<String, dynamic> json = await dataSource.joinSession(sessionId);
-    print('Repository: $json');
+    log.i('Repository: $json');
     return json;
   }
 
@@ -45,8 +46,8 @@ class SessionRepository implements ISessionRepository {
     final int sessionId,
     final bool accept,
   ) async {
-    print('Repository: $participantId, $sessionId, $accept');
+    log.i('Repository: $participantId, $sessionId, $accept');
     await dataSource.respondToRequest(participantId, sessionId, accept);
-    print('Repository: done');
+    log.i('Repository: done');
   }
 }

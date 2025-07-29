@@ -97,7 +97,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         event.accept,
       );
       
-      print('✅ Successfully responded to request: ${event.accept ? "accepted" : "declined"}');
+      log.i('✅ Successfully responded to request: ${event.accept ? "accepted" : "declined"}');
       
       // Reload current session after responding
       final SessionModel? session = await repository.getCurrentSession();
@@ -107,7 +107,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         emit(SessionActive(session));
       }
     } catch (e) {
-      print('❌ Failed to respond to request: $e');
+      log.e('❌ Failed to respond to request: $e');
       emit(SessionError('Failed to respond to request: $e'));
     }
   }

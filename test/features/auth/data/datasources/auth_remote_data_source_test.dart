@@ -25,14 +25,7 @@ void main() {
     group('signIn', () {
       test('should make POST request to /user/login with correct data', () async {
         // Arrange
-        final Map<String, String> expectedData = <String, String>{
-          'name': testUsername,
-          'password': testPassword,
-        };
-        final Options expectedOptions = Options(
-          headers: <String, String>{'not_secret': testNotSecret},
-        );
-        final Response expectedResponse = Response<dynamic>(
+        final Response<dynamic> expectedResponse = Response<dynamic>(
           data: <String, dynamic>{'token': testToken},
           statusCode: 200,
           requestOptions: RequestOptions(path: '/user/login'),
@@ -66,7 +59,7 @@ void main() {
           options: anyNamed('options'),
         )).thenThrow(DioException(
           requestOptions: RequestOptions(path: '/user/login'),
-          response: Response(
+          response: Response<dynamic>(
             statusCode: 401,
             requestOptions: RequestOptions(path: '/user/login'),
           ),
@@ -83,14 +76,7 @@ void main() {
     group('signUp', () {
       test('should make POST request to /user/signup with correct data', () async {
         // Arrange
-        final Map<String, String> expectedData = <String, String>{
-          'name': testUsername,
-          'password': testPassword,
-        };
-        final Options expectedOptions = Options(
-          headers: <String, String>{'not_secret': testNotSecret},
-        );
-        final Response expectedResponse = Response<dynamic>(
+        final Response<dynamic> expectedResponse = Response<dynamic>(
           data: null,
           statusCode: 201,
           requestOptions: RequestOptions(path: '/user/signup'),
@@ -123,7 +109,7 @@ void main() {
           options: anyNamed('options'),
         )).thenThrow(DioException(
           requestOptions: RequestOptions(path: '/user/signup'),
-          response: Response(
+          response: Response<dynamic>(
             statusCode: 409,
             requestOptions: RequestOptions(path: '/user/signup'),
           ),
