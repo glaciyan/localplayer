@@ -43,3 +43,9 @@ class MatchError extends MatchState {
   @override
   List<Object?> get props => <Object?> [message];
 }
+
+class ToastedMatchError extends MatchState {
+  final String message;
+
+  const ToastedMatchError(this.message);
+}

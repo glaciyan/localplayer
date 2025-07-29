@@ -1,6 +1,6 @@
-// lib/core/network/api_client.dart
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:localplayer/core/network/api_error_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'no_connection_exception.dart';
 
@@ -19,7 +19,10 @@ class ApiClient {
       _connectivity = Connectivity() {
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (final RequestOptions options, final RequestInterceptorHandler handler) async {
+        onRequest: (
+          final RequestOptions options,
+          final RequestInterceptorHandler handler,
+        ) async {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
           final String? token = prefs.getString('token');
           if (token != null && token.isNotEmpty) {
@@ -40,92 +43,96 @@ class ApiClient {
 
   Future<String?> getBearerToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final Object? token = prefs.get("token");
-    if (token == null && !(token is String)) {
-      return null;
+    final String? token = prefs.getString("token");
+    return token?.isNotEmpty == true ? token : null;
+  }
+
+  Future<Response<dynamic>> _request(
+    final Future<Response<dynamic>> Function() requestFn,
+  ) async {
+    try {
+      await _checkConnection();
+      return await requestFn();
+    } on NoConnectionException {
+      rethrow;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError) {
+        throw NoConnectionException();
+      }
+      throw _handleApiError(e);
+    } catch (_) {
+      throw ApiErrorException();
     }
-    return token as String;
   }
 
   Future<Response<dynamic>> get(
     final String path, {
     final Map<String, dynamic>? queryParameters,
     final Options? options,
-  }) async {
-    await _checkConnection();
-    try {
-      return await _dio.get(path, queryParameters: queryParameters, options: options);
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        throw NoConnectionException();
-      }
-      rethrow;
-    }
-  }
+  }) => _request(
+    () => _dio.get(path, queryParameters: queryParameters, options: options),
+  );
 
   Future<Response<dynamic>> post(
     final String path, {
     final dynamic data,
     final Map<String, dynamic>? queryParameters,
     final Options? options,
-  }) async {
-    await _checkConnection();
-    try {
-      return await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        throw NoConnectionException();
-      }
-      rethrow;
-    }
-  }
+  }) => _request(
+    () => _dio.post(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    ),
+  );
 
   Future<Response<dynamic>> patch(
     final String path, {
     final dynamic data,
     final Map<String, dynamic>? queryParameters,
     final Options? options,
-  }) async {
-    await _checkConnection();
-    try {
-      return await _dio.patch(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        throw NoConnectionException();
-      }
-      rethrow;
-    }
-  }
+  }) => _request(
+    () => _dio.patch(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    ),
+  );
 
   Future<Response<dynamic>> delete(
     final String path, {
     final dynamic data,
     final Map<String, dynamic>? queryParameters,
     final Options? options,
-  }) async {
-    await _checkConnection();
-    try {
-      return await _dio.delete(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        throw NoConnectionException();
+  }) => _request(
+    () => _dio.delete(
+      path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+    ),
+  );
+
+  ApiErrorException _handleApiError(final DioException e) {
+    if (e.response?.statusCode == 400) {
+      final dynamic data = e.response?.data;
+      String message = "Unexpected Error";
+      String ecode = "Unexpected Error";
+      if (data is Map<String, dynamic>) {
+        final dynamic msg = data['message'];
+        if (msg is String) {
+          message = msg;
+        }
+        final dynamic code = data['code'];
+        if (code is String) {
+          ecode = code;
+        }
       }
-      rethrow;
+      return new ApiErrorException(message, ecode);
     }
+
+    return new ApiErrorException();
   }
 }

@@ -1,5 +1,7 @@
 // features/feed/presentation/blocs/feed/feed_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localplayer/core/network/api_error_exception.dart';
+import 'package:localplayer/core/network/no_connection_exception.dart';
 import 'feed_event.dart';
 import 'feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
@@ -19,13 +21,20 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   void _onRefreshFeed(final RefreshFeed event, final Emitter<FeedState> emit) async {
       try {
-        emit(FeedLoading());
-        await Future<void>.delayed(const Duration(seconds: 1));
-        final List<NotificationModel> notifications = await feedRepository.fetchNotifications();
-        emit(FeedLoaded(notifications: notifications));
-      } catch (e) {
+      emit(FeedLoading());
+      await Future<void>.delayed(const Duration(seconds: 1));
+      final List<NotificationModel> notifications =
+          await feedRepository.fetchNotifications();
+      emit(FeedLoaded(notifications: notifications));
+    } on NoConnectionException {
+      emit(FeedError("Cannot load notifications, no internet."));
+    } catch (e) {
+      if (e is ApiErrorException) {
+        emit(FeedError(e.message));
+      } else {
         emit(FeedError("Error fetching notifications"));
       }
+    }
   }
 
   void _onAcceptSession(final AcceptSession event, final Emitter<FeedState> emit) async {
