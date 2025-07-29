@@ -44,7 +44,7 @@ class MapRepository implements IMapRepository {
       } catch (e) {
       }
     }
-    
+
     if (profilesInRadius.isEmpty) {
       return <ProfileWithSpotify>[];
     }

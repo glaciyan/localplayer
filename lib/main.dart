@@ -29,12 +29,12 @@ import 'package:localplayer/features/match/match_module.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_bloc.dart';
 import 'package:localplayer/features/match/presentation/blocs/match_event.dart';
 import 'package:localplayer/features/session/data/session_repository_interface.dart';
+import 'package:localplayer/features/session/domain/interfaces/session_controller_interface.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_event.dart';
 import 'package:localplayer/features/session/session_module.dart';
 import 'package:localplayer/features/profile/data/profile_repository_interface.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
-import 'package:localplayer/features/profile/presentation/blocs/profile_event.dart';
 import 'package:localplayer/features/profile/profile_module.dart';
 import 'package:localplayer/features/match/data/match_repository_interface.dart';
 import 'package:localplayer/core/services/geolocator/geolocator_impl.dart';
@@ -112,6 +112,14 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<ISessionRepository>(
           create: (_) => SessionModule.provideRepository(config),
         ),
+        RepositoryProvider<SessionBloc>(
+          create: (final BuildContext context) => SessionModule.provideBloc(
+            repository: context.read<ISessionRepository>(),
+          )..add(LoadSession()),
+        ),
+        RepositoryProvider<ISessionController>(
+          create: (final BuildContext context) => SessionModule.provideController(context, context.read<SessionBloc>()),
+        ),
       ],
       child: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[
@@ -139,22 +147,18 @@ class MyApp extends StatelessWidget {
               presenceService: context.read<IPresenceService>(),
             ),
           ),
-        BlocProvider<MapBloc>(
-          create: (final BuildContext context) => MapBloc(
-            mapRepository: context.read<IMapRepository>(),
-            spotifyRepository: context.read<ISpotifyRepository>(),
-          )..add(LoadMapProfiles()),
-        ),
-        BlocProvider<SessionBloc>(
-          create: (final BuildContext context) => SessionModule.provideBloc(
-            repository: context.read<ISessionRepository>(),
-          )..add(LoadSession()),
-        ),
-        BlocProvider<SpotifyProfileCubit>(
-          create: (final BuildContext context) => SpotifyProfileCubit(
-            context.read<ISpotifyRepository>(),
+          BlocProvider<MapBloc>(
+            create: (final BuildContext context) => MapBloc(
+              mapRepository: context.read<IMapRepository>(),
+              spotifyRepository: context.read<ISpotifyRepository>(),
+              sessionController: context.read<ISessionController>(),
+            )..add(LoadMapProfiles()),
           ),
-        ),
+          BlocProvider<SpotifyProfileCubit>(
+            create: (final BuildContext context) => SpotifyProfileCubit(
+              context.read<ISpotifyRepository>(),
+            ),
+          ),
         ],
         child: MaterialApp.router(
           title: 'localplayers',
