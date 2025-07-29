@@ -59,9 +59,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       add(AuthSuccessEvent(UserAuth(id: '', name: event.name, token: '')));
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
+        add(AuthFailureEvent(e.toString(), e));
       };
     }
   }
@@ -75,12 +75,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await authRepository.signUp(event.name, event.password);
       add(AuthRegisteredEvent());
     } on NoConnectionException {
-      add(AuthFailureEvent('No internet connection, please check again later'));
+      add(AuthFailureEvent('No internet connection, please check again later', null));
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
+        add(AuthFailureEvent(e.toString(), e));
       }
     }
   }
@@ -94,18 +94,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final Object? token = prefs.get("token");
       if (token == null && !(token is String)) {
-        add(AuthFailureEvent("You are not logged in."));
+        add(AuthFailureEvent("You are not logged in.", null));
       } else {
         await authRepository.findMe(token as String);
         add(FoundYouEvent());
       }
     } on NoConnectionException {
-      add(AuthFailureEvent('No internet connection'));
+      add(AuthFailureEvent('No internet connection', null));
     } catch (e) {
       if (e is ApiErrorException) {
-        add(AuthFailureEvent(e.message));
+        add(AuthFailureEvent(e.message, e));
       } else {
-        add(AuthFailureEvent(e.toString()));
+        add(AuthFailureEvent(e.toString(), e));
       }
     }
   }

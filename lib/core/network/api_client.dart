@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:localplayer/core/network/api_error_exception.dart';
+import 'package:localplayer/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'no_connection_exception.dart';
 
@@ -60,7 +61,8 @@ class ApiClient {
         throw NoConnectionException();
       }
       throw _handleApiError(e);
-    } catch (_) {
+    } catch (e, st) {
+      log.e("Failed api request", error: e, stackTrace: st);
       throw ApiErrorException();
     }
   }
