@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:localplayer/core/services/spotify/data/services/spotify_audio_service.dart';
 import 'package:localplayer/core/widgets/with_nav_bar.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:localplayer/features/profile/presentation/blocs/profile_state.dart';
@@ -27,12 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(LoadProfile());
     });
-  }
-
-  @override
-  void dispose() {
-    SpotifyAudioService().stop();
-    super.dispose();
   }
 
   @override

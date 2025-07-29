@@ -118,7 +118,7 @@ class MyApp extends StatelessWidget {
             create: (final BuildContext context) => ProfileModule.provideBloc(
               profileRepository: context.read<IProfileRepository>(),
               spotifyRepository: context.read<ISpotifyRepository>(),
-            )..add(LoadProfile()),
+            ),
           ),
           BlocProvider<FeedBloc>(
             create: (final BuildContext context) => FeedModule.provideBloc( 
