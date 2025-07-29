@@ -20,7 +20,10 @@ export type ErrorCode =
     | "session/not-found"
     | "spotify/song-not-found"
     | "swipe/cant-rate-yourself"
-    | "swipe/already-rated";
+    | "swipe/already-rated"
+    | "session/already-somewhere"
+    | "session/your-own"
+    | "session/concluded";
 
 export type GenericError = {
     code: ErrorCode;
@@ -110,6 +113,19 @@ export const ErrorTemplates = {
         code: "swipe/already-rated",
         message: "You have already rated this user.",
     },
+    ALREADY_SOMEWHERE: {
+        code: "session/already-somewhere",
+        message:
+            "You are already pariticipating in another session. Please leave the other first, before joining another.",
+    },
+    SESSION_YOUR_OWN: {
+        code: "session/your-own",
+        message: "You cannot join your own session."
+    },
+    SESSION_CONCLUDED: {
+        code: "session/concluded",
+        message: "This session is already over. You cannot join it."
+    }
 } as const satisfies { [key: string]: GenericError };
 
 export const respond = (error: GenericError) => status(400, error);

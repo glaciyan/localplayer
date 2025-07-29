@@ -1,5 +1,5 @@
 import { prisma } from "../database.ts";
-import { CustomValidationError } from "../errors.ts";
+import { ApiError, ErrorTemplates } from "../errors.ts";
 import { Profile } from "../generated/prisma/client.ts";
 import { LPSessionStatus } from "../generated/prisma/enums.ts";
 import { mklog } from "../logger.ts";
@@ -94,7 +94,56 @@ export class LPSessionService {
         });
     }
 
+    async getCurrentParticipatingSession(profile: Profile) {
+        const participations = await prisma.lPSessionParticipation.findFirst({
+            where: {
+                participantId: profile.id,
+                status: {
+                    not: "DECLINED",
+                },
+                session: {
+                    NOT: {
+                        status: "CONCLUDED",
+                    },
+                },
+            },
+            include: {
+                session: true,
+            },
+        });
+
+        return participations;
+    }
+
+    async leaveSession(profile: Profile) {
+        const participations = await this.getCurrentParticipatingSession(profile);
+
+        if (!participations) {
+            throw new ApiError(ErrorTemplates.SESSION_NOT_FOUND);
+        }
+
+        await prisma.lPSessionParticipation.delete({
+            where: {
+                participantId_sessionId: {
+                    participantId: profile.id,
+                    sessionId: participations.sessionId,
+                },
+            },
+        });
+    }
+
     async joinSession(id: number, profile: Profile) {
+        const participations = await this.getCurrentParticipatingSession(profile);
+
+        log.info(JSON.stringify(participations));
+
+        if (participations) {
+            log.error(
+                `User ${profile.id} tried joining a session while already being somewhere`
+            );
+            throw new ApiError(ErrorTemplates.ALREADY_SOMEWHERE);
+        }
+
         const session = await prisma.lPSession.findUnique({
             where: {
                 id,
@@ -107,18 +156,14 @@ export class LPSessionService {
             log.info(
                 "user probably is already the creator or in the participants list"
             );
-            throw new CustomValidationError({
-                id: "You are already in this session",
-            });
+            throw new ApiError(ErrorTemplates.SESSION_YOUR_OWN);
         }
 
         if (session.status === "CONCLUDED") {
             log.error(
                 `${profile.handle}:${profile.id} has tried to join a concluded session.`
             );
-            throw new CustomValidationError({
-                id: "This session has already ended.",
-            });
+            throw new ApiError(ErrorTemplates.SESSION_CONCLUDED);
         }
 
         const request = await prisma.lPSessionParticipation.create({
