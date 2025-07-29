@@ -133,7 +133,7 @@ void main() {
         const String message = 'Authentication failed';
 
         // Act
-        final event = AuthFailureEvent(message);
+        final event = AuthFailureEvent(message, null);
 
         // Assert
         expect(event.message, equals(message));
@@ -141,8 +141,8 @@ void main() {
 
       test('should create equal instances with same values', () {
         // Arrange & Act
-        final event1 = AuthFailureEvent('Error 1');
-        final event2 = AuthFailureEvent('Error 1');
+        final event1 = AuthFailureEvent('Error 1', null);
+        final event2 = AuthFailureEvent('Error 1', null);
 
         // Assert
         expect(event1.message, equals(event2.message));
@@ -153,7 +153,7 @@ void main() {
         const String message = '';
 
         // Act
-        final event = AuthFailureEvent(message);
+        final event = AuthFailureEvent(message, null);
 
         // Assert
         expect(event.message, equals(message));

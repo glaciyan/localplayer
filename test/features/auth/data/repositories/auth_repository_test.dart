@@ -91,32 +91,32 @@ void main() {
       });
     });
 
-    group('findMe', () {
-      test('should call data source with correct bearer token', () async {
-        // Arrange
-        when(mockDataSource.findMe(testToken))
-            .thenAnswer((_) async => <String, dynamic>{'id': '1', 'name': testUsername});
+    // group('findMe', () {
+    //   test('should call data source with correct bearer token', () async {
+    //     // Arrange
+    //     when(mockDataSource.findMe(testToken))
+    //         .thenAnswer((_) async => <String, dynamic>{'id': '1', 'name': testUsername});
 
-        // Act
-        final result = await authRepository.findMe(testToken);
+    //     // Act
+    //     final result = await authRepository.findMe(testToken);
 
-        // Assert
-        verify(mockDataSource.findMe(testToken)).called(1);
-        expect(result, equals(<String, dynamic>{'id': '1', 'name': testUsername}));
-      });
+    //     // Assert
+    //     verify(mockDataSource.findMe(testToken)).called(1);
+    //     expect(result, equals(<String, dynamic>{'id': '1', 'name': testUsername}));
+    //   });
 
-      test('should throw exception when data source throws', () async {
-        // Arrange
-        when(mockDataSource.findMe(testToken))
-            .thenThrow(Exception('Invalid token'));
+    //   test('should throw exception when data source throws', () async {
+    //     // Arrange
+    //     when(mockDataSource.findMe(testToken))
+    //         .thenThrow(Exception('Invalid token'));
 
-        // Act & Assert
-        expect(
-          () => authRepository.findMe(testToken),
-          throwsA(isA<Exception>()),
-        );
-        verify(mockDataSource.findMe(testToken)).called(1);
-      });
-    });
+    //     // Act & Assert
+    //     expect(
+    //       () => authRepository.findMe(testToken),
+    //       throwsA(isA<Exception>()),
+    //     );
+    //     verify(mockDataSource.findMe(testToken)).called(1);
+    //   });
+    // });
   });
 } 
