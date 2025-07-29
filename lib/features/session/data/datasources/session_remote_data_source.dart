@@ -25,10 +25,12 @@ class SessionRemoteDataSource {
     return response.data as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>?> getCurrentSession() async {
+  Future<dynamic> getCurrentSession() async {
     try {
       final Response<dynamic> response = await apiClient.get('/session');
-      return response.data as Map<String, dynamic>;
+      log.i('getCurrentSession API response type: ${response.data.runtimeType}');
+      log.i('getCurrentSession API response: ${response.data}');
+      return response.data;
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         return null;
@@ -41,11 +43,11 @@ class SessionRemoteDataSource {
     await apiClient.post('/session/close/$id');
   }
 
-  Future<Map<String, dynamic>> joinSession(final int sessionId) async {
+  Future<dynamic> joinSession(final int sessionId) async {
     final Response<dynamic> response = await apiClient.post('/session/$sessionId/join');
     log.i('Joining session: $sessionId');
     log.i('Response: ${response.data}');
-    return response.data as Map<String, dynamic>;
+    return response.data;
   }
 
   Future<void> respondToRequest(
@@ -60,5 +62,9 @@ class SessionRemoteDataSource {
     };
     
     await apiClient.post('/session/requests/respond', data: body);
+  }
+
+  Future<void> leaveSession() async {
+    await apiClient.post('/session/leave');
   }
 }

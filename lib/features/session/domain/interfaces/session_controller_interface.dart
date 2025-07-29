@@ -13,4 +13,5 @@ abstract class ISessionController {
     final int sessionId,
     final bool accept,
   );
+  void leaveSession();
 }

@@ -30,3 +30,5 @@ class RespondToRequest extends SessionEvent {
 
   RespondToRequest(this.participantId, this.sessionId, this.accept);
 }
+
+class LeaveSession extends SessionEvent {}

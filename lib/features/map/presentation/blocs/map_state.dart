@@ -18,13 +18,14 @@ class MapReady extends MapState {
   final LatLngBounds visibleBounds;
   final List<UserProfile> visiblePeople;
   final double zoom;
-
+  final UserProfile me;
   MapReady({
     required this.latitude,
     required this.longitude,
     required this.visibleBounds,
     required this.visiblePeople,
     required this.zoom,
+    required this.me,
   });
 
   MapReady copyWith({
@@ -33,12 +34,14 @@ class MapReady extends MapState {
     final LatLngBounds? visibleBounds,
     final List<UserProfile>? visiblePeople,
     final double? zoom,
+    final UserProfile? me,
   }) => MapReady(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       visibleBounds: visibleBounds ?? this.visibleBounds,
       visiblePeople: visiblePeople ?? this.visiblePeople,
       zoom: zoom ?? this.zoom,
+      me: me ?? this.me,
     );
 }
 
@@ -49,7 +52,7 @@ class MapProfileSelected extends MapState {
   final List<UserProfile> visiblePeople;
   final double zoom;
   final ProfileWithSpotify selectedUser;
-
+  final UserProfile me;
   MapProfileSelected({
     required this.latitude,
     required this.longitude,
@@ -57,6 +60,7 @@ class MapProfileSelected extends MapState {
     required this.visiblePeople,
     required this.zoom,
     required this.selectedUser,
+    required this.me,
   });
 
   MapProfileSelected copyWith({
@@ -66,6 +70,7 @@ class MapProfileSelected extends MapState {
     final List<UserProfile>? visiblePeople,
     final double? zoom,
     final ProfileWithSpotify? selectedUser,
+    final UserProfile? me,
   }) => MapProfileSelected(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -73,5 +78,6 @@ class MapProfileSelected extends MapState {
       visiblePeople: visiblePeople ?? this.visiblePeople,
       zoom: zoom ?? this.zoom,
       selectedUser: selectedUser ?? this.selectedUser,
+      me: me ?? this.me,
     );
 }

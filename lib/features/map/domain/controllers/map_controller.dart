@@ -30,8 +30,9 @@ class MapController implements IMapController {
 
   @override
   void requestJoinSession(final ProfileWithSpotify profile) {
+
     log.i('Request to join Session for user: ${profile.user.displayName}');
-    final int sessionId = profile.user.id; // This is just a placeholder
+    final int sessionId = profile.user.id;
     log.i('Attempting to join session: $sessionId');
     addEvent(map_event.RequestJoinSession(profile.user));
   }
