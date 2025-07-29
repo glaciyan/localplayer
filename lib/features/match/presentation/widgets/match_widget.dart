@@ -33,6 +33,11 @@ class _MatchWidgetState extends State<MatchWidget> {
     _matchController = MatchModule.provideController(context, bloc);
     _matchController.loadProfiles();
   }
+  @override
+  void dispose() {
+    SpotifyAudioService().stop();
+    super.dispose();
+  }
 
   @override
   Widget build(final BuildContext context) =>
