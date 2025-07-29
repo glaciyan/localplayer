@@ -47,49 +47,53 @@ class _FeedWidgetState extends State<FeedWidget> {
               physics: AlwaysScrollableScrollPhysics(),
               controller: _scrollController,
               slivers: <Widget>[
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: notifications.isEmpty
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Center(
-                                child: Text(
-                                  "No notifications",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(color: Colors.black),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Center(
-                                child: Text(
-                                  "Pull down to refresh",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            children: <Widget>[
-                              for (final NotificationModel post in notifications)
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: FeedPost(
-                                    post: post,
-                                    feedController: _feedController,
-                                  ),
-                                ),
-                            ],
+                if (notifications.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                            child: Text(
+                              "No notifications",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: Colors.black),
+                            ),
                           ),
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Text(
+                              "Pull down to refresh",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  SliverPadding(
+                    padding: EdgeInsets.all(16),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => SizedBox(
+                          width: double.infinity,
+                          child: FeedPost(
+                            post: notifications[index],
+                            feedController: _feedController,
+                          ),
+                        ),
+                        childCount: notifications.length,
+                      ),
+                    ),
                   ),
-                ),
               ],
             ),
           );

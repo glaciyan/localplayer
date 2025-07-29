@@ -47,7 +47,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final double initLatitude = userLat ?? 47.6596;
     final double initLongitude = userLng ?? 9.1753;
 
-    const double initZoom = 10.5;
+    const double initZoom = 12;
     
     add(UpdateCameraPosition(
       initLatitude,
