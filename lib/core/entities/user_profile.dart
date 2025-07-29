@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:latlong2/latlong.dart';
 import 'package:localplayer/core/entities/hex_color.dart';
+import 'package:localplayer/features/session/domain/models/session_model.dart';
 
 class UserProfile {
   final int id;
@@ -19,6 +20,7 @@ class UserProfile {
   final int? popularity;
   final String? sessionStatus;
   final DateTime? createdAt;
+  final SessionModel? session;
 
   const UserProfile({
     required this.id,
@@ -37,6 +39,7 @@ class UserProfile {
     this.popularity,
     this.sessionStatus,
     this.createdAt,
+    this.session,
   });
 
   factory UserProfile.fromJson(final Map<String, dynamic> json) => UserProfile(
@@ -56,6 +59,7 @@ class UserProfile {
       popularity: json['popularity'] ?? 0,
       sessionStatus: json['sessionStatus'],
       createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
+      session: json['session'] != null ? SessionModel.fromJson(json['session'] as Map<String, dynamic>) : null,
     );
 
   static LatLng _parsePosition(final Map<String, dynamic> json) {

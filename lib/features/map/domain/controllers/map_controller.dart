@@ -31,15 +31,8 @@ class MapController implements IMapController {
   @override
   void requestJoinSession(final ProfileWithSpotify profile) {
     log.i('Request to join Session for user: ${profile.user.displayName}');
-    // Extract session ID from the profile or use a default
-    // For now, we'll need to get the session ID from somewhere
-    // This might need to be passed as a parameter or stored in the profile
     final int sessionId = profile.user.id; // This is just a placeholder
     log.i('Attempting to join session: $sessionId');
-    
-    // Call the session controller to join the session
-    // We need to get the session controller from the context
-    // For now, we'll just trigger the map event
     addEvent(map_event.RequestJoinSession(profile.user));
   }
 

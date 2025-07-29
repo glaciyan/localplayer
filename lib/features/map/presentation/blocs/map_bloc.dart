@@ -8,6 +8,7 @@ import 'package:localplayer/core/services/spotify/domain/entities/track_entity.d
 import 'package:localplayer/core/services/spotify/domain/repositories/spotify_repository.dart';
 import 'package:localplayer/features/map/data/map_repository_interface.dart';
 import 'package:localplayer/core/network/no_connection_exception.dart';
+import 'package:localplayer/features/session/domain/interfaces/session_controller_interface.dart';
 import 'package:localplayer/main.dart';
 import 'map_event.dart';
 import 'map_state.dart';
@@ -18,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MapBloc extends Bloc<MapEvent, MapState> {
   final IMapRepository mapRepository;
   final ISpotifyRepository spotifyRepository;
+  final ISessionController sessionController;
 
   List<UserProfile> _allProfiles = <UserProfile> [];
   Timer? _debounceTimer;
@@ -25,6 +27,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   MapBloc({
     required this.mapRepository,
     required this.spotifyRepository,
+    required this.sessionController,
   }) : super(MapInitial()) {
     on<LoadMapProfiles>(_onLoadMapProfiles);
     on<UpdateCameraPosition>(_onUpdateCameraPosition);
@@ -176,9 +179,14 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     try {
       // First, try to join the session
       log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
-      // For now, we'll use the user's ID as the session ID
-      // In a real implementation, you'd need to get the actual session ID
-      final int sessionId = event.selectedUser.id;
+      final int? sessionId = event.selectedUser.session?.id;
+      if (sessionId != null) {
+        log.i('Attempting to join session: $sessionId');
+        sessionController.joinSession(sessionId);
+      } else {
+        log.w('No session available');
+        return;
+      }
       
       // We need to access the session repository here
       // For now, we'll just print the attempt

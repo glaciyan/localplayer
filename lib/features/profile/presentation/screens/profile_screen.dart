@@ -72,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               true,
                             );
                           }
+                          context.read<ProfileBloc>().add(LoadProfile());
                         },
                       ),
                     ),
