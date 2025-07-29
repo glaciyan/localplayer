@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               pos.latitude,
                               pos.longitude,
                               "${state.profile.user.displayName}'s Session",
-                              false,
+                              true,
                             );
                           }
                         },
