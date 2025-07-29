@@ -24,6 +24,7 @@ class MapWidget extends StatefulWidget {
 
 class _MapWidgetState extends State<MapWidget> {
   MapController? _mapController;
+  bool _isLoadingRequest = false;
 
   @override
   void initState() {
@@ -217,8 +218,6 @@ class _MapWidgetState extends State<MapWidget> {
                                 ),
                               ),
                               // Button
-                              if (state.me.participating == state.selectedUser.user.sessionId) ...<Widget>[
-
                               Padding(
                                 padding: const EdgeInsets.all(60.0),
                                 child: Column(
@@ -229,66 +228,55 @@ class _MapWidgetState extends State<MapWidget> {
                                       children: <Widget>[
                                         Expanded(
                                           child: ElevatedButton(
-                                              onPressed: () {
-                                                context.read<MapBloc>().add(LeaveSession());
-                                              },
-                                            style: ElevatedButton.styleFrom(
-                                              minimumSize: const Size(10, 60),
-                                              backgroundColor: Colors.grey,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Leave / Cancel Request',
-                                              style: Theme.of(context).textTheme.bodyMedium,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ] else ...<Widget>[
-                                Padding(
-                                padding: const EdgeInsets.all(60.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: ElevatedButton(
-                                            onPressed: () {
+                                            onPressed: _isLoadingRequest ? null : () async {
+                                              setState(() {
+                                                _isLoadingRequest = true;  // Start loading
+                                              });
+                                              
                                               print('DEBUG: participating=${state.me.participating}, sessionId=${state.selectedUser.user.sessionId}');
                                               
-                                              if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
-                                                // Requested state - leave/cancel the request
-                                                print('DEBUG: Leaving requested session');
-                                                context.read<MapBloc>().add(LeaveSession());
-                                              } else if (state.me.participating != null) {
-                                                // In different session - leave current session
-                                                print('DEBUG: Leaving different session');
-                                                context.read<MapBloc>().add(LeaveSession());
-                                              } else {
-                                                // Can request to join
-                                                print('DEBUG: Requesting to join session');
-                                                mapController.requestJoinSession(state.selectedUser);
+                                              try {
+                                                if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
+                                                  // Requested state - leave/cancel the request
+                                                  print('DEBUG: Leaving requested session');
+                                                  context.read<MapBloc>().add(LeaveSession());
+                                                } else if (state.me.participating != null) {
+                                                  // In different session - leave current session
+                                                  print('DEBUG: Leaving different session');
+                                                  context.read<MapBloc>().add(LeaveSession());
+                                                } else {
+                                                  // Can request to join
+                                                  print('DEBUG: Requesting to join session');
+                                                  mapController.requestJoinSession(state.selectedUser);
+                                                }
+                                              } finally {
+                                                // Stop loading after a delay to allow the request to complete
+                                                await Future.delayed(const Duration(milliseconds: 1500));
+                                                setState(() {
+                                                  _isLoadingRequest = false;  // Stop loading
+                                                });
                                               }
                                             },
                                             style: ElevatedButton.styleFrom(
                                               minimumSize: const Size(10, 60),
-                                              backgroundColor: _getButtonColor(state),
+                                              backgroundColor: _isLoadingRequest ? Colors.grey : _getButtonColor(state),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                               ),
                                             ),
-                                            child: Text(
-                                              _getButtonText(state),
-                                              style: Theme.of(context).textTheme.bodyMedium,
-                                            ),
+                                            child: _isLoadingRequest 
+                                              ? const SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  _getButtonText(state),
+                                                  style: Theme.of(context).textTheme.bodyMedium,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -296,7 +284,6 @@ class _MapWidgetState extends State<MapWidget> {
                                   ],
                                 ),
                               ),
-                              ]
                             ],
                           ],
                         ),
@@ -334,7 +321,7 @@ class _MapWidgetState extends State<MapWidget> {
     if (state is! MapProfileSelected) return 'Request to join Session';
     
     if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
-      return 'Requested'; // Request sent
+      return 'Leave / Cancel Request'; // Request sent
     } else if (state.me.participating != null) {
       return 'Leave Current Session';
     } else {
