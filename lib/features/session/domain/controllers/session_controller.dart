@@ -24,4 +24,11 @@ class SessionController implements ISessionController {
 
   @override
   void joinSession(final int sessionId) => addEvent(JoinSession(sessionId));
+
+  @override
+  void respondToRequest(
+    final int participantId,
+    final int sessionId,
+    final bool accept,
+  ) => addEvent(RespondToRequest(participantId, sessionId, accept));
 }

@@ -7,13 +7,16 @@ import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/feed/data/repositories/feed_repository_impl.dart';
 import 'package:localplayer/core/network/api_client.dart';
 import 'package:localplayer/features/feed/data/datasources/feed_remote_data_source.dart';
+import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 
 
 class FeedModule {
   static FeedBloc provideBloc({
     required final IFeedRepository feedRepository,
+    required final SessionBloc sessionBloc,
   }) => FeedBloc(
     feedRepository: feedRepository,
+    sessionBloc: sessionBloc,
   );
 
   static IFeedController provideController(

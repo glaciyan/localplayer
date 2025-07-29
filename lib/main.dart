@@ -138,6 +138,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<FeedBloc>(
             create: (final BuildContext context) => FeedModule.provideBloc( 
               feedRepository: context.read<IFeedRepository>(),
+              sessionBloc: context.read<SessionBloc>(),
             )..add(RefreshFeed()),
           ),
           BlocProvider<AuthBloc>(

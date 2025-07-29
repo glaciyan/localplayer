@@ -2,16 +2,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localplayer/core/network/api_error_exception.dart';
 import 'package:localplayer/core/network/no_connection_exception.dart';
+import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 import 'feed_event.dart';
 import 'feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
 import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
+import 'package:localplayer/features/session/presentation/blocs/session_event.dart' as session_event;
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
   final IFeedRepository feedRepository;
+  final SessionBloc sessionBloc;
 
   FeedBloc({
     required this.feedRepository,
+    required this.sessionBloc,
   }) : super(FeedInitial()) {
     on<RefreshFeed>(_onRefreshFeed);
     on<AcceptSession>(_onAcceptSession);
@@ -39,11 +43,17 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   void _onAcceptSession(final AcceptSession event, final Emitter<FeedState> emit) async {
       try {
-        final bool success = await feedRepository.acceptSession(event.userId, event.sessionId);
-        if (success && state is FeedLoaded) {
+        // Use session bloc instead of feed repository
+        sessionBloc.add(session_event.RespondToRequest(
+          event.userId,
+          event.sessionId,
+          true,
+        ));
+        print('Accepted session');
+        
+        // Keep the current feed state
+        if (state is FeedLoaded) {
           emit(FeedLoaded(notifications: (state as FeedLoaded).notifications));
-        } else if (!success) {
-          emit(FeedError("Error accepting session"));
         }
       } catch (e) {
         emit(FeedError(e.toString()));
@@ -51,9 +61,19 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   }
 
   void _onRejectSession(final RejectSession event, final Emitter<FeedState> emit) async {
-      emit(FeedLoading());
       try {
-        await feedRepository.rejectSession(event.userId, event.sessionId);
+        // Use session bloc instead of feed repository
+        sessionBloc.add(session_event.RespondToRequest(
+          event.userId,
+          event.sessionId,
+          false,
+        ));
+        print('Rejected session');
+
+        // Keep the current feed state
+        if (state is FeedLoaded) {
+          emit(FeedLoaded(notifications: (state as FeedLoaded).notifications));
+        }
       } catch (e) {
         emit(FeedError(e.toString()));
       }
