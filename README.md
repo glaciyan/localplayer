@@ -20,7 +20,7 @@ In many urban areas, musicians and music enthusiasts are looking for spontaneous
 **LocalPlayer** solves this by letting users:
 - 📍 Discover others nearby based on location and musical interests  
 - 🖼️ View rich, Spotify-integrated profiles  
-- 🤝 Connect through swipe-based matching or 🎤 session requests
+- 🤝 Connect through 🎤 session requests
 
 ---
 
