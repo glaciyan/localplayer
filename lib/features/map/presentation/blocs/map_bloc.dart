@@ -184,16 +184,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     );
 
     try {
-      // First, leave current session if we're in one
-      log.i('🚪 Leaving current session before joining new one');
-      sessionController.leaveSession();
-      
       // Then, try to join the session
-      log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
-      final int? sessionId = event.selectedUser.session?.id;
+      log.i('🔗 Requesting to join session for user: ${event.selectedUser.displayName}');
+      final int? sessionId = event.selectedUser.sessionId;
       if (sessionId != null) {
         log.i('Attempting to join session: $sessionId');
         sessionController.joinSession(sessionId);
+        
+        // Add a small delay to allow backend to update the user's participating field
+        await Future.delayed(const Duration(milliseconds: 1000));
       } else {
         log.w('No session available');
         return;
@@ -266,6 +265,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       log.i('🚪 Leaving current session from map');
       sessionController.leaveSession();
       log.i('✅ Successfully left session from map');
+      
+      // Add delay to allow backend to update the user's participating field
+      await Future.delayed(const Duration(milliseconds: 1000));
       
       // Refresh current user profile to get updated participating status
       final UserProfile updatedMe = await mapRepository.fetchMe();

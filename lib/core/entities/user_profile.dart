@@ -22,7 +22,7 @@ class UserProfile {
   final DateTime? createdAt;
   final SessionModel? session;
   final int? participating;
-  final String? sessionId;
+  final int? sessionId;
 
   const UserProfile({
     required this.id,
@@ -64,8 +64,8 @@ class UserProfile {
       sessionStatus: json['sessionStatus'],
       createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
       session: json['session'] != null ? SessionModel.fromJson(json['session'] as Map<String, dynamic>) : null,
-      participating: json['participating'],
-      sessionId: json['sessionId']?.toString(),
+      participating: json['participating'] as int?,
+      sessionId: json['sessionId'] as int?,
     );
 
   static LatLng _parsePosition(final Map<String, dynamic> json) {
@@ -142,7 +142,7 @@ class UserProfile {
     final String? sessionStatus,
     final DateTime? createdAt,
     final int? participating,
-    final String? sessionId,
+    final int? sessionId,
   }) => UserProfile(
       id: id ?? this.id,
       handle: handle ?? this.handle,

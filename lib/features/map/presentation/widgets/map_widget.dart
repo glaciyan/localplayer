@@ -240,7 +240,7 @@ class _MapWidgetState extends State<MapWidget> {
                                               ),
                                             ),
                                             child: Text(
-                                              '${state.selectedUser.user.session?.id} Already in Session ${state.me.participating}',
+                                              'Leave / Cancel Request',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                             ),
                                           ),
@@ -262,17 +262,31 @@ class _MapWidgetState extends State<MapWidget> {
                                         Expanded(
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              state.me.participating == null ? mapController.requestJoinSession(state.selectedUser) : context.read<MapBloc>().add(LeaveSession());
+                                              print('DEBUG: participating=${state.me.participating}, sessionId=${state.selectedUser.user.sessionId}');
+                                              
+                                              if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
+                                                // Requested state - leave/cancel the request
+                                                print('DEBUG: Leaving requested session');
+                                                context.read<MapBloc>().add(LeaveSession());
+                                              } else if (state.me.participating != null) {
+                                                // In different session - leave current session
+                                                print('DEBUG: Leaving different session');
+                                                context.read<MapBloc>().add(LeaveSession());
+                                              } else {
+                                                // Can request to join
+                                                print('DEBUG: Requesting to join session');
+                                                mapController.requestJoinSession(state.selectedUser);
+                                              }
                                             },
                                             style: ElevatedButton.styleFrom(
                                               minimumSize: const Size(10, 60),
-                                              backgroundColor: state.me.participating == null ? Colors.green : Colors.grey,
+                                              backgroundColor: _getButtonColor(state),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(20),
                                               ),
                                             ),
                                             child: Text(
-                                              state.me.participating == null ? 'Request to join Session' : 'Leave Current Session ${state.me.participating}',
+                                              _getButtonText(state),
                                               style: Theme.of(context).textTheme.bodyMedium,
                                             ),
                                           ),
@@ -301,4 +315,30 @@ class _MapWidgetState extends State<MapWidget> {
   int _getPopularity(final UserProfile user) => user.popularity ?? 0;
 
   LatLng _getLatLng(final UserProfile user) => user.position;
+
+  Color _getButtonColor(final MapState state) {
+    if (state is! MapProfileSelected) return Colors.green;
+    
+    print('DEBUG: Button color - participating=${state.me.participating}, sessionId=${state.selectedUser.user.sessionId}');
+    
+    if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
+      return Colors.blue; // Request sent
+    } else if (state.me.participating != null) {
+      return Colors.orange; // In different session
+    } else {
+      return Colors.green; // Can request to join
+    }
+  }
+
+  String _getButtonText(final MapState state) {
+    if (state is! MapProfileSelected) return 'Request to join Session';
+    
+    if (state.me.participating != null && state.me.participating == state.selectedUser.user.sessionId) {
+      return 'Requested'; // Request sent
+    } else if (state.me.participating != null) {
+      return 'Leave Current Session';
+    } else {
+      return 'Request to join Session';
+    }
+  }
 }
