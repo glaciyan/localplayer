@@ -9,15 +9,18 @@ import 'package:localplayer/features/map/data/repositories/map_repository_impl.d
 import 'package:localplayer/features/map/domain/controllers/map_controller.dart';
 import 'package:localplayer/features/map/domain/interfaces/map_controller_interface.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_bloc.dart';
+import 'package:localplayer/features/session/domain/interfaces/session_controller_interface.dart';
 
 
 class MapModule {
   static MapBloc provideBloc({
     required final IMapRepository mapRepository,
     required final ISpotifyRepository spotifyRepository,
+    required final ISessionController sessionController,
   }) => MapBloc(
       mapRepository: mapRepository,
       spotifyRepository: spotifyRepository,
+      sessionController: sessionController,
     );
 
   static IMapController provideController(
