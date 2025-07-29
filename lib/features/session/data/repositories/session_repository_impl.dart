@@ -10,8 +10,16 @@ class SessionRepository implements ISessionRepository {
 
   @override
   Future<SessionModel?> getCurrentSession() async {
-    final Map<String, dynamic>? data = await dataSource.getCurrentSession();
-    return data == null ? null : SessionModel.fromJson(data);
+    final dynamic data = await dataSource.getCurrentSession();
+    log.i('getCurrentSession data type: ${data.runtimeType}');
+    log.i('getCurrentSession data: $data');
+    if (data == null) return null;
+    if (data is Map<String, dynamic>) {
+      return SessionModel.fromJson(data);
+    } else {
+      log.e('getCurrentSession received non-Map data: $data');
+      return null;
+    }
   }
 
   @override
@@ -34,10 +42,10 @@ class SessionRepository implements ISessionRepository {
   Future<void> closeSession(final int id) => dataSource.closeSession(id);
 
   @override
-  Future<Map<String, dynamic>> joinSession(final int sessionId) async {
-    final Map<String, dynamic> json = await dataSource.joinSession(sessionId);
-    log.i('Repository: $json');
-    return json;
+  Future<dynamic> joinSession(final int sessionId) async {
+    final dynamic result = await dataSource.joinSession(sessionId);
+    log.i('Repository: $result');
+    return result;
   }
 
   @override

@@ -83,8 +83,23 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   void _onPingUser(final PingUser event, final Emitter<FeedState> emit) async {
     try {
       await feedRepository.pingUser(event.userId);
-      emit(PingUserSuccess((state as FeedLoaded).notifications));
+      
+      // Get notifications from current state, handling different state types
+      List<NotificationModel> notifications = <NotificationModel>[];
+      if (state is FeedLoaded) {
+        notifications = (state as FeedLoaded).notifications;
+      } else if (state is PingUserSuccess) {
+        notifications = (state as PingUserSuccess).notifications;
+      } else if (state is PingUserError) {
+        // If we're in error state, try to get notifications from previous state
+        // For now, emit an empty list
+        notifications = <NotificationModel>[];
+      }
+      
+      emit(PingUserSuccess(notifications));
+      log.i('Pinged user');
     } catch (e) {
+      log.e('Error pinging user: $e');
       emit(PingUserError(e.toString()));
     }
   }

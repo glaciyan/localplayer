@@ -34,6 +34,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<SelectPlayer>(_onSelectPlayer);
     on<DeselectPlayer>(_onDeselectPlayer);
     on<RequestJoinSession>(_onRequestJoinSession);
+    on<LeaveSession>(_onLeaveSession);
   }
 
 
@@ -184,10 +185,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
 
     try {
-      // First, leave current session if we're in one
-      log.i('🚪 Leaving current session before joining new one');
-      sessionController.leaveSession();
-      
       // Then, try to join the session
       log.i('🔗 Attempting to join session for user: ${event.selectedUser.displayName}');
       final int? sessionId = event.selectedUser.session?.id;
@@ -247,6 +244,47 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         zoom: 12,
         selectedUser: enriched,
       ));
+    }
+  }
+
+  Future<void> _onLeaveSession(
+    final LeaveSession event,
+    final Emitter<MapState> emit,
+  ) async {
+    final UserProfile me = await mapRepository.fetchMe();
+    
+    // Get current visible people from state
+    List<UserProfile> currentVisiblePeople = <UserProfile>[];
+    if (state is MapReady) {
+      currentVisiblePeople = (state as MapReady).visiblePeople;
+    } else if (state is MapProfileSelected) {
+      currentVisiblePeople = (state as MapProfileSelected).visiblePeople;
+    }
+
+    try {
+      log.i('🚪 Leaving current session from map');
+      sessionController.leaveSession();
+      log.i('✅ Successfully left session from map');
+      
+      // Return to the current map state with the same selected user
+      if (state is MapProfileSelected) {
+        final MapProfileSelected currentState = state as MapProfileSelected;
+        emit(MapProfileSelected(
+          me: me,
+          latitude: currentState.latitude,
+          longitude: currentState.longitude,
+          visibleBounds: currentState.visibleBounds,
+          visiblePeople: currentVisiblePeople,
+          zoom: currentState.zoom,
+          selectedUser: currentState.selectedUser,
+        ));
+      } else {
+        // If not in a profile selected state, just emit the current state
+        emit(state);
+      }
+    } catch (e) {
+      log.e('❌ Error leaving session from map: $e');
+      emit(MapError('Failed to leave session: $e'));
     }
   }
 

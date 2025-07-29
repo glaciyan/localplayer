@@ -229,7 +229,9 @@ class _MapWidgetState extends State<MapWidget> {
                                       children: <Widget>[
                                         Expanded(
                                           child: ElevatedButton(
-                                            onPressed: null,
+                                              onPressed: () {
+                                                context.read<MapBloc>().add(LeaveSession());
+                                              },
                                             style: ElevatedButton.styleFrom(
                                               minimumSize: const Size(10, 60),
                                               backgroundColor: Colors.grey,
@@ -260,7 +262,7 @@ class _MapWidgetState extends State<MapWidget> {
                                         Expanded(
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              mapController.requestJoinSession(state.selectedUser);
+                                              state.me.participating == null ? mapController.requestJoinSession(state.selectedUser) : context.read<MapBloc>().add(LeaveSession());
                                             },
                                             style: ElevatedButton.styleFrom(
                                               minimumSize: const Size(10, 60),
@@ -270,8 +272,7 @@ class _MapWidgetState extends State<MapWidget> {
                                               ),
                                             ),
                                             child: Text(
-                                              'Leave Session',
-                                              //state.me.participating == null ? 'Request to join Session' : 'Leave Current Session and join new one',
+                                              state.me.participating == null ? 'Request to join Session' : 'Leave Current Session ${state.me.participating}',
                                               style: Theme.of(context).textTheme.bodyMedium,
                                             ),
                                           ),

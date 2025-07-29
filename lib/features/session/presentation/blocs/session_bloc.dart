@@ -71,7 +71,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   ) async {
     emit(SessionLoading());
     try {
-      final Map<String, dynamic> result = await repository.joinSession(event.sessionId);
+      final dynamic result = await repository.joinSession(event.sessionId);
       log.i('✅ Successfully joined session: $result');
       // Reload current session to reflect the join
       final SessionModel? session = await repository.getCurrentSession();
