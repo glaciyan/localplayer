@@ -192,7 +192,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         sessionController.joinSession(sessionId);
         
         // Add a small delay to allow backend to update the user's participating field
-        await Future.delayed(const Duration(milliseconds: 1000));
+        await Future<dynamic>.delayed(const Duration(milliseconds: 1000));
       } else {
         log.w('No session available');
         return;
@@ -267,7 +267,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       log.i('✅ Successfully left session from map');
       
       // Add delay to allow backend to update the user's participating field
-      await Future.delayed(const Duration(milliseconds: 1000));
+      await Future<dynamic>.delayed(const Duration(milliseconds: 1000));
       
       // Refresh current user profile to get updated participating status
       final UserProfile updatedMe = await mapRepository.fetchMe();
