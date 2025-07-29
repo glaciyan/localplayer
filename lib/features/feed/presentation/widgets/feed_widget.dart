@@ -83,7 +83,7 @@ class _FeedWidgetState extends State<FeedWidget> {
                     padding: EdgeInsets.all(16),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) => SizedBox(
+                        (final BuildContext context, final int index) => SizedBox(
                           width: double.infinity,
                           child: FeedPost(
                             post: notifications[index],
