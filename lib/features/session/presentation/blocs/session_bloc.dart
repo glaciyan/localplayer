@@ -73,12 +73,13 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     try {
       final dynamic result = await repository.joinSession(event.sessionId);
       log.i('✅ Successfully joined session: $result');
-      // Reload current session to reflect the join
-      final SessionModel? session = await repository.getCurrentSession();
-      if (session == null) {
-        emit(SessionInactive());
-      } else {
+      
+      // Create SessionModel from the join response
+      if (result is Map<String, dynamic>) {
+        final SessionModel session = SessionModel.fromJson(result);
         emit(SessionActive(session));
+      } else {
+        emit(SessionError('Invalid session response format'));
       }
     } catch (e) {
       log.e('❌ Failed to join session: $e');

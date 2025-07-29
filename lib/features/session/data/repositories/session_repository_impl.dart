@@ -11,8 +11,6 @@ class SessionRepository implements ISessionRepository {
   @override
   Future<SessionModel?> getCurrentSession() async {
     final dynamic data = await dataSource.getCurrentSession();
-    log.i('getCurrentSession data type: ${data.runtimeType}');
-    log.i('getCurrentSession data: $data');
     if (data == null) return null;
     if (data is Map<String, dynamic>) {
       return SessionModel.fromJson(data);

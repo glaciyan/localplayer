@@ -35,6 +35,7 @@ class FeedPost extends StatefulWidget {
 class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   bool _isLoading = false;
+  bool _hasPinged = false;  // Add this line to track pinged state
   String? _backgroundLink;
 
   @override
@@ -207,11 +208,21 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                                 _isLoading = true;
                               });
 
-                              widget.feedController.pingUser(widget.post.sender.id);
-                              
-                              setState(() {
-                                _isLoading = false;
-                              });
+                              try {
+                                widget.feedController.pingUser(widget.post.sender.id);
+                                
+                                // Add delay to show the spinner
+                                await Future<dynamic>.delayed(const Duration(milliseconds: 1500));
+                                
+                                // Mark as pinged after successful ping
+                                setState(() {
+                                  _hasPinged = true;
+                                });
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                              }
                             },
                             child: _isLoading 
                               ? const SizedBox(
@@ -222,9 +233,9 @@ class _FeedPostState extends State<FeedPost> with SingleTickerProviderStateMixin
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
-                              : const Text('Ping Artist'),
+                              : Text(_hasPinged ? 'Re-ping Artist' : 'Ping Artist'),  // Change text based on pinged state
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor: Theme.of(context).colorScheme.primary,  // Keep original color
                               foregroundColor: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),

@@ -13,8 +13,8 @@ class ApiClient {
     : _dio = Dio(
         BaseOptions(
           baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 7),
-          receiveTimeout: const Duration(seconds: 7),
+          connectTimeout: const Duration(seconds: 15),  // Increase from 7 to 15
+          receiveTimeout: const Duration(seconds: 15),  // Increase from 7 to 15
         ),
       ),
       _connectivity = Connectivity() {
