@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
-import 'package:localplayer/features/map/presentation/blocs/map_state.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +9,15 @@ void main() {
   group('MapBloc', () {
     test('MapEvent instances should be created correctly', () {
       // Test InitializeMap
-      final initializeEvent = InitializeMap();
+      final InitializeMap initializeEvent = InitializeMap();
       expect(initializeEvent, isA<InitializeMap>());
 
       // Test LoadMapProfiles
-      final loadProfilesEvent = LoadMapProfiles();
+      final LoadMapProfiles loadProfilesEvent = LoadMapProfiles();
       expect(loadProfilesEvent, isA<LoadMapProfiles>());
 
       // Test SelectPlayer
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -38,29 +37,29 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final selectPlayerEvent = SelectPlayer(userProfile);
+      final SelectPlayer selectPlayerEvent = SelectPlayer(userProfile);
       expect(selectPlayerEvent, isA<SelectPlayer>());
       expect(selectPlayerEvent.selectedUser, equals(userProfile));
 
       // Test RequestJoinSession
-      final requestJoinEvent = RequestJoinSession(userProfile);
+      final RequestJoinSession requestJoinEvent = RequestJoinSession(userProfile);
       expect(requestJoinEvent, isA<RequestJoinSession>());
       expect(requestJoinEvent.selectedUser, equals(userProfile));
 
       // Test LeaveSession
-      final leaveSessionEvent = LeaveSession();
+      final LeaveSession leaveSessionEvent = LeaveSession();
       expect(leaveSessionEvent, isA<LeaveSession>());
 
       // Test UpdateCameraPosition
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visiblePeople = <UserProfile>[];
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      const zoom = 13.0;
-      final updateCameraEvent = UpdateCameraPosition(
+      const double zoom = 13.0;
+      final UpdateCameraPosition updateCameraEvent = UpdateCameraPosition(
         latitude,
         longitude,
         visiblePeople,
@@ -73,7 +72,7 @@ void main() {
       expect(updateCameraEvent.zoom, equals(zoom));
 
       // Test DeselectPlayer
-      final deselectPlayerEvent = DeselectPlayer(
+      final DeselectPlayer deselectPlayerEvent = DeselectPlayer(
         userProfile,
         latitude,
         longitude,

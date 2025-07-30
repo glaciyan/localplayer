@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:localplayer/features/map/presentation/blocs/map_event.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
-import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,25 +9,25 @@ void main() {
   group('MapEvent', () {
     test('InitializeMap should be instance of InitializeMap', () {
       // Arrange & Act
-      final event = InitializeMap();
+      final InitializeMap initializeEvent = InitializeMap();
 
       // Assert
-      expect(event, isA<InitializeMap>());
+      expect(initializeEvent, isA<InitializeMap>());
     });
 
     test('UpdateCameraPosition should have correct properties', () {
       // Arrange
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visiblePeople = <UserProfile>[];
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      const zoom = 13.0;
+      const double zoom = 13.0;
 
       // Act
-      final event = UpdateCameraPosition(
+      final UpdateCameraPosition updateCameraEvent = UpdateCameraPosition(
         latitude,
         longitude,
         visiblePeople,
@@ -37,24 +36,24 @@ void main() {
       );
 
       // Assert
-      expect(event.latitude, equals(latitude));
-      expect(event.longitude, equals(longitude));
-      expect(event.visiblePeople, equals(visiblePeople));
-      expect(event.visibleBounds, equals(visibleBounds));
-      expect(event.zoom, equals(zoom));
+      expect(updateCameraEvent.latitude, equals(latitude));
+      expect(updateCameraEvent.longitude, equals(longitude));
+      expect(updateCameraEvent.visiblePeople, equals(visiblePeople));
+      expect(updateCameraEvent.visibleBounds, equals(visibleBounds));
+      expect(updateCameraEvent.zoom, equals(zoom));
     });
 
     test('LoadMapProfiles should be instance of LoadMapProfiles', () {
       // Arrange & Act
-      final event = LoadMapProfiles();
+      final LoadMapProfiles loadProfilesEvent = LoadMapProfiles();
 
       // Assert
-      expect(event, isA<LoadMapProfiles>());
+      expect(loadProfilesEvent, isA<LoadMapProfiles>());
     });
 
     test('SelectPlayer should have correct selectedUser', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -76,15 +75,15 @@ void main() {
       );
 
       // Act
-      final event = SelectPlayer(userProfile);
+      final SelectPlayer selectPlayerEvent = SelectPlayer(userProfile);
 
       // Assert
-      expect(event.selectedUser, equals(userProfile));
+      expect(selectPlayerEvent.selectedUser, equals(userProfile));
     });
 
     test('DeselectPlayer should have correct properties', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -104,16 +103,16 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      const zoom = 13.0;
+      const double zoom = 13.0;
 
       // Act
-      final event = DeselectPlayer(
+      final DeselectPlayer deselectPlayerEvent = DeselectPlayer(
         userProfile,
         latitude,
         longitude,
@@ -122,16 +121,16 @@ void main() {
       );
 
       // Assert
-      expect(event.selectedUser, equals(userProfile));
-      expect(event.latitude, equals(latitude));
-      expect(event.longitude, equals(longitude));
-      expect(event.visibleBounds, equals(visibleBounds));
-      expect(event.zoom, equals(zoom));
+      expect(deselectPlayerEvent.selectedUser, equals(userProfile));
+      expect(deselectPlayerEvent.latitude, equals(latitude));
+      expect(deselectPlayerEvent.longitude, equals(longitude));
+      expect(deselectPlayerEvent.visibleBounds, equals(visibleBounds));
+      expect(deselectPlayerEvent.zoom, equals(zoom));
     });
 
     test('RequestJoinSession should have correct selectedUser', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -153,18 +152,18 @@ void main() {
       );
 
       // Act
-      final event = RequestJoinSession(userProfile);
+      final RequestJoinSession requestJoinEvent = RequestJoinSession(userProfile);
 
       // Assert
-      expect(event.selectedUser, equals(userProfile));
+      expect(requestJoinEvent.selectedUser, equals(userProfile));
     });
 
     test('LeaveSession should be instance of LeaveSession', () {
       // Arrange & Act
-      final event = LeaveSession();
+      final LeaveSession leaveSessionEvent = LeaveSession();
 
       // Assert
-      expect(event, isA<LeaveSession>());
+      expect(leaveSessionEvent, isA<LeaveSession>());
     });
   });
 } 
