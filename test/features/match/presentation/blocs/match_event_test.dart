@@ -8,7 +8,7 @@ void main() {
   group('MatchEvent', () {
     test('LoadProfiles should be instance of LoadProfiles', () {
       // Arrange & Act
-      final event = LoadProfiles();
+      final LoadProfiles event = LoadProfiles();
 
       // Assert
       expect(event, isA<LoadProfiles>());
@@ -16,7 +16,7 @@ void main() {
 
     test('MatchNextProfile should be instance of MatchNextProfile', () {
       // Arrange & Act
-      final event = MatchNextProfile();
+      final MatchNextProfile event = MatchNextProfile();
 
       // Assert
       expect(event, isA<MatchNextProfile>());
@@ -24,7 +24,7 @@ void main() {
 
     test('LikePressed should have correct profile', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -46,7 +46,7 @@ void main() {
       );
 
       // Act
-      final event = LikePressed(userProfile);
+      final LikePressed event = LikePressed(userProfile);
 
       // Assert
       expect(event.profile, equals(userProfile));
@@ -54,7 +54,7 @@ void main() {
 
     test('DislikePressed should have correct profile', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -76,7 +76,7 @@ void main() {
       );
 
       // Act
-      final event = DislikePressed(userProfile);
+      final DislikePressed event = DislikePressed(userProfile);
 
       // Assert
       expect(event.profile, equals(userProfile));
