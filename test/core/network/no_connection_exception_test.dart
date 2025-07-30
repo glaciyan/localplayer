@@ -5,7 +5,7 @@ void main() {
   group('NoConnectionException', () {
     test('should create NoConnectionException with default message', () {
       // Arrange & Act
-      final exception = NoConnectionException();
+      final NoConnectionException exception = NoConnectionException();
 
       // Assert
       expect(exception, isA<NoConnectionException>());
@@ -15,10 +15,10 @@ void main() {
 
     test('should create NoConnectionException with custom message', () {
       // Arrange
-      const message = 'Custom connection error message';
+      const String message = 'Custom connection error message';
 
       // Act
-      final exception = NoConnectionException(message);
+      final NoConnectionException exception = NoConnectionException(message);
 
       // Assert
       expect(exception, isA<NoConnectionException>());
@@ -27,10 +27,10 @@ void main() {
 
     test('should have correct toString representation', () {
       // Arrange
-      const message = 'Test connection error';
+      const String message = 'Test connection error';
 
       // Act
-      final exception = NoConnectionException(message);
+      final NoConnectionException exception = NoConnectionException(message);
 
       // Assert
       expect(exception.toString(), equals('NoConnectionException: $message'));
@@ -38,7 +38,7 @@ void main() {
 
     test('should have correct toString with default message', () {
       // Arrange & Act
-      final exception = NoConnectionException();
+      final NoConnectionException exception = NoConnectionException();
 
       // Assert
       expect(exception.toString(), equals('NoConnectionException: No internet connection'));

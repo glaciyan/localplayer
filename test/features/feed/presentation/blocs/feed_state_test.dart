@@ -1,13 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_state.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
-import 'package:localplayer/core/entities/user_profile.dart';
 
 void main() {
   group('FeedState', () {
     test('FeedInitial should be instance of FeedInitial', () {
       // Arrange & Act
-      final state = FeedInitial();
+      final FeedInitial state = FeedInitial();
 
       // Assert
       expect(state, isA<FeedInitial>());
@@ -15,7 +14,7 @@ void main() {
 
     test('FeedLoading should be instance of FeedLoading', () {
       // Arrange & Act
-      final state = FeedLoading();
+      final FeedLoading state = FeedLoading();
 
       // Assert
       expect(state, isA<FeedLoading>());
@@ -23,11 +22,11 @@ void main() {
 
     test('FeedLoaded should have correct properties', () {
       // Arrange
-      final notifications = <NotificationModel>[];
-      const hasMore = true;
+      final List<NotificationModel> notifications = <NotificationModel>[];
+      const bool hasMore = true;
 
       // Act
-      final state = FeedLoaded(notifications: notifications, hasMore: hasMore);
+      final FeedLoaded state = FeedLoaded(notifications: notifications, hasMore: hasMore);
 
       // Assert
       expect(state.notifications, equals(notifications));
@@ -36,10 +35,10 @@ void main() {
 
     test('FeedLoaded should have default hasMore value', () {
       // Arrange
-      final notifications = <NotificationModel>[];
+      final List<NotificationModel> notifications = <NotificationModel>[];
 
       // Act
-      final state = FeedLoaded(notifications: notifications);
+      final FeedLoaded state = FeedLoaded(notifications: notifications);
 
       // Assert
       expect(state.hasMore, equals(true));
@@ -47,10 +46,10 @@ void main() {
 
     test('FeedError should have correct message', () {
       // Arrange
-      const message = 'Test error message';
+      const String message = 'Test error message';
 
       // Act
-      final state = FeedError(message);
+      final FeedError state = FeedError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -58,10 +57,10 @@ void main() {
 
     test('PingUserSuccess should have correct notifications', () {
       // Arrange
-      final notifications = <NotificationModel>[];
+      final List<NotificationModel> notifications = <NotificationModel>[];
 
       // Act
-      final state = PingUserSuccess(notifications);
+      final PingUserSuccess state = PingUserSuccess(notifications);
 
       // Assert
       expect(state.notifications, equals(notifications));
@@ -69,10 +68,10 @@ void main() {
 
     test('PingUserError should have correct message', () {
       // Arrange
-      const message = 'Ping error message';
+      const String message = 'Ping error message';
 
       // Act
-      final state = PingUserError(message);
+      final PingUserError state = PingUserError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -80,11 +79,11 @@ void main() {
 
     test('FeedLoaded should have correct notifications and hasMore', () {
       // Arrange
-      final notifications = <NotificationModel>[];
-      const hasMore = false;
+      final List<NotificationModel> notifications = <NotificationModel>[];
+      const bool hasMore = false;
 
       // Act
-      final state = FeedLoaded(notifications: notifications, hasMore: hasMore);
+      final FeedLoaded state = FeedLoaded(notifications: notifications, hasMore: hasMore);
 
       // Assert
       expect(state.notifications, equals(notifications));

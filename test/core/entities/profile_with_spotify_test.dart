@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 import 'package:latlong2/latlong.dart';
 
 void main() {
   group('ProfileWithSpotify', () {
     test('should create ProfileWithSpotify with required properties', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -29,18 +30,18 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final spotifyArtistData = SpotifyArtistData(
+      final SpotifyArtistData spotifyArtistData = SpotifyArtistData(
         name: 'Test Artist',
         genres: 'pop, rock',
         imageUrl: 'test_image.jpg',
         biography: 'Test biography',
-        tracks: [],
+        tracks: <TrackEntity>[],
         popularity: 50,
         listeners: 1000,
       );
 
       // Act
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: spotifyArtistData,
       );
@@ -53,7 +54,7 @@ void main() {
 
     test('should have const constructor', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -73,18 +74,18 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final spotifyArtistData = SpotifyArtistData(
+      final SpotifyArtistData spotifyArtistData = SpotifyArtistData(
         name: 'Test Artist',
         genres: 'pop, rock',
         imageUrl: 'test_image.jpg',
         biography: 'Test biography',
-        tracks: [],
+        tracks: <TrackEntity>[],
         popularity: 50,
         listeners: 1000,
       );
 
       // Act
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: spotifyArtistData,
       );
@@ -97,7 +98,7 @@ void main() {
 
     test('should access user properties correctly', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -117,18 +118,18 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final spotifyArtistData = SpotifyArtistData(
+      final SpotifyArtistData spotifyArtistData = SpotifyArtistData(
         name: 'Test Artist',
         genres: 'pop, rock',
         imageUrl: 'test_image.jpg',
         biography: 'Test biography',
-        tracks: [],
+        tracks: <TrackEntity>[],
         popularity: 50,
         listeners: 1000,
       );
 
       // Act
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: spotifyArtistData,
       );
@@ -141,7 +142,7 @@ void main() {
 
     test('should access artist properties correctly', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -161,18 +162,18 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final spotifyArtistData = SpotifyArtistData(
+      final SpotifyArtistData spotifyArtistData = SpotifyArtistData(
         name: 'Test Artist',
         genres: 'pop, rock',
         imageUrl: 'test_image.jpg',
         biography: 'Test biography',
-        tracks: [],
+        tracks: <TrackEntity>[],
         popularity: 50,
         listeners: 1000,
       );
 
       // Act
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: spotifyArtistData,
       );

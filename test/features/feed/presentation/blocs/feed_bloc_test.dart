@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bloc_test/bloc_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:localplayer/features/feed/presentation/blocs/feed_bloc.dart';
@@ -8,10 +7,9 @@ import 'package:localplayer/features/feed/presentation/blocs/feed_state.dart';
 import 'package:localplayer/features/feed/data/feed_repository_interface.dart';
 import 'package:localplayer/features/session/presentation/blocs/session_bloc.dart';
 import 'package:localplayer/features/feed/domain/models/NotificationModel.dart';
-import 'package:localplayer/core/entities/user_profile.dart';
 
 // Generate mocks
-@GenerateMocks([IFeedRepository, SessionBloc])
+@GenerateMocks(<Type>[IFeedRepository, SessionBloc])
 import 'feed_bloc_test.mocks.dart';
 
 void main() {
@@ -47,7 +45,7 @@ void main() {
       feedBloc.add(RefreshFeed());
 
       // Assert - wait for async operation
-      await Future.delayed(const Duration(milliseconds: 2000));
+      await Future<dynamic>.delayed(const Duration(milliseconds: 2000));
       expect(feedBloc.state, isA<FeedLoaded>());
     });
 
@@ -61,7 +59,7 @@ void main() {
       feedBloc.add(RefreshFeed());
 
       // Assert - wait for async operation
-      await Future.delayed(const Duration(milliseconds: 2000));
+      await Future<dynamic>.delayed(const Duration(milliseconds: 2000));
       expect(feedBloc.state, isA<FeedError>());
     });
 
@@ -93,7 +91,7 @@ void main() {
 
     test('should handle PingUser event', () async {
       // Arrange
-      const userId = 123;
+      const int userId = 123;
       when(mockFeedRepository.pingUser(userId)).thenAnswer((_) async => null);
       feedBloc.emit(FeedLoaded(notifications: <NotificationModel>[]));
 
@@ -101,7 +99,7 @@ void main() {
       feedBloc.add(PingUser(userId));
 
       // Assert - wait for async operation
-      await Future.delayed(const Duration(milliseconds: 2000));
+      await Future<dynamic>.delayed(const Duration(milliseconds: 2000));
       expect(feedBloc.state, isA<PingUserSuccess>());
     });
   });

@@ -5,7 +5,7 @@ void main() {
   group('FeedEvent', () {
     test('LoadFeed should be instance of LoadFeed', () {
       // Arrange & Act
-      final event = LoadFeed();
+      final LoadFeed event = LoadFeed();
 
       // Assert
       expect(event, isA<LoadFeed>());
@@ -13,7 +13,7 @@ void main() {
 
     test('RefreshFeed should be instance of RefreshFeed', () {
       // Arrange & Act
-      final event = RefreshFeed();
+      final RefreshFeed event = RefreshFeed();
 
       // Assert
       expect(event, isA<RefreshFeed>());
@@ -21,11 +21,11 @@ void main() {
 
     test('AcceptSession should have correct properties', () {
       // Arrange
-      const sessionId = 1;
-      const userId = 2;
+      const int sessionId = 1;
+      const int userId = 2;
 
       // Act
-      final event = AcceptSession(sessionId, userId);
+      final AcceptSession event = AcceptSession(sessionId, userId);
 
       // Assert
       expect(event.sessionId, equals(sessionId));
@@ -34,11 +34,11 @@ void main() {
 
     test('RejectSession should have correct properties', () {
       // Arrange
-      const sessionId = 1;
-      const userId = 2;
+      const int sessionId = 1;
+      const int userId = 2;
 
       // Act
-      final event = RejectSession(sessionId, userId);
+      final RejectSession event = RejectSession(sessionId, userId);
 
       // Assert
       expect(event.sessionId, equals(sessionId));
@@ -47,10 +47,10 @@ void main() {
 
     test('PingUser should have correct properties', () {
       // Arrange
-      const userId = 1;
+      const int userId = 1;
 
       // Act
-      final event = PingUser(userId);
+      final PingUser event = PingUser(userId);
 
       // Assert
       expect(event.userId, equals(userId));
@@ -58,12 +58,12 @@ void main() {
 
     test('RespondToRequest should have correct properties', () {
       // Arrange
-      const participantId = 1;
-      const sessionId = 2;
-      const accept = true;
+      const int participantId = 1;
+      const int sessionId = 2;
+      const bool accept = true;
 
       // Act
-      final event = RespondToRequest(participantId, sessionId, accept);
+      final RespondToRequest event = RespondToRequest(participantId, sessionId, accept);
 
       // Assert
       expect(event.participantId, equals(participantId));
@@ -73,7 +73,7 @@ void main() {
 
     test('AcceptSession should have correct sessionId and userId', () {
       // Arrange & Act
-      final event = AcceptSession(1, 2);
+      final AcceptSession event = AcceptSession(1, 2);
 
       // Assert
       expect(event.sessionId, equals(1));

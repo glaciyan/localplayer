@@ -7,14 +7,14 @@ void main() {
   group('NotificationModel', () {
     test('should create NotificationModel from valid JSON', () {
       // Arrange
-      final Map<String, Object> json = <String, Object> {
+      final Map<String, Object?> json = <String, Object?> {
         'id': 1,
         'createdAt': '2024-01-01T12:00:00Z',
         'title': 'Test Notification',
         'message': 'Test message',
         'read': false,
         'type': 'session_requested',
-        'sender': {
+        'sender': <String, Object?> {
           'id': 1,
           'handle': 'testuser',
           'displayName': 'Test User',
@@ -33,7 +33,7 @@ void main() {
           'participating': null,
           'sessionId': null,
         },
-        'session': {
+        'session': <String, Object?> {
           'id': 1,
           'name': 'Test Session',
           'status': 'active',
@@ -43,7 +43,7 @@ void main() {
       };
 
       // Act
-      final notification = NotificationModel.fromJson(json);
+      final NotificationModel notification = NotificationModel.fromJson(json);
 
       // Assert
       expect(notification.id, equals(1));
@@ -57,14 +57,14 @@ void main() {
 
     test('should handle JSON without session', () {
       // Arrange
-      final json = {
+      final Map<String, Object?> json = <String, Object?> {
         'id': 1,
         'createdAt': '2024-01-01T12:00:00Z',
         'title': 'Test Notification',
-        'message': null,
+        'message': '',
         'read': true,
         'type': 'like',
-        'sender': {
+        'sender': <String, Object?> {
           'id': 1,
           'handle': 'testuser',
           'displayName': 'Test User',
@@ -87,34 +87,34 @@ void main() {
       };
 
       // Act
-      final notification = NotificationModel.fromJson(json);
+      final NotificationModel notification = NotificationModel.fromJson(json);
 
       // Assert
       expect(notification.id, equals(1));
-      expect(notification.message, isNull);
+      expect(notification.message, equals(''));
       expect(notification.read, equals(true));
       expect(notification.type, equals(NotificationType.like));
       expect(notification.session, isNull);
     });
 
     test('should parse different notification types correctly', () {
-      final testCases = [
-        {'type': 'session_requested', 'expected': NotificationType.sessionInvite},
-        {'type': 'session_request_accepted', 'expected': NotificationType.sessionAccepted},
-        {'type': 'session_request_rejected', 'expected': NotificationType.sessionRejected},
-        {'type': 'like', 'expected': NotificationType.like},
-        {'type': 'dislike', 'expected': NotificationType.dislike},
-        {'type': 'unknown', 'expected': NotificationType.other},
+      final List<Map<String, Object>> testCases = <Map<String, Object>> [
+        <String, Object>{'type': 'session_requested', 'expected': NotificationType.sessionInvite},
+        <String, Object>{'type': 'session_request_accepted', 'expected': NotificationType.sessionAccepted},
+        <String, Object>{'type': 'session_request_rejected', 'expected': NotificationType.sessionRejected},
+        <String, Object>{'type': 'like', 'expected': NotificationType.like},
+        <String, Object>{'type': 'dislike', 'expected': NotificationType.dislike},
+        <String, Object>{'type': 'unknown', 'expected': NotificationType.other},
       ];
 
-      for (final testCase in testCases) {
-        final json = {
+      for (final Map<String, Object> testCase in testCases) {
+        final Map<String, Object?> json = <String, Object?> {
           'id': 1,
           'createdAt': '2024-01-01T12:00:00Z',
           'title': 'Test',
           'read': false,
-          'type': testCase['type'],
-          'sender': {
+          'type': testCase['type'] as String,
+          'sender': <String, Object?> {
             'id': 1,
             'handle': 'testuser',
             'displayName': 'Test User',
@@ -135,9 +135,9 @@ void main() {
           },
         };
 
-        final notification = NotificationModel.fromJson(json);
+        final NotificationModel notification = NotificationModel.fromJson(json);
         expect(notification.type, equals(testCase['expected']));
       }
     });
   });
-} 
+}

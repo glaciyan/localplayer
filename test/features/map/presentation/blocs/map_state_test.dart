@@ -6,12 +6,13 @@ import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 
 void main() {
   group('MapState', () {
     test('MapInitial should be instance of MapInitial', () {
       // Arrange & Act
-      final state = MapInitial();
+      final MapInitial state = MapInitial();
 
       // Assert
       expect(state, isA<MapInitial>());
@@ -19,7 +20,7 @@ void main() {
 
     test('MapLoading should be instance of MapLoading', () {
       // Arrange & Act
-      final state = MapLoading();
+      final MapLoading state = MapLoading();
 
       // Assert
       expect(state, isA<MapLoading>());
@@ -27,10 +28,10 @@ void main() {
 
     test('MapError should have correct message', () {
       // Arrange
-      const message = 'Test error message';
+      const String message = 'Test error message';
 
       // Act
-      final state = MapError(message);
+      final MapError state = MapError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -38,15 +39,15 @@ void main() {
 
     test('MapReady should have correct properties', () {
       // Arrange
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      final visiblePeople = <UserProfile>[];
-      const zoom = 13.0;
-      final me = UserProfile(
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      const double zoom = 13.0;
+      final UserProfile me = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -68,7 +69,7 @@ void main() {
       );
 
       // Act
-      final state = MapReady(
+      final MapReady state = MapReady(
         latitude: latitude,
         longitude: longitude,
         visibleBounds: visibleBounds,
@@ -88,15 +89,15 @@ void main() {
 
     test('MapReady copyWith should work correctly', () {
       // Arrange
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      final visiblePeople = <UserProfile>[];
-      const zoom = 13.0;
-      final me = UserProfile(
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      const double zoom = 13.0;
+      final UserProfile me = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -117,7 +118,7 @@ void main() {
         sessionId: null,
       );
 
-      final state = MapReady(
+      final MapReady state = MapReady(
         latitude: latitude,
         longitude: longitude,
         visibleBounds: visibleBounds,
@@ -127,7 +128,7 @@ void main() {
       );
 
       // Act
-      final newState = state.copyWith(zoom: 15.0);
+      final MapReady newState = state.copyWith(zoom: 15.0);
 
       // Assert
       expect(newState.latitude, equals(latitude));
@@ -138,15 +139,15 @@ void main() {
 
     test('MapProfileSelected should have correct properties', () {
       // Arrange
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      final visiblePeople = <UserProfile>[];
-      const zoom = 13.0;
-      final me = UserProfile(
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      const double zoom = 13.0;
+      final UserProfile me = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -166,21 +167,21 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final selectedUser = ProfileWithSpotify(
+      final ProfileWithSpotify selectedUser = ProfileWithSpotify(
         user: me,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
 
       // Act
-      final state = MapProfileSelected(
+      final MapProfileSelected state = MapProfileSelected(
         latitude: latitude,
         longitude: longitude,
         visibleBounds: visibleBounds,
@@ -202,15 +203,15 @@ void main() {
 
     test('MapProfileSelected copyWith should work correctly', () {
       // Arrange
-      const latitude = 40.7128;
-      const longitude = -74.0060;
-      final visibleBounds = LatLngBounds(
+      const double latitude = 40.7128;
+      const double longitude = -74.0060;
+      final LatLngBounds visibleBounds = LatLngBounds(
         LatLng(40.0, -74.0),
         LatLng(41.0, -73.0),
       );
-      final visiblePeople = <UserProfile>[];
-      const zoom = 13.0;
-      final me = UserProfile(
+      final List<UserProfile> visiblePeople = <UserProfile>[];
+      const double zoom = 13.0;
+      final UserProfile me = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -230,20 +231,20 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final selectedUser = ProfileWithSpotify(
+      final ProfileWithSpotify selectedUser = ProfileWithSpotify(
         user: me,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
 
-      final state = MapProfileSelected(
+      final MapProfileSelected state = MapProfileSelected(
         latitude: latitude,
         longitude: longitude,
         visibleBounds: visibleBounds,
@@ -254,7 +255,7 @@ void main() {
       );
 
       // Act
-      final newState = state.copyWith(zoom: 15.0);
+      final MapProfileSelected newState = state.copyWith(zoom: 15.0);
 
       // Assert
       expect(newState.latitude, equals(latitude));

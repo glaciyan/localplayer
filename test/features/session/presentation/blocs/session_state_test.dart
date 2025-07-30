@@ -7,7 +7,7 @@ void main() {
   group('SessionState', () {
     test('SessionInitial should be instance of SessionInitial', () {
       // Arrange & Act
-      final state = SessionInitial();
+      final SessionInitial state = SessionInitial();
 
       // Assert
       expect(state, isA<SessionInitial>());
@@ -15,7 +15,7 @@ void main() {
 
     test('SessionLoading should be instance of SessionLoading', () {
       // Arrange & Act
-      final state = SessionLoading();
+      final SessionLoading state = SessionLoading();
 
       // Assert
       expect(state, isA<SessionLoading>());
@@ -23,7 +23,7 @@ void main() {
 
     test('SessionActive should have correct session', () {
       // Arrange
-      final session = SessionModel(
+      final SessionModel session = SessionModel(
         id: 1,
         createdAt: DateTime.now(),
         updateAt: DateTime.now(),
@@ -33,7 +33,7 @@ void main() {
       );
 
       // Act
-      final state = SessionActive(session);
+      final SessionActive state = SessionActive(session);
 
       // Assert
       expect(state.session, equals(session));
@@ -41,7 +41,7 @@ void main() {
 
     test('SessionActive should work with null position', () {
       // Arrange
-      final session = SessionModel(
+      final SessionModel session = SessionModel(
         id: 1,
         createdAt: DateTime.now(),
         updateAt: DateTime.now(),
@@ -51,7 +51,7 @@ void main() {
       );
 
       // Act
-      final state = SessionActive(session);
+      final SessionActive state = SessionActive(session);
 
       // Assert
       expect(state.session, equals(session));
@@ -60,7 +60,7 @@ void main() {
 
     test('SessionInactive should be instance of SessionInactive', () {
       // Arrange & Act
-      final state = SessionInactive();
+      final SessionInactive state = SessionInactive();
 
       // Assert
       expect(state, isA<SessionInactive>());
@@ -68,10 +68,10 @@ void main() {
 
     test('SessionError should have correct message', () {
       // Arrange
-      const message = 'Test error message';
+      const String message = 'Test error message';
 
       // Act
-      final state = SessionError(message);
+      final SessionError state = SessionError(message);
 
       // Assert
       expect(state.message, equals(message));

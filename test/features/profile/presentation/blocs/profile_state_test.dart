@@ -5,12 +5,13 @@ import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 
 void main() {
   group('ProfileState', () {
     test('ProfileLoading should be instance of ProfileLoading', () {
       // Arrange & Act
-      final state = ProfileLoading();
+      final ProfileLoading state = ProfileLoading();
 
       // Assert
       expect(state, isA<ProfileLoading>());
@@ -18,7 +19,7 @@ void main() {
 
     test('ProfileLoaded should have correct properties', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -38,22 +39,22 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      const updated = false;
+      const bool updated = false;
 
       // Act
-      final state = ProfileLoaded(profileWithSpotify, updated);
+      final ProfileLoaded state = ProfileLoaded(profileWithSpotify, updated);
 
       // Assert
       expect(state.profile, equals(profileWithSpotify));
@@ -62,7 +63,7 @@ void main() {
 
     test('ProfileLoaded should work with updated = true', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -82,22 +83,22 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      const updated = true;
+      const bool updated = true;
 
       // Act
-      final state = ProfileLoaded(profileWithSpotify, updated);
+      final ProfileLoaded state = ProfileLoaded(profileWithSpotify, updated);
 
       // Assert
       expect(state.profile, equals(profileWithSpotify));
@@ -106,7 +107,7 @@ void main() {
 
     test('ProfileSignedOut should be instance of ProfileSignedOut', () {
       // Arrange & Act
-      final state = ProfileSignedOut();
+      final ProfileSignedOut state = ProfileSignedOut();
 
       // Assert
       expect(state, isA<ProfileSignedOut>());
@@ -114,10 +115,10 @@ void main() {
 
     test('ProfileError should have correct message', () {
       // Arrange
-      const message = 'Test error message';
+      const String message = 'Test error message';
 
       // Act
-      final state = ProfileError(message);
+      final ProfileError state = ProfileError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -125,7 +126,7 @@ void main() {
 
     test('ProfileUpdateSuccess should be instance of ProfileUpdateSuccess', () {
       // Arrange & Act
-      final state = ProfileUpdateSuccess();
+      final ProfileUpdateSuccess state = ProfileUpdateSuccess();
 
       // Assert
       expect(state, isA<ProfileUpdateSuccess>());

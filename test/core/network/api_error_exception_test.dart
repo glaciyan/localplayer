@@ -5,7 +5,7 @@ void main() {
   group('ApiErrorException', () {
     test('should create ApiErrorException with default values', () {
       // Arrange & Act
-      final exception = ApiErrorException();
+      final ApiErrorException exception = ApiErrorException();
 
       // Assert
       expect(exception, isA<ApiErrorException>());
@@ -16,10 +16,10 @@ void main() {
 
     test('should create ApiErrorException with custom message', () {
       // Arrange
-      const message = 'Custom error message';
+      const String message = 'Custom error message';
 
       // Act
-      final exception = ApiErrorException(message);
+      final ApiErrorException exception = ApiErrorException(message);
 
       // Assert
       expect(exception, isA<ApiErrorException>());
@@ -29,11 +29,11 @@ void main() {
 
     test('should create ApiErrorException with custom message and code', () {
       // Arrange
-      const message = 'Custom error message';
-      const code = 'custom/error';
+      const String message = 'Custom error message';
+      const String code = 'custom/error';
 
       // Act
-      final exception = ApiErrorException(message, code);
+      final ApiErrorException exception = ApiErrorException(message, code);
 
       // Assert
       expect(exception, isA<ApiErrorException>());
@@ -43,11 +43,11 @@ void main() {
 
     test('should have correct toString representation', () {
       // Arrange
-      const message = 'Test error message';
-      const code = 'test/error';
+      const String message = 'Test error message';
+      const String code = 'test/error';
 
       // Act
-      final exception = ApiErrorException(message, code);
+      final ApiErrorException exception = ApiErrorException(message, code);
 
       // Assert
       expect(exception.toString(), equals('ApiErrorException: $code $message'));
@@ -55,7 +55,7 @@ void main() {
 
     test('should have correct toString with default values', () {
       // Arrange & Act
-      final exception = ApiErrorException();
+      final ApiErrorException exception = ApiErrorException();
 
       // Assert
       expect(exception.toString(), equals('ApiErrorException: unknown/error Unexpected Error'));

@@ -5,20 +5,21 @@ import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 
 void main() {
   group('ProfileEvent', () {
     test('LoadProfile should be instance of LoadProfile', () {
       // Arrange & Act
-      final event = LoadProfile();
+      final LoadProfile event = LoadProfile();
 
       // Assert
-      expect(event, isA<LoadProfile>());
+      expect(event, isA<LoadProfile>()); 
     });
 
     test('LoadProfile should have null updatedProfile', () {
       // Arrange & Act
-      final event = LoadProfile();
+      final LoadProfile event = LoadProfile();
 
       // Assert
       expect(event.updatedProfile, isNull);
@@ -26,11 +27,11 @@ void main() {
 
     test('ProfileUpdated should have correct properties', () {
       // Arrange
-      const displayName = 'Test User';
-      const biography = 'Test biography';
+      const String displayName = 'Test User';
+      const String biography = 'Test biography';
 
       // Act
-      final event = ProfileUpdated(displayName: displayName, biography: biography);
+      final ProfileUpdated event = ProfileUpdated(displayName: displayName, biography: biography);
 
       // Assert
       expect(event.displayName, equals(displayName));
@@ -39,7 +40,7 @@ void main() {
 
     test('UpdateProfile should have correct updatedProfile', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -59,21 +60,21 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
 
       // Act
-      final event = UpdateProfile(profileWithSpotify);
+      final UpdateProfile event = UpdateProfile(profileWithSpotify);
 
       // Assert
       expect(event.updatedProfile, equals(profileWithSpotify));
@@ -81,7 +82,7 @@ void main() {
 
     test('SignOut should be instance of SignOut', () {
       // Arrange & Act
-      final event = SignOut();
+      final SignOut event = SignOut();
 
       // Assert
       expect(event, isA<SignOut>());
@@ -89,7 +90,7 @@ void main() {
 
     test('ProfileUpdateSuccess should be instance of ProfileUpdateSuccess', () {
       // Arrange & Act
-      final event = ProfileUpdateSuccess();
+      final ProfileUpdateSuccess event = ProfileUpdateSuccess();
 
       // Assert
       expect(event, isA<ProfileUpdateSuccess>());

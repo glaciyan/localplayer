@@ -5,12 +5,13 @@ import 'package:localplayer/core/entities/user_profile.dart';
 import 'package:localplayer/core/entities/profile_with_spotify.dart';
 import 'package:localplayer/core/services/spotify/domain/entities/spotify_artist_data.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:localplayer/core/services/spotify/domain/entities/track_entity.dart';
 
 void main() {
   group('MatchState', () {
     test('MatchInitial should be instance of MatchInitial', () {
       // Arrange & Act
-      final state = MatchInitial();
+      final MatchInitial state = MatchInitial();
 
       // Assert
       expect(state, isA<MatchInitial>());
@@ -18,7 +19,7 @@ void main() {
 
     test('MatchLoading should be instance of MatchLoading', () {
       // Arrange & Act
-      final state = MatchLoading();
+      final MatchLoading state = MatchLoading();
 
       // Assert
       expect(state, isA<MatchLoading>());
@@ -26,10 +27,10 @@ void main() {
 
     test('MatchError should have correct message', () {
       // Arrange
-      const message = 'Test error message';
+      const String message = 'Test error message';
 
       // Act
-      final state = MatchError(message);
+      final MatchError state = MatchError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -37,10 +38,10 @@ void main() {
 
     test('ToastedMatchError should have correct message', () {
       // Arrange
-      const message = 'Test toasted error message';
+      const String message = 'Test toasted error message';
 
       // Act
-      final state = ToastedMatchError(message);
+      final ToastedMatchError state = ToastedMatchError(message);
 
       // Assert
       expect(state.message, equals(message));
@@ -48,7 +49,7 @@ void main() {
 
     test('MatchLoaded should have correct properties', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -68,23 +69,23 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      final profiles = <ProfileWithSpotify>[profileWithSpotify];
-      const currentIndex = 0;
+      final List<ProfileWithSpotify> profiles = <ProfileWithSpotify>[profileWithSpotify];
+      const int currentIndex = 0;
 
       // Act
-      final state = MatchLoaded(profiles, currentIndex: currentIndex);
+      final MatchLoaded state = MatchLoaded(profiles, currentIndex: currentIndex);
 
       // Assert
       expect(state.profiles, equals(profiles));
@@ -95,7 +96,7 @@ void main() {
 
     test('MatchLoaded copyWith should work correctly', () {
       // Arrange
-      final userProfile = UserProfile(
+      final UserProfile userProfile = UserProfile(
         id: 1,
         handle: 'testuser',
         displayName: 'Test User',
@@ -115,25 +116,25 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify = ProfileWithSpotify(
         user: userProfile,
         artist: SpotifyArtistData(
           name: 'Test Artist',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      final profiles = <ProfileWithSpotify>[profileWithSpotify, profileWithSpotify];
-      const currentIndex = 0;
+      final List<ProfileWithSpotify> profiles = <ProfileWithSpotify>[profileWithSpotify, profileWithSpotify];
+      const int currentIndex = 0;
 
-      final state = MatchLoaded(profiles, currentIndex: currentIndex);
+      final MatchLoaded state = MatchLoaded(profiles, currentIndex: currentIndex);
 
       // Act
-      final newState = state.copyWith(currentIndex: 1);
+      final MatchLoaded newState = state.copyWith(currentIndex: 1);
 
       // Assert
       expect(newState.profiles, equals(profiles));
@@ -143,7 +144,7 @@ void main() {
 
     test('MatchLoaded hasMore should work correctly', () {
       // Arrange
-      final userProfile1 = UserProfile(
+      final UserProfile userProfile1 = UserProfile(
         id: 1,
         handle: 'testuser1',
         displayName: 'Test User 1',
@@ -163,7 +164,7 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final userProfile2 = UserProfile(
+      final UserProfile userProfile2 = UserProfile(
         id: 2,
         handle: 'testuser2',
         displayName: 'Test User 2',
@@ -183,34 +184,34 @@ void main() {
         participating: null,
         sessionId: null,
       );
-      final profileWithSpotify1 = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify1 = ProfileWithSpotify(
         user: userProfile1,
         artist: SpotifyArtistData(
           name: 'Test Artist 1',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      final profileWithSpotify2 = ProfileWithSpotify(
+      final ProfileWithSpotify profileWithSpotify2 = ProfileWithSpotify(
         user: userProfile2,
         artist: SpotifyArtistData(
           name: 'Test Artist 2',
           genres: 'pop, rock',
           imageUrl: 'test_image.jpg',
           biography: 'Test biography',
-          tracks: [],
+          tracks: <TrackEntity>[],
           popularity: 50,
           listeners: 1000,
         ),
       );
-      final profiles = <ProfileWithSpotify>[profileWithSpotify1, profileWithSpotify2];
+      final List<ProfileWithSpotify> profiles = <ProfileWithSpotify>[profileWithSpotify1, profileWithSpotify2];
 
       // Act
-      final state = MatchLoaded(profiles, currentIndex: 0);
+      final MatchLoaded state = MatchLoaded(profiles, currentIndex: 0);
 
       // Assert
       expect(state.hasMore, equals(true));
