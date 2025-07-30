@@ -59,13 +59,13 @@ class MockIAuthRepository extends _i1.Mock implements _i3.IAuthRepository {
           )
           as _i4.Future<dynamic>);
 
-  // @override
-  // _i4.Future<dynamic> findMe(String? bearer) =>
-  //     (super.noSuchMethod(
-  //           Invocation.method(#findMe, [bearer]),
-  //           returnValue: _i4.Future<dynamic>.value(),
-  //         )
-  //         as _i4.Future<dynamic>);
+  @override
+  _i4.Future<dynamic> findMe() =>
+      (super.noSuchMethod(
+            Invocation.method(#findMe, []),
+            returnValue: _i4.Future<dynamic>.value(),
+          )
+          as _i4.Future<dynamic>);
 }
 
 /// A class which mocks [IGeolocatorService].
