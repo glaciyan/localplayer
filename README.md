@@ -192,14 +192,18 @@ flutter pub get
 flutter run
 ```
 
-### 📡 API Configuration
+### Configuration
 
-Create a `.env` file in the root directory (or use a package like `flutter_dotenv`), and include the following:
+Create a `config.ini` file in `/assets/config.ini` and include the following:
 
-```env
-SPOTIFY_CLIENT_ID=your_spotify_client_id
-SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
-BACKEND_URL=your deployed API
+```ini
+[spotify]
+client_id = <your_spotify_client_id>
+client_secret = <your_spotify_client_secret>
+
+[backend]
+api_base_url = <your_hosted_version>
+not_secret = <the_same_secret_set_in_backend>
 ```
 
 ---
